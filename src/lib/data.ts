@@ -82,6 +82,15 @@ export const calculatorTools = [
     category: "financial",
     implemented: true,
   },
+   {
+    title: "Inflation Calculator",
+    description: "Calculate the impact of inflation on purchasing power.",
+    icon: TrendingUp,
+    href: "/financial-calculators/inflation-calculator",
+    imageId: "inflation-calculator",
+    category: "financial",
+    implemented: true,
+  },
   {
     title: "Base64 Encoder/Decoder",
     description: "Encode text to Base64 or decode from it.",

@@ -67,6 +67,12 @@
       "imageHint": "tax documents"
     },
     {
+      "id": "inflation-calculator",
+      "description": "A rising line graph superimposed over a backdrop of currency, symbolizing inflation.",
+      "imageUrl": "https://images.unsplash.com/photo-1643108170233-397258ac63f9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxpbmZsYXRpb24lMjBncmFwaHxlbnwwfHx8fDE3OTg0MTA4ODV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "inflation graph"
+    },
+    {
       "id": "savings-guide",
       "description": "An open book with financial symbols",
       "imageUrl": "https://images.unsplash.com/photo-1697382608873-acefe3c756fd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxmaW5hbmNpYWwlMjBib29rfGVufDB8fHx8MTc2MzM1NDU0NXww&ixlib=rb-4.1.0&q=80&w=1080",
@@ -185,6 +191,12 @@
       "description": "An athlete with visible muscle definition, representing body composition.",
       "imageUrl": "https://images.unsplash.com/photo-1581009137052-c0b249821925?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhdGhsZXRlJTIwbXVzY2xlfGVufDB8fHx8MTc2NzE2MDQ3M3ww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "athlete muscle"
+    },
+    {
+      "id": "budget-calculator",
+      "description": "A person reviewing financial documents and a budget on a desk with a calculator.",
+      "imageUrl": "https://images.unsplash.com/photo-1554224155-1696413565d3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxidWRnZXR8ZW58MHx8fHwxNzY4NTE3ODU3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "budget planning"
     },
     {
       "id": "calorie-calculator",
