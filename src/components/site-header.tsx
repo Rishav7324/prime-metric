@@ -17,7 +17,7 @@ export function SiteHeader() {
       <div className="container flex h-16 max-w-screen-2xl items-center">
         <div className="mr-4 flex">
           <Link href="/" className="mr-6 flex items-center space-x-2">
-            <Calculator className="h-6 w-6 text-accent" />
+            <Calculator className="h-6 w-6 text-primary" />
             <span className="font-bold font-headline sm:inline-block text-lg">
               PrimeMetric
             </span>
@@ -25,7 +25,7 @@ export function SiteHeader() {
           <nav className="hidden items-center gap-6 text-sm md:flex">
             {navLinks.map((link) => (
               <Link
-                key={link.label}
+                key={link.href}
                 href={link.href}
                 className="transition-colors hover:text-foreground/80 text-foreground/60 font-medium"
               >
@@ -57,7 +57,7 @@ export function SiteHeader() {
                 <SheetHeader>
                     <SheetTitle>
                         <Link href="/" className="mr-6 flex items-center space-x-2">
-                            <Calculator className="h-6 w-6 text-accent" />
+                            <Calculator className="h-6 w-6 text-primary" />
                             <span className="font-bold font-headline sm:inline-block text-lg">
                             PrimeMetric
                             </span>
@@ -71,7 +71,7 @@ export function SiteHeader() {
               <nav className="grid gap-6 text-lg font-medium mt-8">
                  {navLinks.map((link) => (
                   <Link
-                    key={link.label}
+                    key={link.href}
                     href={link.href}
                     className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                   >

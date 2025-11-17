@@ -11,10 +11,10 @@ import { categories } from "@/lib/data";
 
 const Index = () => {
   const featuredCalculators = [
-    { name: "BMI Calculator", path: "#", uses: "2.4M+" },
-    { name: "Loan Calculator", path: "#", uses: "1.8M+" },
-    { name: "Currency Converter", path: "#", uses: "3.1M+" },
-    { name: "Discount Calculator", path: "#", uses: "1.2M+" },
+    { name: "BMI Calculator", path: "/health-calculators/bmi-calculator", uses: "2.4M+" },
+    { name: "Loan Calculator", path: "/financial-calculators/loan-calculator", uses: "1.8M+" },
+    { name: "Currency Converter", path: "/financial-calculators/currency-converter", uses: "3.1M+" },
+    { name: "Discount Calculator", path: "/financial-calculators/discount-calculator", uses: "1.2M+" },
   ];
 
   return (
@@ -29,14 +29,14 @@ const Index = () => {
       <div className="min-h-screen">
         {/* Hero Section */}
         <header className="relative overflow-hidden py-20 md:py-32">
-        <div className="absolute inset-0 bg-gradient-to-br from-background via-primary/20 to-background opacity-50 animated-gradient"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-background via-primary/5 to-background opacity-50 animated-gradient"></div>
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,hsl(var(--primary)/0.1),transparent)]"></div>
         
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-4xl mx-auto text-center space-y-8">
             <h1 className="text-5xl md:text-7xl font-bold leading-tight font-headline">
               All Your Calculators
-              <span className="block bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+              <span className="block bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
                 In One Place
               </span>
             </h1>
@@ -106,7 +106,7 @@ const Index = () => {
                           {calc}
                         </span>
                       ))}
-                      <span className="text-xs px-3 py-1 rounded-full bg-secondary/10 text-secondary border border-secondary/20">
+                      <span className="text-xs px-3 py-1 rounded-full bg-secondary/10 text-secondary-foreground border border-secondary/20">
                         +More
                       </span>
                     </div>
