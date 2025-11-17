@@ -1,4 +1,4 @@
-import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type } from "lucide-react";
+import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette } from "lucide-react";
 
 export const calculatorTools = [
   {
@@ -35,6 +35,13 @@ export const calculatorTools = [
     icon: Type,
     href: "/tool/case-converter",
     imageId: "case-converter"
+  },
+  {
+    title: "Color Picker",
+    description: "Pick colors from images and get their values.",
+    icon: Pipette,
+    href: "/tool/color-picker",
+    imageId: "color-picker"
   }
 ];
 
@@ -51,7 +58,7 @@ export const educationalTools = [
     description: "Understand the basics of the stock market.",
     icon: Briefcase,
     href: "#",
-    imageId: "stock-market-basics"
+imageId: "stock-market-basics"
   },
   {
     title: "Retirement Planning",
