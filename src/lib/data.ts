@@ -1,4 +1,4 @@
-import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary } from "lucide-react";
+import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type } from "lucide-react";
 
 export const calculatorTools = [
   {
@@ -28,6 +28,13 @@ export const calculatorTools = [
     icon: Binary,
     href: "/tool/base64",
     imageId: "base64-tool"
+  },
+  {
+    title: "Case Converter",
+    description: "Convert text between different letter cases.",
+    icon: Type,
+    href: "/tool/case-converter",
+    imageId: "case-converter"
   }
 ];
 

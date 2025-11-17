@@ -41,6 +41,12 @@
       "description": "Abstract binary code on a screen",
       "imageUrl": "https://images.unsplash.com/photo-1569396116180-210c182bedb8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxiaW5hcnklMjBjb2RlfGVufDB8fHx8MTc2MzM1NDM0MXww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "binary code"
+    },
+    {
+      "id": "case-converter",
+      "description": "Abstract letter blocks on a surface",
+      "imageUrl": "https://images.unsplash.com/photo-1759147893749-7c92a92cd9d1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxsZXR0ZXIlMjBibG9ja3N8ZW58MHx8fHwxNzYzMzU1MDU5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "letter blocks"
     }
   ]
 }
