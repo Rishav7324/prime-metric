@@ -7,67 +7,9 @@ import { Search, Calculator, DollarSign, Heart, GraduationCap, Repeat, TrendingU
 import Link from "next/link";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import Head from "next/head";
+import { categories } from "@/lib/data";
 
 const Index = () => {
-  const categories = [
-    {
-      title: "Financial Calculators",
-      icon: DollarSign,
-      description: "Loans, EMI, Investment, Tax & More",
-      gradient: "from-blue-500 to-purple-600",
-      calculators: ["Loan Calculator", "EMI Calculator", "Currency Converter", "ROI Calculator"],
-      path: "#"
-    },
-    {
-      title: "Health & Fitness",
-      icon: Heart,
-      description: "BMI, BMR, Calories & Body Metrics",
-      gradient: "from-pink-500 to-rose-600",
-      calculators: ["BMI Calculator", "BMR Calculator", "Calorie Calculator", "Body Fat %"],
-      path: "#"
-    },
-    {
-      title: "Math Calculators",
-      icon: GraduationCap,
-      description: "Algebra, Geometry, Statistics & More",
-      gradient: "from-emerald-500 to-teal-600",
-      calculators: ["Scientific Calculator", "Percentage", "Fraction", "Pythagorean"],
-      path: "#"
-    },
-    {
-      title: "Other Calculators",
-      icon: Repeat,
-      description: "Converters, Utilities & Daily Tools",
-      gradient: "from-orange-500 to-amber-600",
-      calculators: ["Date Calculator", "Age Calculator", "Time Zone", "Dice Roller"],
-      path: "#"
-    },
-    {
-      title: "Image Tools",
-      icon: ImageIcon,
-      description: "Crop, Resize, Compress & Convert Images",
-      gradient: "from-cyan-500 to-blue-600",
-      calculators: ["Crop Image", "Resize Image", "Compress Image", "Convert Image"],
-      path: "/tool/crop-image"
-    },
-    {
-      title: "Text & Developer Tools",
-      icon: FileText,
-      description: "Text Formatting, Encoding & Generation",
-      gradient: "from-indigo-500 to-blue-600",
-      calculators: ["Word Counter", "Case Converter", "JSON Formatter", "QR Code"],
-      path: "/tool/word-counter"
-    },
-    {
-      title: "All Calculators",
-      icon: TrendingUp,
-      description: "Browse Complete Collection",
-      gradient: "from-violet-500 to-purple-600",
-      calculators: ["100+ Calculators", "Financial", "Health", "Math & More"],
-      path: "#tools"
-    }
-  ];
-
   const featuredCalculators = [
     { name: "BMI Calculator", path: "#", uses: "2.4M+" },
     { name: "Loan Calculator", path: "#", uses: "1.8M+" },
@@ -243,7 +185,7 @@ const Index = () => {
               Join millions of users who trust PrimeMetric for their daily calculations
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/#tools">
+              <Link href="/all-calculators">
                 <Button size="lg" className="gradient-button text-lg px-8">
                   Browse All Calculators
                 </Button>
