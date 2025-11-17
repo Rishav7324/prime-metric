@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from "react";
@@ -5,9 +6,16 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import CalculatorLayout from "@/components/CalculatorLayout";
+import CalculatorLayout, { generateMetadata } from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+
+export const metadata = generateMetadata({
+  title: "Fuel Cost Calculator",
+  description: "Calculate total fuel costs for your trip",
+  keywords: "fuel cost calculator, trip cost, gas calculator, mileage cost, fuel budget",
+  canonicalUrl: "/financial-calculators/fuel-cost-calculator",
+});
 
 const FuelCostCalculator = () => {
   const [distance, setDistance] = useState("");
@@ -50,7 +58,6 @@ const FuelCostCalculator = () => {
     <CalculatorLayout
       title="Fuel Cost Calculator"
       description="Calculate total fuel costs for your trip"
-      keywords="fuel cost calculator, trip cost, gas calculator, mileage cost, fuel budget"
       canonicalUrl="/financial-calculators/fuel-cost-calculator"
       formula="Cost = (Distance / MPG) × Fuel Price"
     >

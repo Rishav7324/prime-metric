@@ -1,7 +1,8 @@
+
 'use client';
 
 import { useState } from "react";
-import CalculatorLayout from "@/components/CalculatorLayout";
+import CalculatorLayout, { generateMetadata } from "@/components/CalculatorLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,6 +11,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
 import { TrendingUp } from "lucide-react";
+
+export const metadata = generateMetadata({
+  title: "Interest Calculator",
+  description: "Calculate simple or compound interest for your investments or loans",
+  keywords: "interest calculator, simple interest, compound interest, investment calculator",
+  canonicalUrl: "/financial-calculators/compound-interest-calculator"
+});
 
 const InterestCalculator = () => {
   const [principal, setPrincipal] = useState("");
@@ -56,7 +64,6 @@ const InterestCalculator = () => {
     <CalculatorLayout
       title="Interest Calculator"
       description="Calculate simple or compound interest for your investments or loans"
-      keywords="interest calculator, simple interest, compound interest, investment calculator"
       canonicalUrl="/financial-calculators/compound-interest-calculator"
       formula={type === 'simple' ? "Simple Interest: I = P × r × t" : "Compound Interest: A = P(1 + r)ⁿ"}
     >

@@ -36,7 +36,7 @@ const Index = () => {
           <div className="max-w-4xl mx-auto text-center space-y-8">
             <h1 className="text-5xl md:text-7xl font-bold leading-tight font-headline">
               All Your Calculators
-              <span className="block bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
+              <span className="block bg-gradient-to-r from-primary via-primary/80 to-secondary bg-clip-text text-transparent">
                 In One Place
               </span>
             </h1>

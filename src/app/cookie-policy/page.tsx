@@ -8,7 +8,9 @@ export const metadata: Metadata = {
     title: "Cookie Policy | Prime Metric",
     description: "Learn about how Prime Metric uses cookies to improve your experience. Understand what cookies are, how we use them, and how you can manage them.",
     keywords: "cookie policy, cookies, primemetric cookies, website cookies, privacy",
-    canonical: "https://primemetric.online/cookie-policy",
+    alternates: {
+      canonical: "https://primemetric.online/cookie-policy",
+    }
 };
 
 const CookiePolicyPage = () => {

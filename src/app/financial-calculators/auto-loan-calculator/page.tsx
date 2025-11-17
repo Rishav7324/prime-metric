@@ -1,13 +1,21 @@
+
 'use client';
 
 import { useState } from "react";
-import CalculatorLayout from "@/components/CalculatorLayout";
+import CalculatorLayout, { generateMetadata } from "@/components/CalculatorLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+
+export const metadata = generateMetadata({
+  title: "Auto Loan Calculator",
+  description: "Calculate your car loan monthly payments",
+  keywords: "auto loan calculator, car loan, emi calculator, car payment",
+  canonicalUrl: "/financial-calculators/auto-loan-calculator"
+});
 
 const AutoLoanCalculator = () => {
   const [carPrice, setCarPrice] = useState("");

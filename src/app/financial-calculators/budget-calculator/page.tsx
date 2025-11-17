@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from "react";
@@ -5,9 +6,16 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import CalculatorLayout from "@/components/CalculatorLayout";
+import CalculatorLayout, { generateMetadata } from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+
+export const metadata = generateMetadata({
+  title: "Budget Calculator",
+  description: "Plan and track your monthly income and expenses",
+  keywords: "budget calculator, monthly budget planner, expense tracker, savings calculator",
+  canonicalUrl: "/financial-calculators/budget-calculator",
+});
 
 const BudgetCalculator = () => {
   const [income, setIncome] = useState("");
@@ -49,7 +57,6 @@ const BudgetCalculator = () => {
     <CalculatorLayout
       title="Budget Calculator"
       description="Plan and track your monthly income and expenses"
-      keywords="budget calculator, monthly budget planner, expense tracker, savings calculator"
       canonicalUrl="/financial-calculators/budget-calculator"
       explanation="This calculator helps you manage your finances by tracking income vs expenses and showing how much you can save each month."
     >

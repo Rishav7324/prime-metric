@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from "react";
@@ -5,10 +6,17 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import CalculatorLayout from "@/components/CalculatorLayout";
+import CalculatorLayout, { generateMetadata } from "@/components/CalculatorLayout";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+
+export const metadata = generateMetadata({
+  title: "Amortization Calculator",
+  description: "Calculate loan amortization schedule",
+  keywords: "amortization calculator, loan schedule, mortgage amortization, loan payment schedule, amortization table",
+  canonicalUrl: "/financial-calculators/amortization-calculator",
+});
 
 const AmortizationCalculator = () => {
   const [principal, setPrincipal] = useState("");

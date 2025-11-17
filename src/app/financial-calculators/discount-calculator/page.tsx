@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from "react";
@@ -5,9 +6,16 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import CalculatorLayout from "@/components/CalculatorLayout";
+import CalculatorLayout, { generateMetadata } from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+
+export const metadata = generateMetadata({
+  title: "Discount Calculator",
+  description: "Calculate your savings and final price after discount",
+  keywords: "discount calculator, sale calculator, percentage off, savings calculator",
+  canonicalUrl: "/financial-calculators/discount-calculator"
+});
 
 const DiscountCalculator = () => {
   const [originalPrice, setOriginalPrice] = useState("");
@@ -70,7 +78,6 @@ const DiscountCalculator = () => {
     <CalculatorLayout
       title="Discount Calculator"
       description="Calculate your savings and final price after discount"
-      keywords="discount calculator, sale calculator, percentage off, savings calculator"
       canonicalUrl="/financial-calculators/discount-calculator"
       explanation={explanation}
     >

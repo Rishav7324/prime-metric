@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from "react";
@@ -5,9 +6,16 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import CalculatorLayout from "@/components/CalculatorLayout";
+import CalculatorLayout, { generateMetadata } from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+
+export const metadata = generateMetadata({
+  title: "House Affordability Calculator",
+  description: "Estimate the home price you can afford based on your income and debts",
+  keywords: "house affordability calculator, how much house can i afford, mortgage affordability, home buying calculator",
+  canonicalUrl: "/financial-calculators/house-affordability-calculator",
+});
 
 const HouseAffordabilityCalculator = () => {
   const [income, setIncome] = useState("");
@@ -66,7 +74,6 @@ const HouseAffordabilityCalculator = () => {
     <CalculatorLayout
       title="House Affordability Calculator"
       description="Estimate the home price you can afford based on your income and debts"
-      keywords="house affordability calculator, how much house can i afford, mortgage affordability, home buying calculator"
       canonicalUrl="/financial-calculators/house-affordability-calculator"
       formula="Based on the 28/36 rule for debt-to-income ratios"
     >

@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from "react";
@@ -5,9 +6,16 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import CalculatorLayout from "@/components/CalculatorLayout";
+import CalculatorLayout, { generateMetadata } from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+
+export const metadata = generateMetadata({
+  title: "Inflation Calculator",
+  description: "Calculate the future value of money and the impact of inflation on purchasing power",
+  keywords: "inflation calculator, purchasing power, future value of money, inflation impact",
+  canonicalUrl: "/financial-calculators/inflation-calculator",
+});
 
 const InflationCalculator = () => {
   const [amount, setAmount] = useState("1000");
@@ -45,7 +53,6 @@ const InflationCalculator = () => {
     <CalculatorLayout
       title="Inflation Calculator"
       description="Calculate the future value of money and the impact of inflation on purchasing power"
-      keywords="inflation calculator, purchasing power, future value of money, inflation impact"
       canonicalUrl="/financial-calculators/inflation-calculator"
       formula="Future Value = Present Value × (1 + inflation rate)ⁿ"
       explanation="This calculator shows how inflation affects the value of money over time and what today's money will be worth in the future."

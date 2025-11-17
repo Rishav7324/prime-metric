@@ -1,45 +1,48 @@
+
 import Head from "next/head";
 import { Metadata } from 'next';
 
 type CalculatorLayoutProps = {
   title: string;
   description: string;
-  keywords: string;
+  keywords?: string;
   canonicalUrl: string;
   formula?: string;
   explanation?: React.ReactNode;
   children: React.ReactNode;
 };
 
-export const metadata: Metadata = {
-  title: 'Prime Metric',
-  description: '100+ premium calculators and educational tools for financial clarity.',
-};
+export function generateMetadata({ title, description, keywords, canonicalUrl }: CalculatorLayoutProps): Metadata {
+  return {
+    title: `${title} | Prime Metric`,
+    description: description,
+    keywords: keywords,
+    alternates: {
+      canonical: `https://primemetric.online${canonicalUrl}`,
+    },
+    openGraph: {
+        title: `${title} | Prime Metric`,
+        description: description,
+        url: `https://primemetric.online${canonicalUrl}`,
+        type: 'website',
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: `${title} | Prime Metric`,
+        description: description,
+    }
+  };
+}
 
 const CalculatorLayout = ({
   title,
   description,
-  keywords,
-  canonicalUrl,
   formula,
   explanation,
   children,
 }: CalculatorLayoutProps) => {
   return (
     <>
-      <Head>
-        <title>{`${title} | Prime Metric`}</title>
-        <meta name="description" content={description} />
-        <meta name="keywords" content={keywords} />
-        <link rel="canonical" href={`https://primemetric.online${canonicalUrl}`} />
-        <meta property="og:title" content={`${title} | Prime Metric`} />
-        <meta property="og:description" content={description} />
-        <meta property="og:url" content={`https://primemetric.online${canonicalUrl}`} />
-        <meta property="og:type" content="website" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={`${title} | Prime Metric`} />
-        <meta name="twitter:description" content={description} />
-      </Head>
       <main className="py-12 sm:py-20">
         <div className="container">
           <div className="text-center max-w-2xl mx-auto">

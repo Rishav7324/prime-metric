@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from "react";
@@ -6,9 +7,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import CalculatorLayout from "@/components/CalculatorLayout";
+import CalculatorLayout, { generateMetadata } from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+
+export const metadata = generateMetadata({
+  title: "Finance Calculator",
+  description: "Calculate Future Value and Present Value of money",
+  keywords: "finance calculator, future value, present value, time value of money, fv calculator, pv calculator",
+  canonicalUrl: "/financial-calculators/finance-calculator"
+});
 
 const FinanceCalculator = () => {
   const [calcType, setCalcType] = useState("future-value");
@@ -51,7 +59,6 @@ const FinanceCalculator = () => {
     <CalculatorLayout
       title="Finance Calculator"
       description="Calculate Future Value and Present Value of money"
-      keywords="finance calculator, future value, present value, time value of money, fv calculator, pv calculator"
       canonicalUrl="/financial-calculators/finance-calculator"
       formula={calcType === "future-value" ? "FV = PV × (1 + r)^n" : "PV = FV / (1 + r)^n"}
     >

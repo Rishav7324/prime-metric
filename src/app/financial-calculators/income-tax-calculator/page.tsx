@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from "react";
@@ -6,9 +7,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import CalculatorLayout from "@/components/CalculatorLayout";
+import CalculatorLayout, { generateMetadata } from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+
+export const metadata = generateMetadata({
+  title: "Income Tax Calculator",
+  description: "Estimate your income tax using simplified tax brackets",
+  keywords: "income tax calculator, tax estimator, tax brackets, federal income tax",
+  canonicalUrl: "/financial-calculators/income-tax-calculator",
+});
 
 const IncomeTaxCalculator = () => {
   const [income, setIncome] = useState("");
@@ -62,7 +70,6 @@ const IncomeTaxCalculator = () => {
     <CalculatorLayout
       title="Income Tax Calculator"
       description="Estimate your income tax using simplified tax brackets"
-      keywords="income tax calculator, tax estimator, tax brackets, federal income tax"
       canonicalUrl="/financial-calculators/income-tax-calculator"
       formula="Tax = Income × Applicable Tax Rate"
     >

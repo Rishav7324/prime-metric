@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from "react";
@@ -5,9 +6,16 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import CalculatorLayout from "@/components/CalculatorLayout";
+import CalculatorLayout, { generateMetadata } from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+
+export const metadata = generateMetadata({
+  title: "APR Calculator",
+  description: "Calculate Annual Percentage Rate including fees and interest",
+  keywords: "apr calculator, annual percentage rate, loan cost, interest and fees",
+  canonicalUrl: "/financial-calculators/apr-calculator"
+});
 
 const APRCalculator = () => {
   const [loanAmount, setLoanAmount] = useState("");
@@ -144,5 +152,3 @@ const APRCalculator = () => {
 };
 
 export default APRCalculator;
-
-    

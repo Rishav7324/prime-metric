@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from "react";
@@ -6,9 +7,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import CalculatorLayout from "@/components/CalculatorLayout";
+import CalculatorLayout, { generateMetadata } from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+
+export const metadata = generateMetadata({
+  title: "Currency Converter",
+  description: "Convert between major world currencies",
+  keywords: "currency converter, exchange rates, currency calculator, forex calculator",
+  canonicalUrl: "/financial-calculators/currency-converter"
+});
 
 const CurrencyCalculator = () => {
   const [amount, setAmount] = useState("");
@@ -55,7 +63,6 @@ const CurrencyCalculator = () => {
     <CalculatorLayout
       title="Currency Converter"
       description="Convert between major world currencies"
-      keywords="currency converter, exchange rates, currency calculator, forex calculator"
       canonicalUrl="/financial-calculators/currency-converter"
     >
       <div className="grid md:grid-cols-2 gap-8">

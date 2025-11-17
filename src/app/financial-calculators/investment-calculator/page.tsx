@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from "react";
@@ -5,9 +6,16 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import CalculatorLayout from "@/components/CalculatorLayout";
+import CalculatorLayout, { generateMetadata } from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+
+export const metadata = generateMetadata({
+  title: "Investment Calculator",
+  description: "Calculate returns on your investment with regular contributions",
+  keywords: "investment calculator, compound interest calculator, investment return, savings calculator, retirement calculator",
+  canonicalUrl: "/financial-calculators/investment-calculator"
+});
 
 const InvestmentCalculator = () => {
   const [principal, setPrincipal] = useState("");
@@ -51,7 +59,6 @@ const InvestmentCalculator = () => {
     <CalculatorLayout
       title="Investment Calculator"
       description="Calculate returns on your investment with regular contributions"
-      keywords="investment calculator, compound interest calculator, investment return, savings calculator, retirement calculator"
       canonicalUrl="/financial-calculators/investment-calculator"
       formula="FV = PV(1+r)ⁿ + PMT × [((1+r)ⁿ - 1) / r]"
       explanation="This calculator estimates the future value of your investment based on initial amount, regular contributions, time period, and expected rate of return."
