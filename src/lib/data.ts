@@ -220,10 +220,10 @@ imageId: "fraction-calculator",
     title: "Age Calculator",
     description: "Calculate age between two dates.",
     icon: Clock,
-    href: "#",
+    href: "/other-calculators/age-calculator",
     imageId: "age-calculator",
     category: "other",
-    implemented: false,
+    implemented: true,
   },
   {
     title: "Date Calculator",
@@ -346,5 +346,3 @@ export const faqData = [
     answer: "No, we do not store any personal data you enter into our calculators. Your privacy is our top priority. All calculations are performed on your device and are not saved on our servers.",
   },
 ];
-
-    
