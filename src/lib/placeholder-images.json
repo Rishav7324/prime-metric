@@ -155,6 +155,12 @@
       "description": "A simple, clean calculator interface on a digital screen.",
       "imageUrl": "https://images.unsplash.com/photo-1653074281018-c08f358059ab?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8Y2FsY3VsYXRvciUyMGFwcHxlbnwwfHx8fDE3NjMzNTcxMDF8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "calculator app"
+    },
+    {
+      "id": "binary-calculator",
+      "description": "Close-up of a circuit board with glowing lines, representing binary data flow.",
+      "imageUrl": "https://images.unsplash.com/photo-1528901166007-3784c7dd3653?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxiaW5hcnklMjBjaXJjdWl0fGVufDB8fHx8MTc2NzE1NzM1Nnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "binary circuit"
     }
   ]
 }
