@@ -1,4 +1,4 @@
-import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw } from "lucide-react";
+import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop } from "lucide-react";
 
 export const calculatorTools = [
   {
@@ -56,6 +56,13 @@ export const calculatorTools = [
     icon: RefreshCw,
     href: "/tool/convert-image",
     imageId: "image-converter"
+  },
+  {
+    title: "Image Cropper",
+    description: "Crop images to the perfect dimensions.",
+    icon: Crop,
+    href: "/tool/crop-image",
+    imageId: "image-cropper"
   }
 ];
 
