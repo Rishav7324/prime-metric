@@ -11,90 +11,13 @@
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
+
+  <!-- Financial Calculators -->
   <url>
     <loc>https://primemetric.online/financial-calculators</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
-  <url>
-    <loc>https://primemetric.online/health-calculators</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://primemetric.online/math-calculators</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://primemetric.online/other-calculators</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <!-- Tool Pages -->
-  <url>
-    <loc>https://primemetric.online/tool/base64</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://primemetric.online/tool/case-converter</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://primemetric.online/tool/color-picker</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://primemetric.online/tool/compress-image</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://primemetric.online/tool/convert-image</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://primemetric.online/tool/crop-image</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://primemetric.online/tool/hash-generator</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://primemetric.online/tool/json-formatter</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://primemetric.online/tool/lorem-ipsum</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://primemetric.online/tool/qr-code</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://primemetric.online/tool/url-encoder</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://primemetric.online/tool/word-counter</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- Financial Calculators -->
   <url>
     <loc>https://primemetric.online/financial-calculators/amortization-calculator</loc>
     <changefreq>monthly</changefreq>
@@ -165,8 +88,13 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-
+  
   <!-- Health & Fitness Calculators -->
+  <url>
+    <loc>https://primemetric.online/health-calculators</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
   <url>
     <loc>https://primemetric.online/health-calculators/bmi-calculator</loc>
     <changefreq>monthly</changefreq>
@@ -210,6 +138,11 @@
 
   <!-- Math Calculators -->
   <url>
+    <loc>https://primemetric.online/math-calculators</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://primemetric.online/math-calculators/area-calculator</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -247,6 +180,11 @@
 
   <!-- Other Calculators -->
   <url>
+    <loc>https://primemetric.online/other-calculators</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://primemetric.online/other-calculators/age-calculator</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -273,6 +211,68 @@
   </url>
   <url>
     <loc>https://primemetric.online/other-calculators/grade-calculator</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Developer/Image Tools -->
+  <url>
+    <loc>https://primemetric.online/tool/base64</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://primemetric.online/tool/case-converter</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://primemetric.online/tool/color-picker</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://primemetric.online/tool/compress-image</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://primemetric.online/tool/convert-image</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://primemetric.online/tool/crop-image</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://primemetric.online/tool/hash-generator</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://primemetric.online/tool/json-formatter</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://primemetric.online/tool/lorem-ipsum</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://primemetric.online/tool/qr-code</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://primemetric.online/tool/url-encoder</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://primemetric.online/tool/word-counter</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
