@@ -1,60 +1,43 @@
 /**
  * @file Firestore Security Rules
- * @description This ruleset secures the 'messages' and 'subscribers' collections, restricting write access to authenticated users only.
- *   Read access is public for both collections, allowing anyone to retrieve messages and subscriber information.
+ * @description This ruleset secures the 'messages' and 'subscribers' collections.
+ *   It allows public write access for creating new documents, enabling features like a public contact form
+ *   and newsletter subscription. Read, update, and delete operations are disabled for all users to protect data privacy.
  *
  * @dataStructure
  * - /messages/{messageId}: Stores messages received through the website.
  * - /subscribers/{subscriberId}: Stores information about users who have subscribed to email updates.
  *
  * @keySecurityDecisions
- * - Public read access to both 'messages' and 'subscribers' collections.
- * - Write access to both 'messages' and 'subscribers' collections are restricted to authenticated users only.
+ * - Public write access (create) is granted to both collections to allow form submissions from unauthenticated users.
+ * - Read, update, and delete operations are denied to prevent unauthorized access, modification, or removal of data.
  */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * @description Allows anyone to read messages but restricts creation, updates, and deletion to authenticated users.
+     * @description Allows anyone to create a message, but denies read, update, and delete operations.
      * @path /messages/{messageId}
-     * @allow (get, list)
-     * @allow (create) request.auth != null
-     * @deny (create) request.auth == null
-     * @allow (update) request.auth != null
-     * @deny (update) request.auth == null
-     * @allow (delete) request.auth != null
-     * @deny (delete) request.auth == null
-     * @principle Allows public reads and authenticated writes.
+     * @allow (create) if true
+     * @deny (get, list, update, delete)
+     * @principle Allows public creation for contact forms while protecting submitted data.
      */
     match /messages/{messageId} {
-      allow get, list: if true;
-      allow create: if isSignedIn();
-      allow update: if isSignedIn();
-      allow delete: if isSignedIn();
+      allow create: if true;
+      allow get, list, update, delete: if false;
     }
 
     /**
-     * @description Allows anyone to read subscriber information but restricts creation, updates, and deletion to authenticated users.
+     * @description Allows anyone to subscribe, but denies read, update, and delete operations.
      * @path /subscribers/{subscriberId}
-     * @allow (get, list)
-     * @allow (create) request.auth != null
-     * @deny (create) request.auth == null
-     * @allow (update) request.auth != null
-     * @deny (update) request.auth == null
-     * @allow (delete) request.auth != null
-     * @deny (delete) request.auth == null
-     * @principle Allows public reads and authenticated writes.
+     * @allow (create) if true
+     * @deny (get, list, update, delete)
+     * @principle Allows public creation for newsletter sign-ups while protecting subscriber emails.
      */
     match /subscribers/{subscriberId} {
-      allow get, list: if true;
-      allow create: if isSignedIn();
-      allow update: if isSignedIn();
-      allow delete: if isSignedIn();
-    }
-
-    function isSignedIn() {
-      return request.auth != null;
+      allow create: if true;
+      allow get, list, update, delete: if false;
     }
   }
 }
