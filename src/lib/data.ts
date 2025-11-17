@@ -23,10 +23,10 @@ export const calculatorTools = [
     title: "Loan Calculator",
     description: "See how much your loan will cost you over time.",
     icon: PiggyBank,
-    href: "#",
+    href: "/financial-calculators/loan-calculator",
     imageId: "loan-calculator",
     category: "financial",
-    implemented: false,
+    implemented: true,
   },
   {
     title: "APR Calculator",
