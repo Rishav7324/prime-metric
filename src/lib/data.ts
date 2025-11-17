@@ -1,4 +1,4 @@
-import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette } from "lucide-react";
+import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2 } from "lucide-react";
 
 export const calculatorTools = [
   {
@@ -42,6 +42,13 @@ export const calculatorTools = [
     icon: Pipette,
     href: "/tool/color-picker",
     imageId: "color-picker"
+  },
+  {
+    title: "Image Compressor",
+    description: "Reduce image file size without losing quality.",
+    icon: Minimize2,
+    href: "/tool/compress-image",
+    imageId: "image-compressor"
   }
 ];
 
