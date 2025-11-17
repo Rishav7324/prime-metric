@@ -185,6 +185,12 @@
       "description": "Close-up of a circuit board with glowing lines, representing binary data flow.",
       "imageUrl": "https://images.unsplash.com/photo-1528901166007-3784c7dd3653?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxiaW5hcnklMjBjaXJjdWl0fGVufDB8fHx8MTc2NzE1NzM1Nnww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "binary circuit"
+    },
+    {
+      "id": "circle-calculator",
+      "description": "A vibrant, abstract image of overlapping circles and geometric patterns.",
+      "imageUrl": "https://images.unsplash.com/photo-1509909756405-be0199881695?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMGNpcmNsZXN8ZW58MHx8fHwxNzY5MDM5OTM0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "abstract circles"
     }
   ]
 }

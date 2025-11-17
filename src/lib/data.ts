@@ -1,4 +1,4 @@
-import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link, DollarSign, Heart, GraduationCap, Repeat, Percent, Divide, Sigma, Wrench, Clock, CalendarDays, WalletCards, ListOrdered, Square, Car, Flame, PersonStanding, Wallet, Dumbbell } from "lucide-react";
+import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link, DollarSign, Heart, GraduationCap, Repeat, Percent, Divide, Sigma, Wrench, Clock, CalendarDays, WalletCards, ListOrdered, Square, Car, Flame, PersonStanding, Wallet, Dumbbell, Circle } from "lucide-react";
 
 export const calculatorTools = [
   {
@@ -266,6 +266,15 @@ export const allCalculators = [...calculatorTools, ...educationalTools,
     icon: Binary,
     href: "/math-calculators/binary-calculator",
     imageId: "binary-calculator",
+    category: "math",
+    implemented: true,
+  },
+  {
+    title: "Circle Calculator",
+    description: "Calculate area, circumference, and diameter of a circle.",
+    icon: Circle,
+    href: "/math-calculators/circle-calculator",
+    imageId: "circle-calculator",
     category: "math",
     implemented: true,
   },
