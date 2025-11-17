@@ -5,10 +5,10 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Search, BotMessageSquare, Menu, Calculator, DollarSign, Heart, GraduationCap } from 'lucide-react';
 
 const navLinks = [
-  { href: "#tools", label: "All Calculators" },
-  { href: "#", label: "Financial" },
-  { href: "#", label: "Health" },
-  { href: "/about", label: "About" },
+  { href: "/all-calculators", label: "All Calculators" },
+  { href: "/financial-calculators", label: "Financial" },
+  { href: "/health-calculators", label: "Health" },
+  { href: "/math-calculators", label: "Math" },
 ];
 
 export function SiteHeader() {
@@ -25,7 +25,7 @@ export function SiteHeader() {
           <nav className="hidden items-center gap-6 text-sm md:flex">
             {navLinks.map((link) => (
               <Link
-                key={link.href}
+                key={link.label}
                 href={link.href}
                 className="transition-colors hover:text-foreground/80 text-foreground/60 font-medium"
               >
@@ -57,7 +57,7 @@ export function SiteHeader() {
               <nav className="grid gap-6 text-lg font-medium mt-8">
                  {navLinks.map((link) => (
                   <Link
-                    key={link.href}
+                    key={link.label}
                     href={link.href}
                     className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                   >
@@ -73,5 +73,3 @@ export function SiteHeader() {
     </header>
   );
 }
-
-    
