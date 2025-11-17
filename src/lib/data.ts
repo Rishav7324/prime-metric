@@ -92,6 +92,15 @@ export const calculatorTools = [
     implemented: true,
   },
   {
+    title: "Investment Calculator",
+    description: "Project future value of investments with regular contributions.",
+    icon: TrendingUp,
+    href: "/financial-calculators/investment-calculator",
+    imageId: "investment-calculator",
+    category: "financial",
+    implemented: true,
+  },
+  {
     title: "Base64 Encoder/Decoder",
     description: "Encode text to Base64 or decode from it.",
     icon: Binary,

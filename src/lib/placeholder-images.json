@@ -13,6 +13,12 @@
       "imageHint": "investment chart"
     },
     {
+      "id": "investment-calculator",
+      "description": "A vibrant, abstract image of upward-trending financial charts and graphs, symbolizing growth.",
+      "imageUrl": "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMGNoYXJ0fGVufDB8fHx8MTc2OTYzOTMwN3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "financial growth"
+    },
+    {
       "id": "loan-calculator",
       "description": "An interface for calculating a loan",
       "imageUrl": "https://images.unsplash.com/photo-1757301714935-c8127a21abc6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxsb2FuJTIwaW50ZXJmYWNlfGVufDB8fHx8MTc2MzM1NDU0NXww&ixlib=rb-4.1.0&q=80&w=1080",
