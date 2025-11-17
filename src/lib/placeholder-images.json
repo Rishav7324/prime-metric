@@ -25,6 +25,12 @@
       "imageHint": "abstract percentage"
     },
     {
+      "id": "auto-loan-calculator",
+      "description": "A sleek, modern car on a showroom floor",
+      "imageUrl": "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBjYXJ8ZW58MHx8fHwxNzY2NTc1MDUyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "modern car"
+    },
+    {
       "id": "amortization-calculator",
       "description": "A visual representation of a loan amortization schedule",
       "imageUrl": "https://images.unsplash.com/photo-1653213096328-9482182f9f80?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxsb2FuJTIwc2NoZWR1bGV8ZW58MHx8fHwxNzYzMzU2NTYwfDA&ixlib=rb-4.1.0&q=80&w=1080",
@@ -57,7 +63,7 @@
     {
       "id": "case-converter",
       "description": "Abstract letter blocks on a surface",
-      "imageUrl": "https://images.unsplash.com/photo-1759147893749-7c92a92cd9d1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxsZXR0ZXIlMjBibG9ja3N8ZW58MHx8fHwxNzYzMzU1MDU5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1759147893749-7c92a92cd9d1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxsZXR0ZXIlMjBibG9ja3N8ZW58MHx8fHwxNzYzMzU1MDU5fDA&ixlibrb-4.1.0&q=80&w=1080",
       "imageHint": "letter blocks"
     },
     {
@@ -99,7 +105,7 @@
     {
       "id": "lorem-ipsum-generator",
       "description": "Abstract text blocks representing placeholder content",
-      "imageUrl": "https://images.unsplash.com/photo-1543286386-713bdd548da4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHx0ZXh0JTIwYmxvY2tzfGVufDB8fHx8MTc2NDEzOTIwMnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1543286386-713bdd548da4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHx0ZXh0JTIwYmxvY2tzfGVufDB8fHx8MTc2NDEzOTIwMnww&ixlibrb-4.1.0&q=80&w=1080",
       "imageHint": "text blocks"
     },
     {
@@ -123,7 +129,7 @@
     {
       "id": "area-calculator",
       "description": "Geometric shapes on a blueprint background",
-      "imageUrl": "https://images.unsplash.com/photo-1518066000714-58c45f1a230d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxnZW9tZXRyaWMlMjBzaGFwZXN8ZW58MHx8fHwxNzYzMzU1MjU0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1518066000714-58c45f1a230d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxnZW9tZXRyaWMlMjBzaGFwZXN8ZW58MHx8fHwxNzYzMzU1MjU0fDA&ixlibrb-4.1.0&q=80&w=1080",
       "imageHint": "geometric shapes"
     }
   ]
