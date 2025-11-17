@@ -45,7 +45,7 @@
     {
       "id": "case-converter",
       "description": "Abstract letter blocks on a surface",
-      "imageUrl": "https://images.unsplash.com/photo-1759147893749-7c92a92cd9d1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxsZXR0ZXIlMjBibG9ja3N8ZW58MHx8fHwxNzYzMzU1MDU5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1759147893749-7c92a92cd9d1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxsZXR0ZXIlMjBibG9ja3N8ZW58MHx8fHwxNzYzMzU1MDU5fDA&ixlibrb-4.1.0&q=80&w=1080",
       "imageHint": "letter blocks"
     },
     {
@@ -63,14 +63,20 @@
     {
       "id": "image-converter",
       "description": "Arrows pointing between different file type icons",
-      "imageUrl": "https://images.unsplash.com/photo-1668852222395-11d9154ade25?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxmaWxlJTIwY29udmVyc2lvbnxlbnwwfHx8fDE3NjMzNTUzMzd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1668852222395-11d9154ade25?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxmaWxlJTIwY29udmVyc2lvbnxlbnwwfHx8fDE3NjMzNTUzMzd8MA&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "file conversion"
     },
     {
       "id": "image-cropper",
       "description": "A camera lens focusing on a subject",
-      "imageUrl": "https://images.unsplash.com/photo-1580554336067-3a131b2f3c2b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxjYW1lcmElMjBmb2N1c3xlbnwwfHx8fDE3NjQxMzkxODR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1580554336067-3a131b2f3c2b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxjYW1lcmElMjBmb2N1c3xlbnwwfHx8fDE3NjQxMzkxODR8MA&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "camera focus"
+    },
+    {
+      "id": "hash-generator",
+      "description": "Abstract cryptographic block chain",
+      "imageUrl": "https://images.unsplash.com/photo-1642104704074-af0f4871ab18?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjcnlwdG9ncmFwaGljJTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NjQxNDA3MTN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "crypto background"
     }
   ]
 }

@@ -1,4 +1,4 @@
-import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop } from "lucide-react";
+import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash } from "lucide-react";
 
 export const calculatorTools = [
   {
@@ -63,6 +63,13 @@ export const calculatorTools = [
     icon: Crop,
     href: "/tool/crop-image",
     imageId: "image-cropper"
+  },
+  {
+    title: "Hash Generator",
+    description: "Generate MD5, SHA-1, and SHA-256 hashes.",
+    icon: Hash,
+    href: "/tool/hash-generator",
+    imageId: "hash-generator"
   }
 ];
 
