@@ -10,7 +10,9 @@ export const metadata: Metadata = {
     title: "About Us - Prime Metric",
     description: "Learn about Prime Metric, your trusted source for free online calculators. We provide accurate calculation tools for finance, health, math, and everyday needs.",
     keywords: "about Prime Metric, calculator website, free online tools, calculation platform",
-    canonical: "https://primemetric.online/about",
+    alternates: {
+      canonical: "https://primemetric.online/about",
+    }
 };
 
 const AboutPage = () => {
