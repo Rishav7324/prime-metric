@@ -65,8 +65,8 @@ export const calculatorTools = [
     implemented: true,
   },
   {
-    title: "Compound Interest Calculator",
-    description: "Calculate the future value of your investment.",
+    title: "Interest Calculator",
+    description: "Calculate simple or compound interest.",
     icon: TrendingUp,
     href: "/financial-calculators/compound-interest-calculator",
     imageId: "compound-interest",

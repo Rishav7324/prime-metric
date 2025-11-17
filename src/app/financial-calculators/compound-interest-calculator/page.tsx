@@ -9,12 +9,13 @@ import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+import { TrendingUp } from "lucide-react";
 
-const CompoundInterestCalculator = () => {
+const InterestCalculator = () => {
   const [principal, setPrincipal] = useState("");
   const [rate, setRate] = useState("");
   const [time, setTime] = useState("");
-  const [frequency, setFrequency] = useState("12");
+  const [type, setType] = useState("compound");
   const [result, setResult] = useState<any>(null);
   const { toast } = useToast();
 
@@ -22,41 +23,57 @@ const CompoundInterestCalculator = () => {
     const p = parseFloat(principal);
     const r = parseFloat(rate) / 100;
     const t = parseFloat(time);
-    const n = parseFloat(frequency);
-
-    if (p > 0 && r >= 0 && t > 0 && n > 0) {
-      const amount = p * Math.pow(1 + r / n, n * t);
-      const interest = amount - p;
-
+    
+    if (p > 0 && r >= 0 && t > 0) {
+      let interest, total;
+      
+      if (type === "simple") {
+        interest = p * r * t;
+        total = p + interest;
+      } else { // compound
+        total = p * Math.pow(1 + r, t);
+        interest = total - p;
+      }
+      
       setResult({
-        finalAmount: amount.toFixed(2),
         interest: interest.toFixed(2),
+        total: total.toFixed(2)
       });
       toast({
         title: "Calculation Complete",
-        description: "Your investment projection has been calculated.",
+        description: `The calculated interest is $${interest.toFixed(2)}.`,
       });
     } else {
-      toast({
-        variant: "destructive",
-        title: "Invalid Input",
-        description: "Please enter valid, positive numbers for all fields.",
-      });
+        toast({
+            variant: "destructive",
+            title: "Invalid Input",
+            description: "Please enter valid, positive numbers for all fields.",
+        });
     }
   };
 
   return (
     <CalculatorLayout
-      title="Compound Interest Calculator"
-      description="Calculate the future value of your investment with compound interest"
-      keywords="compound interest calculator, investment calculator, future value calculator, interest calculator, savings growth"
+      title="Interest Calculator"
+      description="Calculate simple or compound interest for your investments or loans"
+      keywords="interest calculator, simple interest, compound interest, investment calculator"
       canonicalUrl="/financial-calculators/compound-interest-calculator"
-      formula="A = P(1 + r/n)^(nt)"
+      formula={type === 'simple' ? "Simple Interest: I = P × r × t" : "Compound Interest: A = P(1 + r)ⁿ"}
     >
       <div className="grid md:grid-cols-2 gap-8">
         <Card className="glass-card p-8">
           <h2 className="text-2xl font-bold mb-6 font-headline">Investment Details</h2>
           <div className="space-y-6">
+             <div>
+              <Label>Interest Type</Label>
+              <Select value={type} onValueChange={setType}>
+                <SelectTrigger className="mt-2 h-12 glass-card border-primary/30"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="compound">Compound Interest</SelectItem>
+                  <SelectItem value="simple">Simple Interest</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
             <div>
               <Label>Principal Amount ($)</Label>
               <Input type="number" value={principal} onChange={(e) => setPrincipal(e.target.value)} placeholder="e.g., 10000" className="mt-2 h-12 glass-card border-primary/30" />
@@ -69,22 +86,7 @@ const CompoundInterestCalculator = () => {
               <Label>Time Period (Years)</Label>
               <Input type="number" value={time} onChange={(e) => setTime(e.target.value)} placeholder="e.g., 10" className="mt-2 h-12 glass-card border-primary/30" />
             </div>
-            <div>
-              <Label>Compound Frequency</Label>
-              <Select value={frequency} onValueChange={setFrequency}>
-                <SelectTrigger className="mt-2 h-12 glass-card border-primary/30">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="1">Annually</SelectItem>
-                  <SelectItem value="2">Semi-Annually</SelectItem>
-                  <SelectItem value="4">Quarterly</SelectItem>
-                  <SelectItem value="12">Monthly</SelectItem>
-                  <SelectItem value="365">Daily</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <Button onClick={calculate} className="w-full h-12 gradient-button">Calculate</Button>
+            <Button onClick={calculate} className="w-full h-12 gradient-button">Calculate Interest</Button>
           </div>
         </Card>
 
@@ -93,15 +95,15 @@ const CompoundInterestCalculator = () => {
           {result ? (
             <div className="space-y-6">
               <div className="text-center py-8">
-                <div className="text-sm text-muted-foreground mb-2">Final Amount</div>
-                <div className="text-5xl font-bold gradient-text">${result.finalAmount}</div>
+                <div className="text-sm text-muted-foreground mb-2">Total Amount</div>
+                <div className="text-5xl font-bold gradient-text">${result.total}</div>
               </div>
               <div className="space-y-4">
                 <div className="p-4 rounded-lg glass-card border border-green-500/20">
                   <div className="text-sm text-muted-foreground">Total Interest Earned</div>
                   <div className="text-2xl font-bold text-green-400">${result.interest}</div>
                 </div>
-                <div className="p-4 rounded-lg glass-card border border-primary/20">
+                 <div className="p-4 rounded-lg glass-card border border-primary/20">
                   <div className="text-sm text-muted-foreground">Principal Amount</div>
                   <div className="text-2xl font-bold text-primary">${parseFloat(principal).toFixed(2)}</div>
                 </div>
@@ -109,35 +111,38 @@ const CompoundInterestCalculator = () => {
             </div>
           ) : (
             <div className="flex items-center justify-center h-64 text-muted-foreground">
-              <div className="text-center"><div className="text-6xl mb-4">💰</div><p>Enter details to calculate</p></div>
+              <div className="text-center">
+                <TrendingUp className="text-6xl mb-4 mx-auto w-16 h-16" />
+                <p>Enter details to calculate</p>
+                </div>
             </div>
           )}
         </Card>
       </div>
 
-      <CalculatorContentSection
-        aboutContent="The Compound Interest Calculator demonstrates how investments grow exponentially over time when interest is reinvested. Unlike simple interest, compound interest earns returns on both your original principal and accumulated interest, making it one of the most powerful wealth-building tools available."
+       <CalculatorContentSection
+        aboutContent="The Interest Calculator computes both simple and compound interest, helping you understand how investments grow or how much interest you'll owe on a loan. Simple interest is calculated only on the principal amount, while compound interest is calculated on the principal plus accumulated interest, leading to exponential growth over time."
         useCases={[
-          { title: "Investment Planning", description: "Project the future value of savings accounts, retirement accounts, or investment portfolios." },
-          { title: "Retirement Savings", description: "Calculate how much you need to save monthly to reach retirement goals, accounting for compound growth." },
-          { title: "College Savings", description: "Estimate future education fund values when starting early with compound interest." },
-          { title: "Comparing Accounts", description: "Compare different compound frequencies to see which savings or investment accounts offer better returns." }
+          { title: "Investment Projections", description: "Project the future value of your savings or investments using either simple or compound interest." },
+          { title: "Loan Cost Analysis", description: "Understand the total interest you'll pay on a loan over its term." },
+          { title: "Comparing Savings Accounts", description: "Compare how different interest types and rates affect your savings growth." },
+          { title: "Educational Tool", description: "Learn the fundamental difference between simple and compound interest and see the power of compounding in action." }
         ]}
         tips={[
-          { title: "Start Early", description: "The earlier you start investing, the more time compound interest has to work. Even small amounts can grow substantially over decades." },
-          { title: "Reinvest Returns", description: "Always reinvest dividends and interest to maximize compound growth. Automatic reinvestment makes this effortless." },
-          { title: "Consistent Contributions", description: "Regular contributions amplify compound interest effects. Consider dollar-cost averaging into investments." },
-          { title: "Higher Frequency Helps", description: "More frequent compounding (daily vs. annually) results in slightly higher returns, though the difference is modest." }
+          { title: "The Power of Compounding", description: "Compound interest generates significantly more returns over long periods compared to simple interest because you earn interest on your interest." },
+          { title: "Start Early", description: "The earlier you start investing, the more time your money has to grow with compounding, even with small amounts." },
+          { title: "Impact of Rate and Time", description: "Higher interest rates and longer time periods dramatically increase the amount of interest earned, especially with compounding." },
+          { title: "Interest on Debt", description: "Remember that compound interest also works on debt like credit cards, which is why balances can grow quickly if not paid off." }
         ]}
         faqs={[
-          { question: "What's the Rule of 72?", answer: "Divide 72 by your interest rate to estimate how many years it takes for money to double. For example, at 8% interest, money doubles in roughly 9 years (72 ÷ 8 = 9)." },
-          { question: "Is compound interest better than simple interest?", answer: "Yes, compound interest always produces greater returns than simple interest over time because you earn returns on your accumulated interest." },
-          { question: "How often should interest compound?", answer: "More frequent compounding is better. Daily compounding produces slightly more than monthly, which beats annual. However, the interest rate itself matters much more than the compounding frequency." },
-          { question: "Can compound interest work against me?", answer: "Yes, compound interest on debt (like credit cards) can make debt grow rapidly. This is why it's crucial to pay off high-interest debt before focusing on investments." }
+          { question: "What's the main difference between simple and compound interest?", answer: "Simple interest is calculated only on the initial principal. Compound interest is calculated on the principal plus any interest that has already been earned. This 'interest on interest' is what leads to faster growth." },
+          { question: "Which type of interest is more common?", answer: "Most savings accounts, investments, and loans use compound interest. Simple interest is less common but can be found in some short-term loans or bonds." },
+          { question: "Does this calculator account for different compounding frequencies?", answer: "This version calculates interest compounded annually. For more detailed calculations with different frequencies (monthly, quarterly), you would need a more advanced compound interest calculator." },
+          { question: "How does inflation affect my interest earnings?", answer: "Your 'real' return is the interest rate minus the inflation rate. If your interest rate is 5% and inflation is 3%, your real return is about 2%. To grow your purchasing power, your interest rate must be higher than the inflation rate." }
         ]}
       />
     </CalculatorLayout>
   );
 };
 
-export default CompoundInterestCalculator;
+export default InterestCalculator;
