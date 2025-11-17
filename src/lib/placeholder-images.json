@@ -59,6 +59,12 @@
       "description": "Abstract pixelated image representing compression",
       "imageUrl": "https://images.unsplash.com/photo-1579546929518-9e396f3a8034?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMHBpeGVsfGVufDB8fHx8MTc2NDA0NzI4MHww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "abstract pixel"
+    },
+    {
+      "id": "image-converter",
+      "description": "Arrows pointing between different file type icons",
+      "imageUrl": "https://images.unsplash.com/photo-1668852222395-11d9154ade25?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxmaWxlJTIwY29udmVyc2lvbnxlbnwwfHx8fDE3NjMzNTUzMzd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "file conversion"
     }
   ]
 }

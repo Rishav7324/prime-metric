@@ -1,4 +1,4 @@
-import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2 } from "lucide-react";
+import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw } from "lucide-react";
 
 export const calculatorTools = [
   {
@@ -49,6 +49,13 @@ export const calculatorTools = [
     icon: Minimize2,
     href: "/tool/compress-image",
     imageId: "image-compressor"
+  },
+  {
+    title: "Image Converter",
+    description: "Convert images between formats like PNG, JPG, and WEBP.",
+    icon: RefreshCw,
+    href: "/tool/convert-image",
+    imageId: "image-converter"
   }
 ];
 
