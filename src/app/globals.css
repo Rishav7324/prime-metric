@@ -4,25 +4,25 @@
 
 @layer base {
   :root {
-    --background: 221 29% 18%;
+    --background: 222 84% 5%;
     --foreground: 210 40% 98%;
-    --card: 221 29% 22%;
+    --card: 222 84% 9%;
     --card-foreground: 210 40% 98%;
-    --popover: 221 29% 18%;
+    --popover: 222 84% 5%;
     --popover-foreground: 210 40% 98%;
-    --primary: 226 64% 33%;
+    --primary: 260 100% 50%;
     --primary-foreground: 210 40% 98%;
-    --secondary: 221 29% 25%;
+    --secondary: 217 33% 17%;
     --secondary-foreground: 210 40% 98%;
-    --muted: 221 29% 25%;
-    --muted-foreground: 221 29% 60%;
-    --accent: 292 75% 42%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 260 100% 65%;
     --accent-foreground: 210 40% 98%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 221 29% 30%;
-    --input: 221 29% 25%;
-    --ring: 226 64% 45%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217 33% 25%;
+    --input: 217 33% 17%;
+    --ring: 260 100% 50%;
     --radius: 0.75rem;
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
@@ -32,25 +32,25 @@
   }
 
   .dark {
-    --background: 221 29% 18%;
+    --background: 222 84% 5%;
     --foreground: 210 40% 98%;
-    --card: 221 29% 22%;
+    --card: 222 84% 9%;
     --card-foreground: 210 40% 98%;
-    --popover: 221 29% 18%;
+    --popover: 222 84% 5%;
     --popover-foreground: 210 40% 98%;
-    --primary: 226 64% 33%;
+    --primary: 260 100% 50%;
     --primary-foreground: 210 40% 98%;
-    --secondary: 221 29% 25%;
+    --secondary: 217 33% 17%;
     --secondary-foreground: 210 40% 98%;
-    --muted: 221 29% 25%;
-    --muted-foreground: 221 29% 60%;
-    --accent: 292 75% 42%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 260 100% 65%;
     --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 221 29% 30%;
-    --input: 221 29% 25%;
-    --ring: 226 64% 45%;
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 260 100% 65%;
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
