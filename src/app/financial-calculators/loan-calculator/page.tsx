@@ -9,6 +9,6 @@ export const metadata = generateMetadata({
   canonicalUrl: "/financial-calculators/loan-calculator",
 });
 
-export default function Page() {
+export default function LoanCalculatorPage() {
   return <LoanCalculatorClient />;
 }

@@ -1,5 +1,5 @@
+import RetirementCalculatorClient from "./client-page";
 import { generateMetadata } from "@/components/CalculatorLayout";
-import RetirementCalculator from "./client-page";
 
 export const metadata = generateMetadata({
   title: "Retirement Calculator",
@@ -8,6 +8,6 @@ export const metadata = generateMetadata({
   canonicalUrl: "/financial-calculators/retirement-calculator",
 });
 
-export default function Page() {
-  return <RetirementCalculator />;
+export default function RetirementCalculatorPage() {
+  return <RetirementCalculatorClient />;
 }
