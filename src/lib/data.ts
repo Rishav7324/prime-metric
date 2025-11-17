@@ -168,7 +168,18 @@ export const educationalTools = [
   },
 ];
 
-export const allCalculators = [...calculatorTools, ...educationalTools].map(tool => ({
+export const allCalculators = [...calculatorTools, ...educationalTools,
+  // Manually add other categories until they are in their own files
+  {
+    title: "BMI Calculator",
+    description: "Calculate your Body Mass Index.",
+    icon: Heart,
+    href: "#",
+    imageId: "bmi-calculator",
+    category: "health",
+    implemented: false,
+  }
+].map(tool => ({
   id: tool.imageId,
   name: tool.title,
   description: tool.description,
@@ -180,6 +191,10 @@ export const allCalculators = [...calculatorTools, ...educationalTools].map(tool
 
 export const financialCalculators = allCalculators.filter(
   (calc) => calc.category === "financial"
+);
+
+export const healthCalculators = allCalculators.filter(
+  (calc) => calc.category === "health"
 );
 
 export const categories = [
@@ -197,7 +212,7 @@ export const categories = [
       description: "BMI, BMR, Calories & Body Metrics",
       gradient: "from-pink-500 to-rose-600",
       calculators: ["BMI Calculator", "BMR Calculator", "Calorie Calculator", "Body Fat %"],
-      path: "#"
+      path: "/health-calculators"
     },
     {
       title: "Math Calculators",
