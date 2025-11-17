@@ -270,6 +270,15 @@ export const allCalculators = [...calculatorTools, ...educationalTools,
     implemented: true,
   },
   {
+    title: "Healthy Weight Calculator",
+    description: "Find your healthy weight range based on BMI standards.",
+    icon: PersonStanding,
+    href: "/health-calculators/healthy-weight-calculator",
+    imageId: "healthy-weight-calculator",
+    category: "health",
+    implemented: true,
+  },
+  {
     title: "Basic Calculator",
     description: "Perform basic arithmetic operations.",
     icon: Calculator,
@@ -451,7 +460,11 @@ export const financialCalculators = allCalculators.filter(
 
 export const healthCalculators = allCalculators.filter(
   (calc) => calc.category === "health"
-);
+).sort((a, b) => {
+  if (a.implemented && !b.implemented) return -1;
+  if (!a.implemented && b.implemented) return 1;
+  return a.name.localeCompare(b.name);
+});
 
 export const mathCalculators = allCalculators.filter(
   (calc) => calc.category === "math"
