@@ -15,7 +15,7 @@ export const financialCalculatorsData: Omit<CalculatorType, 'icon'>[] = [
   { id: "finance", name: "Finance Calculator", description: "General finance calculations", category: "financial", path: "/financial-calculators/finance-calculator", implemented: true },
   { id: "income-tax", name: "Income Tax Calculator", description: "Calculate income tax", category: "financial", path: "/financial-calculators/income-tax-calculator", implemented: true },
   { id: "salary", name: "Salary Calculator", description: "Calculate salary components", category: "financial", path: "/financial-calculators/salary-calculator", implemented: true },
-  { id: "interest", name: "Interest Calculator", description: "Calculate simple/compound interest", category: "financial", path: "/financial-calculators/interest-calculator", implemented: true },
+  { id: "interest", name: "Interest Calculator", description: "Calculate simple/compound interest", category: "financial", path: "/financial-calculators/compound-interest-calculator", implemented: true },
   { id: "simple-interest", name: "Simple Interest Calculator", description: "Calculate simple interest", category: "financial", path: "/financial-calculators/simple-interest-calculator", implemented: true },
   { id: "house-affordability", name: "House Affordability Calculator", description: "Calculate affordable house price", category: "financial", path: "/financial-calculators/house-affordability-calculator", implemented: true },
   { id: "rent", name: "Rent Calculator", description: "Calculate rental costs", category: "financial", path: "/financial-calculators/rent-calculator", implemented: true },
@@ -80,7 +80,7 @@ export const otherCalculatorsData: Omit<CalculatorType, 'icon'>[] = [
   { id: "speed", name: "Speed Calculator", description: "Calculate speed", category: "other", path: "/other-calculators/speed-calculator", implemented: true },
   { id: "dice", name: "Dice Roller", description: "Roll virtual dice", category: "other", path: "/other-calculators/dice-roller", implemented: true },
   { id: "mileage", name: "Mileage Calculator", description: "Calculate mileage", category: "other", path: "/other-calculators/mileage-calculator", implemented: true },
-  { id: "fuel-cost", name: "Fuel Cost Calculator", description: "Calculate fuel costs", category: "other", path: "/other-calculators/fuel-cost-calculator", implemented: true },
+  { id: "fuel-cost", name: "Fuel Cost Calculator", description: "Calculate fuel costs", category: "financial", path: "/financial-calculators/fuel-cost-calculator", implemented: true },
 ];
 
 export const imageToolsData: Omit<CalculatorType, 'icon'>[] = [
@@ -209,6 +209,8 @@ export const calculatorTools: CalculatorType[] = [
   ...healthCalculators,
   ...mathCalculators,
   ...otherCalculators,
+  ...textTools,
+  ...imageTools
 ];
 
 export const allCalculators: CalculatorType[] = [
@@ -333,3 +335,5 @@ export const faqData = [
     answer: "No, we do not store any personal data you enter into our calculators. Your privacy is our top priority. All calculations are performed on your device and are not saved on our servers.",
   },
 ];
+
+    

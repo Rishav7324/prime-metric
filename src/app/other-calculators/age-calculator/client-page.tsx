@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,6 +13,13 @@ const AgeCalculatorClient = () => {
   const [birthDate, setBirthDate] = useState("");
   const [result, setResult] = useState<any>(null);
   const { toast } = useToast();
+
+  useEffect(() => {
+    // Set default birth date on client side to avoid hydration mismatch
+    const today = new Date();
+    const defaultBirthDate = new Date(today.getFullYear() - 25, today.getMonth(), today.getDate());
+    setBirthDate(defaultBirthDate.toISOString().split('T')[0]);
+  }, []);
 
   const calculate = () => {
     if (!birthDate) {
