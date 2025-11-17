@@ -1,109 +1,102 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" 
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
-                xmlns:s="http://www.sitemaps.org/schemas/sitemap/0.9"
-                exclude-result-prefixes="s">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9">
   <xsl:output method="html" version="1.0" encoding="UTF-8" indent="yes"/>
-  
+
   <xsl:template match="/">
     <html>
       <head>
-        <title>PrimeMetric XML Sitemap</title>
+        <title>Sitemap | Prime Metric</title>
         <style type="text/css">
           body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-            background-color: #f0f4f8;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-size: 16px;
             color: #333;
+            background-color: #f8f9fa;
             margin: 0;
-            padding: 2rem;
+            padding: 20px;
           }
-          #content {
+          #main {
+            width: 100%;
             max-width: 900px;
             margin: 0 auto;
-            background: #fff;
-            padding: 2rem;
-            border-radius: 1rem;
-            box-shadow: 0 10px 30px -15px rgba(0,0,0,0.1);
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
           }
           h1 {
+            font-size: 28px;
+            font-weight: 600;
             color: #2c3e50;
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-          }
-          p {
-            color: #7f8c8d;
-            font-size: 1rem;
-            margin-top: 0;
+            margin: 0;
+            padding: 24px;
+            border-bottom: 1px solid #e9ecef;
           }
           table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 2rem;
           }
           th, td {
             text-align: left;
-            padding: 0.75rem 1rem;
-            border-bottom: 1px solid #ecf0f1;
+            padding: 12px 24px;
+            border-bottom: 1px solid #e9ecef;
           }
           th {
-            background-color: #ecf0f1;
-            color: #7f8c8d;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            font-weight: 600;
+            color: #495057;
+            background-color: #f1f3f5;
           }
-          tr:hover td {
-            background-color: #f7f9fa;
+          tr:hover {
+            background-color: #f1f3f5;
           }
           a {
-            color: #3498db;
+            color: #007bff;
             text-decoration: none;
           }
           a:hover {
             text-decoration: underline;
           }
-          .footer {
-            margin-top: 2rem;
-            text-align: center;
-            font-size: 0.9rem;
-            color: #95a5a6;
+          td a {
+            word-break: break-all;
+          }
+          .count {
+            padding: 24px;
+            font-size: 18px;
+            color: #495057;
           }
         </style>
       </head>
       <body>
-        <div id="content">
-          <h1>PrimeMetric XML Sitemap</h1>
-          <p>
-            This sitemap contains <xsl:value-of select="count(s:urlset/s:url)"/> URLs and was generated to help search engines index our content.
-          </p>
+        <div id="main">
+          <h1>Sitemap</h1>
+          <div class="count">
+            Total URLs: <xsl:value-of select="count(sitemap:urlset/sitemap:url)"/>
+          </div>
           <table>
             <thead>
               <tr>
                 <th>URL</th>
                 <th>Last Modified</th>
-                <th>Priority</th>
               </tr>
             </thead>
             <tbody>
-              <xsl:for-each select="s:urlset/s:url">
+              <xsl:for-each select="sitemap:urlset/sitemap:url">
                 <tr>
                   <td>
-                    <xsl:variable name="loc" select="s:loc"/>
-                    <a href="{$loc}"><xsl:value-of select="s:loc"/></a>
+                    <a>
+                      <xsl:attribute name="href">
+                        <xsl:value-of select="sitemap:loc"/>
+                      </xsl:attribute>
+                      <xsl:value-of select="sitemap:loc"/>
+                    </a>
                   </td>
                   <td>
-                    <xsl:value-of select="substring(s:lastmod,1,10)"/>
-                  </td>
-                  <td>
-                    <xsl:value-of select="s:priority"/>
+                    <xsl:value-of select="sitemap:lastmod"/>
                   </td>
                 </tr>
               </xsl:for-each>
             </tbody>
           </table>
-          <div class="footer">
-            Generated by PrimeMetric
-          </div>
         </div>
       </body>
     </html>
