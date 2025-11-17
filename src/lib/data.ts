@@ -1,4 +1,4 @@
-import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link, DollarSign, Heart, GraduationCap, Repeat } from "lucide-react";
+import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link, DollarSign, Heart, GraduationCap, Repeat, Percent, Divide, Sigma } from "lucide-react";
 
 export const calculatorTools = [
   {
@@ -162,7 +162,7 @@ export const educationalTools = [
     description: "Start planning for a comfortable retirement.",
     icon: Calculator,
     href: "#",
-    imageId: "retirement-planning",
+imageId: "retirement-planning",
     category: "education",
     implemented: false,
   },
@@ -177,6 +177,33 @@ export const allCalculators = [...calculatorTools, ...educationalTools,
     href: "#",
     imageId: "bmi-calculator",
     category: "health",
+    implemented: false,
+  },
+  {
+    title: "Scientific Calculator",
+    description: "Perform advanced calculations.",
+    icon: Sigma,
+    href: "#",
+    imageId: "scientific-calculator",
+    category: "math",
+    implemented: false,
+  },
+  {
+    title: "Percentage Calculator",
+    description: "Calculate percentages.",
+    icon: Percent,
+    href: "#",
+    imageId: "percentage-calculator",
+    category: "math",
+    implemented: false,
+  },
+  {
+    title: "Fraction Calculator",
+    description: "Perform calculations with fractions.",
+    icon: Divide,
+    href: "#",
+    imageId: "fraction-calculator",
+    category: "math",
     implemented: false,
   }
 ].map(tool => ({
@@ -195,6 +222,10 @@ export const financialCalculators = allCalculators.filter(
 
 export const healthCalculators = allCalculators.filter(
   (calc) => calc.category === "health"
+);
+
+export const mathCalculators = allCalculators.filter(
+  (calc) => calc.category === "math"
 );
 
 export const categories = [
@@ -220,7 +251,7 @@ export const categories = [
       description: "Algebra, Geometry, Statistics & More",
       gradient: "from-emerald-500 to-teal-600",
       calculators: ["Scientific Calculator", "Percentage", "Fraction", "Pythagorean"],
-      path: "#"
+      path: "/math-calculators"
     },
     {
       title: "Other Calculators",
