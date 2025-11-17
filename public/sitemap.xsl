@@ -1,59 +1,110 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <xsl:output method="html" encoding="UTF-8" indent="yes"/>
-  <xsl:template match="/">
-    <html>
-      <head>
-        <title>XML Sitemap</title>
-        <style>
-          body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; color: #333; }
-          #sitemap { max-width: 900px; margin: 2rem auto; }
-          table { width: 100%; border-collapse: collapse; }
-          th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #ddd; }
-          th { background-color: #f2f2f2; font-weight: bold; }
-          tr:hover { background-color: #f5f5f5; }
-          a { color: #007bff; text-decoration: none; }
-          a:hover { text-decoration: underline; }
-          h1 { border-bottom: 2px solid #ccc; padding-bottom: 10px; }
-        </style>
-      </head>
-      <body>
-        <div id="sitemap">
-          <h1>XML Sitemap</h1>
-          <p>This is a XML sitemap, meant for consumption by search engines.</p>
-          <p>You can find more information about XML sitemaps on <a href="http://sitemaps.org" target="_blank" rel="noopener noreferrer">sitemaps.org</a>.</p>
-          <table>
-            <thead>
-              <tr>
-                <th>URL</th>
-                <th>Last Modified</th>
-                <th>Priority</th>
-              </tr>
-            </thead>
-            <tbody>
-              <xsl:for-each select="urlset/url">
-                <tr>
-                  <td>
-                    <xsl:variable name="loc" select="loc"/>
-                    <a>
-                      <xsl:attribute name="href">
-                        <xsl:value-of select="$loc"/>
-                      </xsl:attribute>
-                      <xsl:value-of select="$loc"/>
-                    </a>
-                  </td>
-                  <td>
-                    <xsl:value-of select="lastmod"/>
-                  </td>
-                  <td>
-                    <xsl:value-of select="priority"/>
-                  </td>
-                </tr>
-              </xsl:for-each>
-            </tbody>
-          </table>
-        </div>
-      </body>
-    </html>
-  </xsl:template>
+<xsl:stylesheet version="2.0" 
+                xmlns:html="http://www.w3.org/TR/REC-html40"
+                xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:output method="html" version="1.0" encoding="UTF-8" indent="yes"/>
+<xsl:template match="/">
+	<html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<title>XML Sitemap</title>
+			<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+			<style type="text/css">
+				body {
+					font-family: 'Helvetica', 'Arial', sans-serif;
+					font-size: 14px;
+					color: #333;
+                    background-color: #f8f9fa;
+                    margin: 0;
+                    padding: 20px;
+				}
+				table {
+					border: none;
+					border-collapse: collapse;
+                    width: 100%;
+                    max-width: 800px;
+                    margin: 0 auto;
+                    background-color: #fff;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+				}
+				th, td {
+					padding: 12px 15px;
+					text-align: left;
+				}
+                th {
+                    background-color: #e9ecef;
+                    color: #495057;
+                    font-weight: bold;
+                    border-bottom: 2px solid #dee2e6;
+                }
+				tr:nth-child(even) {
+                    background-color: #f8f9fa;
+                }
+                tr:hover {
+                    background-color: #e9ecef;
+                }
+				a {
+					color: #007bff;
+					text-decoration: none;
+				}
+				a:hover {
+					text-decoration: underline;
+				}
+                #header {
+                    text-align: center;
+                    margin-bottom: 20px;
+                }
+                #header h1 {
+                    font-size: 24px;
+                    color: #212529;
+                }
+                #footer {
+                    margin-top: 20px;
+                    text-align: center;
+                    font-size: 12px;
+                    color: #6c757d;
+                }
+			</style>
+		</head>
+		<body>
+			<div id="header">
+				<h1>XML Sitemap</h1>
+				<p>This is a XML sitemap, meant for consumption by search engines.</p>
+                <p>You can find more information about XML sitemaps on <a href="http://sitemaps.org">sitemaps.org</a>.</p>
+			</div>
+			<table id="sitemap" cellpadding="3">
+				<thead>
+					<tr>
+						<th width="75%">URL</th>
+						<th width="20%">Last Modified</th>
+						<th width="5%">Priority</th>
+					</tr>
+				</thead>
+				<tbody>
+					<xsl:for-each select="sitemap:urlset/sitemap:url">
+						<tr>
+							<td>
+								<xsl:variable name="itemURL">
+									<xsl:value-of select="sitemap:loc"/>
+								</xsl:variable>
+								<a href="{$itemURL}">
+									<xsl:value-of select="sitemap:loc"/>
+								</a>
+							</td>
+							<td>
+								<xsl:value-of select="sitemap:lastmod"/>
+							</td>
+							<td>
+								<xsl:value-of select="sitemap:priority"/>
+							</td>
+						</tr>
+					</xsl:for-each>
+				</tbody>
+			</table>
+            <div id="footer">
+                Generated by PrimeMetric.online
+            </div>
+		</body>
+	</html>
+</xsl:template>
 </xsl:stylesheet>
