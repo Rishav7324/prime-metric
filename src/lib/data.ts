@@ -1,4 +1,4 @@
-import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces } from "lucide-react";
+import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText } from "lucide-react";
 
 export const calculatorTools = [
   {
@@ -77,6 +77,13 @@ export const calculatorTools = [
     icon: Braces,
     href: "/tool/json-formatter",
     imageId: "json-formatter"
+  },
+  {
+    title: "Lorem Ipsum Generator",
+    description: "Generate placeholder text for your projects.",
+    icon: FileText,
+    href: "/tool/lorem-ipsum",
+    imageId: "lorem-ipsum-generator"
   }
 ];
 

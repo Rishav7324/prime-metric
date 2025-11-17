@@ -83,6 +83,12 @@
       "description": "Abstract data structure visualization",
       "imageUrl": "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxqc29uJTIwY29kZXxlbnwwfHx8fDE3NjQxNDE1NTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "json code"
+    },
+    {
+      "id": "lorem-ipsum-generator",
+      "description": "Abstract text blocks representing placeholder content",
+      "imageUrl": "https://images.unsplash.com/photo-1543286386-713bdd548da4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHx0ZXh0JTIwYmxvY2tzfGVufDB8fHx8MTc2NDEzOTIwMnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "text blocks"
     }
   ]
 }
