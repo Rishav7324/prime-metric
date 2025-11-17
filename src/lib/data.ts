@@ -1,5 +1,5 @@
 
-import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link, DollarSign, Heart, GraduationCap, Repeat, Percent, Divide, Sigma, Wrench, Clock, CalendarDays, WalletCards } from "lucide-react";
+import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link, DollarSign, Heart, GraduationCap, Repeat, Percent, Divide, Sigma, Wrench, Clock, CalendarDays, WalletCards, ListOrdered } from "lucide-react";
 
 export const calculatorTools = [
   {
@@ -35,6 +35,15 @@ export const calculatorTools = [
     icon: WalletCards,
     href: "/financial-calculators/apr-calculator",
     imageId: "apr-calculator",
+    category: "financial",
+    implemented: true,
+  },
+  {
+    title: "Amortization Calculator",
+    description: "Generate a detailed loan payment schedule.",
+    icon: ListOrdered,
+    href: "/financial-calculators/amortization-calculator",
+    imageId: "amortization-calculator",
     category: "financial",
     implemented: true,
   },

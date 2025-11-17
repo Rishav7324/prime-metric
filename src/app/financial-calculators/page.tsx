@@ -71,7 +71,7 @@ const FinancialCalculators = () => {
                     >
                         <Card className="glass-card p-6 h-full hover:shadow-glow transition-all duration-300 hover:-translate-y-1">
                         <div className="flex items-start gap-4">
-                            <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                            <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
                             <Icon className="w-6 h-6 text-white" />
                             </div>
                             <div className="flex-1 min-w-0">
