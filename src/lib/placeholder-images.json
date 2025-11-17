@@ -131,6 +131,12 @@
       "description": "Geometric shapes on a blueprint background",
       "imageUrl": "https://images.unsplash.com/photo-1518066000714-58c45f1a230d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxnZW9tZXRyaWMlMjBzaGFwZXN8ZW58MHx8fHwxNzYzMzU1MjU0fDA&ixlibrb-4.1.0&q=80&w=1080",
       "imageHint": "geometric shapes"
+    },
+    {
+      "id": "bmi-calculator",
+      "description": "A person on a scale, measuring their weight",
+      "imageUrl": "https://images.unsplash.com/photo-1588640733510-0926b0a09a56?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx3ZWlnaHQlMjBzY2FsZXxlbnwwfHx8fDE3NjMzNTI4NzR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "weight scale"
     }
   ]
 }
