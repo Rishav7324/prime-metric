@@ -3,6 +3,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Search, Calculator, DollarSign, Heart, GraduationCap, Repeat, TrendingUp, Menu, FileText, Image as ImageIcon } from "lucide-react";
 import Link from "next/link";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";

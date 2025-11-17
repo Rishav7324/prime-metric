@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { cn } from '@/lib/utils';
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import { SiteHeader } from '@/components/site-header';
 import { SiteFooter } from '@/components/site-footer';
 import { Toaster } from "@/components/ui/toaster";
