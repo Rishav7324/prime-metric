@@ -205,6 +205,13 @@ export const otherCalculators: CalculatorType[] = addIcons(otherCalculatorsData)
 export const imageTools: CalculatorType[] = addIcons(imageToolsData);
 export const textTools: CalculatorType[] = addIcons(textToolsData);
 
+export const calculatorTools: CalculatorType[] = [
+  ...financialCalculators,
+  ...healthCalculators,
+  ...mathCalculators,
+  ...otherCalculators,
+];
+
 export const allCalculators: CalculatorType[] = [
   ...financialCalculators,
   ...healthCalculators,
