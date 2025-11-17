@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Search, BotMessageSquare, Menu, Calculator, DollarSign, Heart, GraduationCap } from 'lucide-react';
 
 const navLinks = [
@@ -54,6 +54,20 @@ export function SiteHeader() {
               </Button>
             </SheetTrigger>
             <SheetContent side="right">
+                <SheetHeader>
+                    <SheetTitle>
+                        <Link href="/" className="mr-6 flex items-center space-x-2">
+                            <Calculator className="h-6 w-6 text-accent" />
+                            <span className="font-bold font-headline sm:inline-block text-lg">
+                            PrimeMetric
+                            </span>
+                        </Link>
+                    </SheetTitle>
+                    <SheetDescription>
+                        From financial planning to health metrics, unit conversions to daily utilities - 
+                        powerful calculators with instant results and detailed explanations.
+                    </SheetDescription>
+                </SheetHeader>
               <nav className="grid gap-6 text-lg font-medium mt-8">
                  {navLinks.map((link) => (
                   <Link
