@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from "react";
@@ -10,14 +9,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
 import { Mail, MessageSquare, Send } from "lucide-react";
-import type { Metadata } from "next";
 import LegalPageLayout from "@/components/LegalPageLayout";
-
-export const metadata: Metadata = {
-    title: "Contact Us - PrimeMetric",
-    description: "Get in touch with PrimeMetric. Have questions or feedback? We'd love to hear from you. Contact us for support, suggestions, or inquiries.",
-    keywords: "contact primemetric, calculator support, feedback, customer service",
-};
 
 const Contact = () => {
   const [name, setName] = useState("");
