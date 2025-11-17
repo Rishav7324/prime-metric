@@ -12,17 +12,17 @@ import { useToast } from "@/hooks/use-toast";
 
 const TimeZoneConverter = () => {
   const [time, setTime] = useState("");
-  const [fromZone, setFromZone] = useState(Intl.DateTimeFormat().resolvedOptions().timeZone);
+  const [fromZone, setFromZone] = useState("");
   const [toZone, setToZone] = useState("Europe/London");
   const [result, setResult] = useState("");
   const [timeZones, setTimeZones] = useState<string[]>([]);
   const { toast } = useToast();
 
   useEffect(() => {
-    // Intl.supportedValuesOf is a modern API. Fallback for older browsers not needed in this context.
+    // Set client-side-only values here to avoid hydration mismatch
+    setFromZone(Intl.DateTimeFormat().resolvedOptions().timeZone);
     setTimeZones(Intl.supportedValuesOf('timeZone'));
     
-    // Set initial time
     const now = new Date();
     const hours = now.getHours().toString().padStart(2, '0');
     const minutes = now.getMinutes().toString().padStart(2, '0');
@@ -76,16 +76,18 @@ const TimeZoneConverter = () => {
                 </div>
                  <div>
                     <Label>From Time Zone</Label>
-                    <Select value={fromZone} onValueChange={setFromZone}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
-                    <SelectContent className="max-h-[300px]"><SelectItem value={fromZone}>{fromZone}</SelectItem></SelectContent>
+                    <Select value={fromZone} onValueChange={setFromZone} disabled={!fromZone}>
+                    <SelectTrigger><SelectValue placeholder="Loading..." /></SelectTrigger>
+                    <SelectContent className="max-h-[300px]">
+                      {fromZone && <SelectItem value={fromZone}>{fromZone}</SelectItem>}
+                    </SelectContent>
                     </Select>
                     <p className="text-xs text-muted-foreground mt-1">Your current time zone is detected.</p>
                 </div>
                  <div className="col-span-1 md:col-span-2">
                     <Label>To Time Zone</Label>
                     <Select value={toZone} onValueChange={setToZone}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectTrigger><SelectValue placeholder="Select a timezone" /></SelectTrigger>
                     <SelectContent className="max-h-[300px]">
                         {timeZones.map(tz => <SelectItem key={tz} value={tz}>{tz}</SelectItem>)}
                     </SelectContent>
@@ -125,5 +127,3 @@ const TimeZoneConverter = () => {
 };
 
 export default TimeZoneConverter;
-
-    
