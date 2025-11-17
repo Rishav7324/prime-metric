@@ -12,7 +12,9 @@ type CalculatorLayoutProps = {
   children: React.ReactNode;
 };
 
-export function generateMetadata({ title, description, keywords, canonicalUrl }: CalculatorLayoutProps): Metadata {
+type GenerateMetadataProps = Omit<CalculatorLayoutProps, 'children' | 'formula' | 'explanation'>;
+
+export function generateMetadata({ title, description, keywords, canonicalUrl }: GenerateMetadataProps): Metadata {
   return {
     title: `${title} | Prime Metric`,
     description: description,
