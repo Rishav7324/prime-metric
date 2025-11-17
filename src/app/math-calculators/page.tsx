@@ -1,5 +1,4 @@
 
-'use client'
 
 import Link from "next/link";
 import { Calculator as CalcIcon, ArrowLeft, Binary } from "lucide-react";

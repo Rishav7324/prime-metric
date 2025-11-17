@@ -1,5 +1,4 @@
 
-'use client'
 
 import Link from "next/link";
 import { Calculator, ArrowLeft, DollarSign } from "lucide-react";

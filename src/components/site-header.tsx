@@ -67,8 +67,8 @@ export function SiteHeader() {
               </nav>
             </SheetContent>
           </Sheet>
-           <Button>Contact Us</Button>
-        </div>
+          </div>
+        
       </div>
     </header>
   );

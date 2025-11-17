@@ -1,5 +1,4 @@
-
-import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link, DollarSign, Heart, GraduationCap, Repeat, Percent, Divide, Sigma, Wrench, Clock, CalendarDays, WalletCards, ListOrdered, Square, Car, Flame, PersonStanding } from "lucide-react";
+import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link, DollarSign, Heart, GraduationCap, Repeat, Percent, Divide, Sigma, Wrench, Clock, CalendarDays, WalletCards, ListOrdered, Square, Car, Flame, PersonStanding, Wallet } from "lucide-react";
 
 export const calculatorTools = [
   {
@@ -53,6 +52,15 @@ export const calculatorTools = [
     icon: ListOrdered,
     href: "/financial-calculators/amortization-calculator",
     imageId: "amortization-calculator",
+    category: "financial",
+    implemented: true,
+  },
+  {
+    title: "Budget Calculator",
+    description: "Plan and track your monthly income and expenses.",
+    icon: Wallet,
+    href: "/financial-calculators/budget-calculator",
+    imageId: "budget-calculator",
     category: "financial",
     implemented: true,
   },
