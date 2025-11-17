@@ -1,4 +1,4 @@
-import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link, DollarSign, Heart, GraduationCap, Repeat, Percent, Divide, Sigma, Wrench, Clock, CalendarDays, WalletCards, ListOrdered, Square, Car, Flame, PersonStanding, Wallet, Dumbbell, Circle, Dices } from "lucide-react";
+import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link, DollarSign, Heart, GraduationCap, Repeat, Percent, Divide, Sigma, Wrench, Clock, CalendarDays, WalletCards, ListOrdered, Square, Car, Flame, PersonStanding, Wallet, Dumbbell, Circle, Dices, MoveHorizontal } from "lucide-react";
 
 export const calculatorTools = [
   {
@@ -394,6 +394,15 @@ export const allCalculators = [...calculatorTools, ...educationalTools,
     imageId: "gpa-calculator",
     category: "other",
     implemented: false,
+  },
+  {
+    title: "Distance Calculator",
+    description: "Calculate distance between two points.",
+    icon: MoveHorizontal,
+    href: "/math-calculators/distance-calculator",
+    imageId: "distance-calculator",
+    category: "math",
+    implemented: true,
   },
 ].map(tool => ({
   id: tool.imageId,

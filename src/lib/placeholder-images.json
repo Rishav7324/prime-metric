@@ -45,7 +45,7 @@
     {
       "id": "compound-interest",
       "description": "A graph showing exponential growth, representing compound interest.",
-      "imageUrl": "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxleHBvbmVudGlhbCUyMGdyb3d0aCUyMGNoYXJ0fGVufDB8fHx8MTc2OTYzOTMwN3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMGNoYXJ0fGVufDB8fHx8MTc2OTYzOTMwN3ww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "growth chart"
     },
     {
@@ -227,6 +227,12 @@
       "description": "A vibrant 'SALE' sign in a retail store window.",
       "imageUrl": "https://images.unsplash.com/photo-1529633219428-935c1a0a5568?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzYWxlJTIwc2lnbnxlbnwwfHx8fDE3NzIyOTg3Njd8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "sale sign"
+    },
+    {
+      "id": "distance-calculator",
+      "description": "A graph on a coordinate plane showing points and lines.",
+      "imageUrl": "https://images.unsplash.com/photo-1635372722652-328565551502?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjb29yZGluYXRlJTIwcGxhbmUlMjBncmFwaHxlbnwwfHx8fDE3NzMwMjE1NTZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "coordinate graph"
     }
   ]
 }
