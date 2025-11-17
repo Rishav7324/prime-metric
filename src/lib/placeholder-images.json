@@ -203,6 +203,12 @@
       "description": "Intertwined arrows showing conversion between different states or units.",
       "imageUrl": "https://images.unsplash.com/photo-1634028399553-95a89f4935e4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMGNvbnZlcnNpb258ZW58MHx8fHwxNzY5NjU0MTgyfDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "abstract conversion"
+    },
+    {
+      "id": "currency-converter",
+      "description": "A collage of different world currency notes and coins.",
+      "imageUrl": "https://images.unsplash.com/photo-1580519542036-c47de6196ba5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx3b3JsZCUyMGN1cnJlbmN5fGVufDB8fHx8MTc2NTMyNTYwMHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "world currency"
     }
   ]
 }
