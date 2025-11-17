@@ -1,8 +1,6 @@
 
-
 import Link from "next/link";
-import { Calculator, ArrowLeft, Heart } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Heart } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { healthCalculators } from "@/lib/data";
 import type { Metadata } from "next";
@@ -13,12 +11,9 @@ export const metadata: Metadata = {
   keywords: "health calculator, fitness calculator, BMI calculator, calorie calculator, TDEE calculator, body fat calculator, ideal weight",
 };
 
-const HealthCalculators = () => {
+const HealthCalculatorsPage = () => {
   return (
-    
-      <div className="min-h-screen">
-      
-
+    <div className="min-h-screen">
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-4xl mx-auto mb-12 text-center">
           <div className="flex justify-center mb-6">
@@ -37,7 +32,7 @@ const HealthCalculators = () => {
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {healthCalculators.map((calc, index) => {
-                const Icon = calc.icon || Heart;
+                const Icon = calc.icon;
                 return (
                     <Link
                         key={calc.id}
@@ -75,4 +70,4 @@ const HealthCalculators = () => {
   );
 };
 
-export default HealthCalculators;
+export default HealthCalculatorsPage;

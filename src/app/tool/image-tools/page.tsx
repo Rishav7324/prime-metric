@@ -1,37 +1,37 @@
 
 import Link from "next/link";
-import { Wrench } from "lucide-react";
+import { ImageIcon } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { otherCalculators } from "@/lib/data";
+import { imageTools } from "@/lib/data";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Daily Utility Calculators - Age, Time, GPA & More Tools",
-    description: "Practical tools for everyday calculations. Free online calculators for age, date, time, GPA, password generation, and more daily utilities.",
-    keywords: "utility calculator, age calculator, date calculator, time calculator, GPA calculator, password generator, everyday tools",
+    title: "Image Tools - Crop, Resize, Compress & Convert",
+    description: "A collection of free online image tools to crop, resize, compress, and convert your images. Optimize your images for web and other uses.",
+    keywords: "image tools, crop image, resize image, compress image, convert image, color picker",
 };
 
-const OtherCalculatorsPage = () => {
+const ImageToolsPage = () => {
   return (
-    <div className="min-h-screen">
+      <div className="min-h-screen">
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-4xl mx-auto mb-12 text-center">
           <div className="flex justify-center mb-6">
-            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
-              <Wrench className="w-10 h-10 text-white" />
+            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-orange-500 to-amber-600 flex items-center justify-center">
+              <ImageIcon className="w-10 h-10 text-white" />
             </div>
           </div>
-          <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-cyan-500 to-blue-600 bg-clip-text text-transparent">
-            Daily Utility Calculators
+          <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-orange-500 to-amber-600 bg-clip-text text-transparent">
+            Image Tools
           </h1>
           <p className="text-xl text-muted-foreground">
-            Practical tools for everyday calculations
+            Crop, Resize, Compress, Convert & Pick Colors from Images
           </p>
         </div>
 
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {otherCalculators.map((calc, index) => {
+            {imageTools.map((calc, index) => {
                 const Icon = calc.icon;
                 return (
               <Link
@@ -42,7 +42,7 @@ const OtherCalculatorsPage = () => {
               >
                 <Card className="glass-card p-6 h-full hover:shadow-glow transition-all duration-300 hover:-translate-y-1">
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-orange-500 to-amber-600 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
                       <Icon className="w-6 h-6 text-white" />
                     </div>
                     <div className="flex-1 min-w-0">
@@ -52,11 +52,6 @@ const OtherCalculatorsPage = () => {
                       <p className="text-sm text-muted-foreground line-clamp-2">
                         {calc.description}
                       </p>
-                      {!calc.implemented && (
-                        <span className="inline-block mt-2 text-xs px-2 py-1 rounded-full bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">
-                          Coming Soon
-                        </span>
-                      )}
                     </div>
                   </div>
                 </Card>
@@ -69,4 +64,4 @@ const OtherCalculatorsPage = () => {
   );
 };
 
-export default OtherCalculatorsPage;
+export default ImageToolsPage;

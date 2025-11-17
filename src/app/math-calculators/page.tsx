@@ -1,7 +1,6 @@
 
 import Link from "next/link";
-import { Calculator as CalcIcon, ArrowLeft, Binary } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { BrainCircuit } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { mathCalculators } from "@/lib/data";
 import { Metadata } from "next";
@@ -15,16 +14,14 @@ export const metadata: Metadata = {
     }
 };
 
-const MathCalculators = () => {
+const MathCalculatorsPage = () => {
   return (
-    
       <div className="min-h-screen">
-      
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-4xl mx-auto mb-12 text-center">
           <div className="flex justify-center mb-6">
             <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
-              <Binary className="w-10 h-10 text-white" />
+              <BrainCircuit className="w-10 h-10 text-white" />
             </div>
           </div>
           <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">
@@ -38,7 +35,7 @@ const MathCalculators = () => {
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {mathCalculators.map((calc, index) => {
-                const Icon = calc.icon || Binary;
+                const Icon = calc.icon;
                 return (
               <Link
                 key={calc.id}
@@ -75,4 +72,4 @@ const MathCalculators = () => {
   );
 };
 
-export default MathCalculators;
+export default MathCalculatorsPage;

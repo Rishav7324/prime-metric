@@ -1,4 +1,4 @@
-import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link, DollarSign, Heart, GraduationCap, Repeat, Percent, Divide, Sigma, Wrench, Clock, CalendarDays, WalletCards, ListOrdered, Square, Car, Flame, PersonStanding, Wallet, Dumbbell, Circle, Dices, MoveHorizontal, FileCheck, Ruler, Home, Scale, BrainCircuit } from "lucide-react";
+import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link, DollarSign, Heart, GraduationCap, Repeat, Percent, Divide, Sigma, Wrench, Clock, CalendarDays, WalletCards, ListOrdered, Square, Car, Flame, PersonStanding, Wallet, Dumbbell, Circle, Dices, MoveHorizontal, FileCheck, Ruler, Home, Scale, BrainCircuit, Image as ImageIcon } from "lucide-react";
 import { Calculator as CalculatorType } from "@/types/calculator";
 
 
@@ -28,6 +28,7 @@ export const financialCalculatorsData: Omit<CalculatorType, 'icon'>[] = [
   { id: "savings", name: "Savings Calculator", description: "Calculate savings growth", category: "financial", path: "/financial-calculators/savings-calculator", implemented: true },
   { id: "budget", name: "Budget Calculator", description: "Plan your budget", category: "financial", path: "/financial-calculators/budget-calculator", implemented: true },
   { id: "apr", name: "APR Calculator", description: "Calculate annual percentage rate", category: "financial", path: "/financial-calculators/apr-calculator", implemented: true },
+  { id: "fuel-cost", name: "Fuel Cost Calculator", description: "Calculate fuel costs", category: "financial", path: "/financial-calculators/fuel-cost-calculator", implemented: true },
 ];
 
 export const healthCalculatorsData: Omit<CalculatorType, 'icon'>[] = [
@@ -73,14 +74,12 @@ export const otherCalculatorsData: Omit<CalculatorType, 'icon'>[] = [
   { id: "grade", name: "Grade Calculator", description: "Calculate grades and scores", category: "other", path: "/other-calculators/grade-calculator", implemented: true },
   { id: "tip", name: "Tip Calculator", description: "Calculate tips and splits", category: "other", path: "/other-calculators/tip-calculator", implemented: true },
   { id: "date", name: "Date Calculator", description: "Calculate between dates", category: "other", path: "/other-calculators/date-calculator", implemented: true },
-  { id: "password", name: "Password Generator", description: "Generate secure passwords", category: "other", path: "/other-calculators/password-generator", implemented: true },
   { id: "time-zone", name: "Time Zone Calculator", description: "Convert time zones", category: "other", path: "/other-calculators/time-zone-converter", implemented: true },
   { id: "height", name: "Height Calculator", description: "Convert height units", category: "other", path: "/other-calculators/height-calculator", implemented: true },
   { id: "conversion", name: "Conversion Calculator", description: "Unit conversions", category: "other", path: "/other-calculators/conversion-calculator", implemented: true },
   { id: "speed", name: "Speed Calculator", description: "Calculate speed", category: "other", path: "/other-calculators/speed-calculator", implemented: true },
   { id: "dice", name: "Dice Roller", description: "Roll virtual dice", category: "other", path: "/other-calculators/dice-roller", implemented: true },
   { id: "mileage", name: "Mileage Calculator", description: "Calculate mileage", category: "other", path: "/other-calculators/mileage-calculator", implemented: true },
-  { id: "fuel-cost", name: "Fuel Cost Calculator", description: "Calculate fuel costs", category: "financial", path: "/financial-calculators/fuel-cost-calculator", implemented: true },
 ];
 
 export const imageToolsData: Omit<CalculatorType, 'icon'>[] = [
@@ -91,7 +90,7 @@ export const imageToolsData: Omit<CalculatorType, 'icon'>[] = [
   { id: "color-picker", name: "Color Picker", description: "Pick colors from images", category: "tools", path: "/tool/color-picker", implemented: true },
 ];
 
-export const textToolsData: Omit<CalculatorType, 'icon'>[] = [
+export const developerToolsData: Omit<CalculatorType, 'icon'>[] = [
   { id: "word-counter", name: "Word Counter", description: "Count words, characters, and sentences", category: "tools", path: "/tool/word-counter", implemented: true },
   { id: "case-converter", name: "Case Converter", description: "Convert text case (upper, lower, title)", category: "tools", path: "/tool/case-converter", implemented: true },
   { id: "lorem-ipsum", name: "Lorem Ipsum Generator", description: "Generate placeholder text", category: "tools", path: "/tool/lorem-ipsum", implemented: true },
@@ -101,6 +100,7 @@ export const textToolsData: Omit<CalculatorType, 'icon'>[] = [
   { id: "qr-code", name: "QR Code Generator", description: "Generate QR codes", category: "tools", path: "/tool/qr-code", implemented: true },
   { id: "hash-generator", name: "Hash Generator", description: "Generate MD5, SHA-1, SHA-256 hashes", category: "tools", path: "/tool/hash-generator", implemented: true },
   { id: "invoice-generator", name: "Invoice Generator", description: "Create professional business invoices", category: "tools", path: "/tool/invoice-generator", implemented: true },
+  { id: "password", name: "Password Generator", description: "Generate secure passwords", category: "tools", path: "/other-calculators/password-generator", implemented: true },
 ];
 
 const iconMap: { [key: string]: CalculatorType['icon'] } = {
@@ -202,16 +202,7 @@ export const healthCalculators: CalculatorType[] = addIcons(healthCalculatorsDat
 export const mathCalculators: CalculatorType[] = addIcons(mathCalculatorsData);
 export const otherCalculators: CalculatorType[] = addIcons(otherCalculatorsData);
 export const imageTools: CalculatorType[] = addIcons(imageToolsData);
-export const textTools: CalculatorType[] = addIcons(textToolsData);
-
-export const calculatorTools: CalculatorType[] = [
-  ...financialCalculators,
-  ...healthCalculators,
-  ...mathCalculators,
-  ...otherCalculators,
-  ...textTools,
-  ...imageTools
-];
+export const developerTools: CalculatorType[] = addIcons(developerToolsData);
 
 export const allCalculators: CalculatorType[] = [
   ...financialCalculators,
@@ -219,7 +210,7 @@ export const allCalculators: CalculatorType[] = [
   ...mathCalculators,
   ...otherCalculators,
   ...imageTools,
-  ...textTools,
+  ...developerTools,
 ];
 
 export const educationalTools: CalculatorType[] = [
@@ -284,36 +275,28 @@ export const categories = [
       path: "/math-calculators"
     },
     {
-      title: "Other Calculators",
+      title: "Daily Utilities",
       icon: Wrench,
-      description: "Converters, Utilities & Daily Tools",
+      description: "Date, Age, Time, GPA & Other Tools",
       gradient: "from-cyan-500 to-blue-600",
       calculators: ["Date Calculator", "Age Calculator", "Time Zone", "Dice Roller"],
       path: "/other-calculators"
     },
     {
       title: "Image Tools",
-      icon: Type,
+      icon: ImageIcon,
       description: "Crop, Resize, Compress & Convert Images",
-      gradient: "from-cyan-500 to-blue-600",
+      gradient: "from-orange-500 to-amber-600",
       calculators: ["Crop Image", "Resize Image", "Compress Image", "Convert Image"],
-      path: "/tool/crop-image"
+      path: "/tool/image-tools"
     },
     {
-      title: "Text & Developer Tools",
+      title: "Developer Tools",
       icon: FileText,
       description: "Text Formatting, Encoding & Generation",
       gradient: "from-indigo-500 to-blue-600",
       calculators: ["Word Counter", "Case Converter", "JSON Formatter", "QR Code"],
-      path: "/tool/word-counter"
-    },
-    {
-      title: "All Calculators",
-      icon: TrendingUp,
-      description: "Browse Complete Collection",
-      gradient: "from-violet-500 to-purple-600",
-      calculators: ["100+ Calculators", "Financial", "Health", "Math & More"],
-      path: "/all-calculators"
+      path: "/tool/developer-tools"
     }
   ];
 
@@ -335,5 +318,3 @@ export const faqData = [
     answer: "No, we do not store any personal data you enter into our calculators. Your privacy is our top priority. All calculations are performed on your device and are not saved on our servers.",
   },
 ];
-
-    

@@ -1,7 +1,6 @@
 
 import Link from "next/link";
-import { Calculator, ArrowLeft, DollarSign } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { DollarSign } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { financialCalculators } from "@/lib/data";
 import { Metadata } from "next";
@@ -15,11 +14,9 @@ export const metadata: Metadata = {
   }
 };
 
-const FinancialCalculators = () => {
+const FinancialCalculatorsPage = () => {
   return (
-    
-      <div className="min-h-screen">
-      
+    <div className="min-h-screen">
       <div className="container mx-auto px-4 py-12">
         {/* Header */}
         <div className="max-w-4xl mx-auto mb-12 text-center">
@@ -40,7 +37,7 @@ const FinancialCalculators = () => {
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {financialCalculators.map((calc, index) => {
-                const Icon = calc.icon || DollarSign;
+                const Icon = calc.icon;
                 return (
                     <Link
                         key={calc.id}
@@ -78,4 +75,4 @@ const FinancialCalculators = () => {
   );
 };
 
-export default FinancialCalculators;
+export default FinancialCalculatorsPage;

@@ -4,7 +4,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SpeedInsights } from "@vercel/speed-insights/next"
-import { Search, Calculator, DollarSign, Heart, GraduationCap, Repeat, TrendingUp, Menu, FileText, Image as ImageIcon } from "lucide-react";
+import { Search, Calculator } from "lucide-react";
 import Link from "next/link";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import Head from "next/head";
@@ -189,11 +189,6 @@ const Index = () => {
               <Link href="/all-calculators">
                 <Button size="lg" className="gradient-button text-lg px-8">
                   Browse All Calculators
-                </Button>
-              </Link>
-              <Link href="/tool/color-picker">
-                <Button size="lg" variant="outline" className="glass-card border-primary/30 text-lg px-8">
-                  View Image Tools
                 </Button>
               </Link>
             </div>
