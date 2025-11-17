@@ -1,3 +1,4 @@
+
 import { generateMetadata } from "@/components/CalculatorLayout";
 import LoanCalculator from "./client-page";
 
