@@ -1,5 +1,5 @@
 
-import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link, DollarSign, Heart, GraduationCap, Repeat, Percent, Divide, Sigma, Wrench, Clock, CalendarDays } from "lucide-react";
+import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link, DollarSign, Heart, GraduationCap, Repeat, Percent, Divide, Sigma, Wrench, Clock, CalendarDays, WalletCards } from "lucide-react";
 
 export const calculatorTools = [
   {
@@ -28,6 +28,15 @@ export const calculatorTools = [
     imageId: "loan-calculator",
     category: "financial",
     implemented: false,
+  },
+  {
+    title: "APR Calculator",
+    description: "Calculate the Annual Percentage Rate of a loan.",
+    icon: WalletCards,
+    href: "/financial-calculators/apr-calculator",
+    imageId: "apr-calculator",
+    category: "financial",
+    implemented: true,
   },
   {
     title: "Base64 Encoder/Decoder",
@@ -163,7 +172,7 @@ export const educationalTools = [
     description: "Start planning for a comfortable retirement.",
     icon: Calculator,
     href: "#",
-imageId: "retirement-planning",
+    imageId: "retirement-planning",
     category: "education",
     implemented: false,
   },
@@ -203,7 +212,7 @@ export const allCalculators = [...calculatorTools, ...educationalTools,
     description: "Perform calculations with fractions.",
     icon: Divide,
     href: "#",
-    imageId: "fraction-calculator",
+imageId: "fraction-calculator",
     category: "math",
     implemented: false,
   },
@@ -266,7 +275,7 @@ export const categories = [
       icon: DollarSign,
       description: "Loans, EMI, Investment, Tax & More",
       gradient: "from-blue-500 to-purple-600",
-      calculators: ["Loan Calculator", "EMI Calculator", "Currency Converter", "ROI Calculator"],
+      calculators: ["Loan Calculator", "APR Calculator", "EMI Calculator", "Currency Converter"],
       path: "/financial-calculators"
     },
     {
@@ -337,3 +346,5 @@ export const faqData = [
     answer: "No, we do not store any personal data you enter into our calculators. Your privacy is our top priority. All calculations are performed on your device and are not saved on our servers.",
   },
 ];
+
+    
