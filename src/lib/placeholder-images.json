@@ -45,7 +45,7 @@
     {
       "id": "case-converter",
       "description": "Abstract letter blocks on a surface",
-      "imageUrl": "https://images.unsplash.com/photo-1759147893749-7c92a92cd9d1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxsZXR0ZXIlMjBibG9ja3N8ZW58MHx8fHwxNzYzMzU1MDU5fDA&ixlib-rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1759147893749-7c92a92cd9d1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxsZXR0ZXIlMjBibG9ja3N8ZW58MHx8fHwxNzYzMzU1MDU5fDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "letter blocks"
     },
     {
@@ -63,7 +63,7 @@
     {
       "id": "image-converter",
       "description": "Arrows pointing between different file type icons",
-      "imageUrl": "https://images.unsplash.com/photo-1668852222395-11d9154ade25?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxmaWxlJTIwY29udmVyc2lvbnxlbnwwfHx8fDE3NjMzNTUzMzd8MA&ixlib-rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1668852222395-11d9154ade25?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxmaWxlJTIwY29udmVyc2lvbnxlbnwwfHx8fDE3NjMzNTUzMzd8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "file conversion"
     },
     {
@@ -87,7 +87,7 @@
     {
       "id": "lorem-ipsum-generator",
       "description": "Abstract text blocks representing placeholder content",
-      "imageUrl": "https://images.unsplash.com/photo-1543286386-713bdd548da4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHx0ZXh0JTIwYmxvY2tzfGVufDB8fHx8MTc2NDEzOTIwMnww&ixlib-rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1543286386-713bdd548da4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHx0ZXh0JTIwYmxvY2tzfGVufDB8fHx8MTc2NDEzOTIwMnww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "text blocks"
     },
     {
@@ -95,6 +95,12 @@
       "description": "A close-up of a QR code pattern",
       "imageUrl": "https://images.unsplash.com/photo-1593111358999-5f813a2ea1a5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxRUiUyMGNvZGV8ZW58MHx8fHwxNzY0MTU0MTU0fDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "QR code"
+    },
+    {
+      "id": "url-encoder",
+      "description": "Abstract network of interconnected nodes",
+      "imageUrl": "https://images.unsplash.com/photo-1605379399642-870262d3d051?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHx1cmwlMjBsaW5rfGVufDB8fHx8MTc2NDc2NDkzM3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "url link"
     }
   ]
 }

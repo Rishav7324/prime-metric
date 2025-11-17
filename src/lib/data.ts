@@ -1,4 +1,4 @@
-import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode } from "lucide-react";
+import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link } from "lucide-react";
 
 export const calculatorTools = [
   {
@@ -91,6 +91,13 @@ export const calculatorTools = [
     icon: QrCode,
     href: "/tool/qr-code",
     imageId: "qr-code-generator"
+  },
+  {
+    title: "URL Encoder/Decoder",
+    description: "Encode and decode URLs and URI components.",
+    icon: Link,
+    href: "/tool/url-encoder",
+    imageId: "url-encoder"
   }
 ];
 
