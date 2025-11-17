@@ -1,7 +1,6 @@
-
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,30 +9,40 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+import { currencies } from "@/components/CurrencySelector";
 
 const CurrencyCalculator = () => {
-  const [amount, setAmount] = useState("");
+  const [amount, setAmount] = useState("1");
   const [fromCurrency, setFromCurrency] = useState("USD");
   const [toCurrency, setToCurrency] = useState("EUR");
   const [result, setResult] = useState<string | null>(null);
+  const [rates, setRates] = useState<{ [key: string]: number } | null>(null);
   const { toast } = useToast();
 
-  // Static exchange rates (in production, fetch from API)
-  const rates: { [key: string]: number } = {
-    USD: 1,
-    EUR: 0.92,
-    GBP: 0.79,
-    INR: 83.12,
-    JPY: 149.50,
-    AUD: 1.52,
-    CAD: 1.36,
-    CHF: 0.88,
-    CNY: 7.24,
-  };
+  useEffect(() => {
+    fetch('https://api.exchangerate-api.com/v4/latest/USD')
+      .then(res => res.json())
+      .then(data => {
+        setRates(data.rates);
+      })
+      .catch(error => {
+        console.error("Failed to fetch exchange rates:", error);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Could not fetch live exchange rates. Using static data.",
+        });
+        // Fallback to static rates if API fails
+        setRates({
+          USD: 1, EUR: 0.92, GBP: 0.79, INR: 83.12, JPY: 149.50, AUD: 1.52,
+          CAD: 1.36, CHF: 0.88, CNY: 7.24,
+        });
+      });
+  }, [toast]);
 
   const calculate = () => {
     const amt = parseFloat(amount);
-    if (amt > 0) {
+    if (amt > 0 && rates) {
       const usdAmount = amt / rates[fromCurrency];
       const converted = usdAmount * rates[toCurrency];
       setResult(converted.toFixed(2));
@@ -45,12 +54,12 @@ const CurrencyCalculator = () => {
       toast({
         variant: "destructive",
         title: "Invalid Input",
-        description: "Please enter a valid amount to convert.",
+        description: "Please enter a valid amount to convert or wait for rates to load.",
       });
     }
   };
 
-  const currencies = Object.keys(rates);
+  const currencyOptions = currencies.map(c => ({ value: c.code, label: c.name }));
 
   return (
     <CalculatorLayout
@@ -73,7 +82,7 @@ const CurrencyCalculator = () => {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {currencies.map(curr => <SelectItem key={curr} value={curr}>{curr}</SelectItem>)}
+                  {currencyOptions.map(curr => <SelectItem key={curr.value} value={curr.value}>{curr.value} - {curr.label}</SelectItem>)}
                 </SelectContent>
               </Select>
             </div>
@@ -84,17 +93,19 @@ const CurrencyCalculator = () => {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {currencies.map(curr => <SelectItem key={curr} value={curr}>{curr}</SelectItem>)}
+                  {currencyOptions.map(curr => <SelectItem key={curr.value} value={curr.value}>{curr.value} - {curr.label}</SelectItem>)}
                 </SelectContent>
               </Select>
             </div>
-            <Button onClick={calculate} className="w-full h-12 gradient-button">Convert</Button>
+            <Button onClick={calculate} className="w-full h-12 gradient-button" disabled={!rates}>
+              {rates ? 'Convert' : 'Loading Rates...'}
+            </Button>
           </div>
         </Card>
 
         <Card className="glass-card p-8">
           <h2 className="text-2xl font-bold mb-6 font-headline">Result</h2>
-          {result ? (
+          {result && rates ? (
             <div className="space-y-6">
               <div className="text-center py-8">
                 <div className="text-sm text-muted-foreground mb-2">{amount} {fromCurrency} =</div>
