@@ -21,7 +21,6 @@ const CompressImage = () => {
   const [compressedImageBlob, setCompressedImageBlob] = useState<Blob | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
   const { toast } = useToast();
 
   const formatFileSize = (bytes: number) => {
@@ -75,20 +74,16 @@ const CompressImage = () => {
         let bestBlob: Blob | null = null;
         let low = 0;
         let high = 1;
-        let bestQuality = 0;
 
-        // Binary search for the best quality
+        // Binary search for the best quality that is under the target size
         for(let i=0; i<10; i++) { // 10 iterations are enough for good precision
             let mid = (low + high) / 2;
             const blob = await getCanvasBlob(canvas, mid);
-            if (blob) {
-                if (blob.size > targetBytes) {
-                    high = mid;
-                } else {
-                    low = mid;
-                    bestQuality = mid;
-                    bestBlob = blob;
-                }
+            if (blob && blob.size <= targetBytes) {
+                bestBlob = blob;
+                low = mid; // Try for higher quality
+            } else {
+                high = mid; // Quality is too high, reduce it
             }
         }
         
@@ -97,7 +92,7 @@ const CompressImage = () => {
             setCompressedImageBlob(bestBlob);
             toast({ title: "Success", description: `Image compressed to ~${formatFileSize(bestBlob.size)}` });
         } else {
-            toast({ variant: "destructive", title: "Error", description: "Could not compress image." });
+            toast({ variant: "destructive", title: "Error", description: "Could not compress image to the target size. Try a larger size." });
         }
         setIsCompressing(false);
     }
@@ -119,7 +114,7 @@ const CompressImage = () => {
   return (
     <CalculatorLayout
       title="Compress Image"
-      description="Reduce image file size by quality or target size"
+      description="Reduce image file size by targeting a specific size."
       keywords="compress image, reduce image size, image compression, optimize images, compress jpg, compress png"
       canonicalUrl="/tool/compress-image"
     >
@@ -225,24 +220,24 @@ const CompressImage = () => {
       </div>
 
       <CalculatorContentSection
-        aboutContent="The Image Compression Tool reduces image file sizes while maintaining visual quality by adjusting compression levels. Large image files slow down websites, consume storage space, and increase bandwidth costs. This tool lets you control the quality-to-size ratio by selecting compression levels from 1-100%, allowing you to find the perfect balance between file size reduction and image quality. Compressed images load faster, improve SEO, enhance user experience, and reduce hosting costs without visible quality loss when optimized properly."
+        aboutContent="The Image Compression Tool reduces image file sizes by intelligently adjusting the quality to meet a specific target file size in kilobytes (KB) or megabytes (MB). Large image files slow down websites, consume storage space, and increase bandwidth costs. This tool lets you achieve a predictable file size, which is perfect for web performance optimization, meeting upload limits, or managing storage. Compressed images load faster, improve SEO, and enhance user experience."
         useCases={[
-          { title: "Website Performance", description: "Compress images before uploading to websites to dramatically improve page load speeds, boost SEO rankings, and enhance user experience." },
-          { title: "Email Attachments", description: "Reduce image file sizes to meet email attachment limits while maintaining sufficient quality for recipients to view clearly." },
-          { title: "Social Media Uploads", description: "Compress images before posting to social platforms to speed up uploads and ensure faster loading for followers viewing your content." },
-          { title: "Mobile App Optimization", description: "Reduce app bundle sizes by compressing image assets, resulting in faster downloads and better performance on mobile devices." }
+          { title: "Website Performance", description: "Compress images to a specific size (e.g., under 100KB) to dramatically improve page load speeds and boost SEO rankings." },
+          { title: "Meeting Upload Limits", description: "Reduce image file sizes to meet the requirements of email attachments, online forms, or content management systems." },
+          { title: "Social Media Uploads", description: "Compress images before posting to social platforms to speed up uploads and ensure faster loading for followers." },
+          { title: "Mobile App Optimization", description: "Reduce app bundle sizes by compressing image assets to a specific target, resulting in faster downloads and better performance." }
         ]}
         tips={[
-          { title: "Target Size", description: "Aim for under 500KB for large web images and under 100KB for smaller thumbnails for good web performance." },
-          { title: "Test Before Deploying", description: "Always preview compressed images at actual viewing size before using them in production. What looks acceptable zoomed out may show artifacts when viewed normally." },
-          { title: "Compress Before Resizing", description: "For best results, resize images to their final display dimensions first, then compress. Compressing large images then resizing wastes processing and may reduce quality unnecessarily." },
-          { title: "Keep Originals", description: "Always maintain original, uncompressed versions of important images. Repeated compression degrades quality, so compress from originals each time rather than recompressing already compressed images to avoid cumulative quality loss." }
+          { title: "Be Realistic", description: "You cannot compress a 10MB photo to 10KB without extreme quality loss. Set a reasonable target size based on the image dimensions and content." },
+          { title: "Test Before Deploying", description: "Always preview compressed images to ensure the quality is acceptable for your needs before using them in a live environment." },
+          { title: "Resize First", description: "For best results, resize your image to its final display dimensions *before* using this tool to compress it to a target size." },
+          { title: "Keep Originals", description: "Always maintain the original, high-quality version of your images. Compression is a lossy process, and quality cannot be recovered." }
         ]}
         faqs={[
-          { question: "How much can I compress without visible quality loss?", answer: "This depends on the image. For photographs, targeting a size that results in 70-85% quality typically provides excellent results with 50-70% file size reduction. For graphics, you may need a higher quality to maintain sharpness." },
-          { question: "What's the difference between compression and resizing?", answer: "Compression reduces file size by removing image data while keeping pixel dimensions the same. Resizing changes the actual width and height by removing pixels. Both reduce file size, but serve different purposes - use resizing for dimensions, compression for file size." },
-          { question: "Can I compress images multiple times?", answer: "While possible, it's not recommended. Each compression pass degrades quality further, especially with lossy formats like JPEG. Always compress from original, high-quality sources rather than recompressing already compressed images to avoid cumulative quality loss." },
-          { question: "Does compression work on all image formats?", answer: "This tool works best with JPEG images where quality adjustments are most effective. PNG compression is lossless and typically doesn't offer adjustable quality levels. For PNGs, consider converting to JPEG if transparency isn't needed, or use PNG optimization tools instead." }
+          { question: "How does it find the right quality for the target size?", answer: "The tool uses a binary search algorithm. It quickly tests different quality levels to find the highest possible quality that results in a file size at or just below your target." },
+          { question: "Why can't it hit my target size exactly?", answer: "JPEG compression is complex, and the final size can vary. The tool aims to get as close as possible without exceeding your target. The result will be very close to what you specified." },
+          { question: "What if it can't reach my target size?", answer: "If your target size is too small for the image dimensions (e.g., trying to compress a large photo to 1KB), the tool may not be able to achieve it. In this case, it will produce the smallest possible file, and you may need to resize the image first." },
+          { question: "Does this work for all image types?", answer: "This target-size compression works by converting the image to JPEG, which is ideal for photographs. If you upload a PNG with transparency, the transparency will be lost." }
         ]}
       />
     </CalculatorLayout>
