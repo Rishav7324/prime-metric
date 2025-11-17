@@ -10,15 +10,29 @@ import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
 import { Mail, MessageSquare, Send } from "lucide-react";
 import LegalPageLayout from "@/components/LegalPageLayout";
+import { useFirestore } from "@/firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { addDocumentNonBlocking } from "@/firebase";
 
 const Contact = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const { toast } = useToast();
+  const firestore = useFirestore();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!firestore) return;
+
+    const messagesCollection = collection(firestore, "messages");
+    addDocumentNonBlocking(messagesCollection, {
+      senderName: name,
+      senderEmail: email,
+      messageContent: message,
+      sentAt: serverTimestamp(),
+    });
+
     toast({
       title: "Message Sent!",
       description: "Thank you for contacting us. We'll get back to you soon.",
