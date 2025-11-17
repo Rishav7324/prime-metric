@@ -1,4 +1,4 @@
-import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link, DollarSign, Heart, GraduationCap, Repeat, Percent, Divide, Sigma, Wrench, Clock, CalendarDays, WalletCards, ListOrdered, Square, Car, Flame, PersonStanding, Wallet } from "lucide-react";
+import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link, DollarSign, Heart, GraduationCap, Repeat, Percent, Divide, Sigma, Wrench, Clock, CalendarDays, WalletCards, ListOrdered, Square, Car, Flame, PersonStanding, Wallet, Dumbbell } from "lucide-react";
 
 export const calculatorTools = [
   {
@@ -239,6 +239,15 @@ export const allCalculators = [...calculatorTools, ...educationalTools,
     icon: Flame,
     href: "/health-calculators/calorie-calculator",
     imageId: "calorie-calculator",
+    category: "health",
+    implemented: true,
+  },
+  {
+    title: "Carbohydrate Calculator",
+    description: "Calculate daily carb intake needs for your goals.",
+    icon: Dumbbell,
+    href: "/health-calculators/carbohydrate-calculator",
+    imageId: "carbohydrate-calculator",
     category: "health",
     implemented: true,
   },
