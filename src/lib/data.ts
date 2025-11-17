@@ -1,4 +1,4 @@
-import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link, DollarSign, Heart, GraduationCap, Repeat, Percent, Divide, Sigma, Wrench, Clock, CalendarDays, WalletCards, ListOrdered, Square, Car, Flame, PersonStanding, Wallet, Dumbbell, Circle, Dices, MoveHorizontal, FileCheck, Ruler, Home } from "lucide-react";
+import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link, DollarSign, Heart, GraduationCap, Repeat, Percent, Divide, Sigma, Wrench, Clock, CalendarDays, WalletCards, ListOrdered, Square, Car, Flame, PersonStanding, Wallet, Dumbbell, Circle, Dices, MoveHorizontal, FileCheck, Ruler, Home, Scale } from "lucide-react";
 
 export const calculatorTools = [
   {
@@ -284,6 +284,15 @@ export const allCalculators = [...calculatorTools, ...educationalTools,
     icon: Ruler,
     href: "/health-calculators/height-calculator",
     imageId: "height-calculator",
+    category: "health",
+    implemented: true,
+  },
+  {
+    title: "Ideal Weight Calculator",
+    description: "Calculate your ideal body weight based on Devine formula.",
+    icon: Scale,
+    href: "/health-calculators/ideal-weight-calculator",
+    imageId: "ideal-weight-calculator",
     category: "health",
     implemented: true,
   },
