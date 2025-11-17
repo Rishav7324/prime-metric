@@ -1,5 +1,5 @@
 
-import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link, DollarSign, Heart, GraduationCap, Repeat, Percent, Divide, Sigma, Wrench, Clock, CalendarDays, WalletCards, ListOrdered, Square, Car } from "lucide-react";
+import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link, DollarSign, Heart, GraduationCap, Repeat, Percent, Divide, Sigma, Wrench, Clock, CalendarDays, WalletCards, ListOrdered, Square, Car, Flame } from "lucide-react";
 
 export const calculatorTools = [
   {
@@ -204,6 +204,15 @@ export const allCalculators = [...calculatorTools, ...educationalTools,
     icon: Heart,
     href: "/health-calculators/bmi-calculator",
     imageId: "bmi-calculator",
+    category: "health",
+    implemented: true,
+  },
+  {
+    title: "BMR Calculator",
+    description: "Calculate your Basal Metabolic Rate.",
+    icon: Flame,
+    href: "/health-calculators/bmr-calculator",
+    imageId: "bmr-calculator",
     category: "health",
     implemented: true,
   },
