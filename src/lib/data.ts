@@ -1,4 +1,4 @@
-import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText } from "lucide-react";
+import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode } from "lucide-react";
 
 export const calculatorTools = [
   {
@@ -84,6 +84,13 @@ export const calculatorTools = [
     icon: FileText,
     href: "/tool/lorem-ipsum",
     imageId: "lorem-ipsum-generator"
+  },
+  {
+    title: "QR Code Generator",
+    description: "Generate QR codes for URLs, text, and more.",
+    icon: QrCode,
+    href: "/tool/qr-code",
+    imageId: "qr-code-generator"
   }
 ];
 

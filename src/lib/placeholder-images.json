@@ -45,7 +45,7 @@
     {
       "id": "case-converter",
       "description": "Abstract letter blocks on a surface",
-      "imageUrl": "https://images.unsplash.com/photo-1759147893749-7c92a92cd9d1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxsZXR0ZXIlMjBibG9ja3N8ZW58MHx8fHwxNzYzMzU1MDU5fDA&ixlibrb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1759147893749-7c92a92cd9d1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxsZXR0ZXIlMjBibG9ja3N8ZW58MHx8fHwxNzYzMzU1MDU5fDA&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "letter blocks"
     },
     {
@@ -87,8 +87,14 @@
     {
       "id": "lorem-ipsum-generator",
       "description": "Abstract text blocks representing placeholder content",
-      "imageUrl": "https://images.unsplash.com/photo-1543286386-713bdd548da4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHx0ZXh0JTIwYmxvY2tzfGVufDB8fHx8MTc2NDEzOTIwMnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1543286386-713bdd548da4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHx0ZXh0JTIwYmxvY2tzfGVufDB8fHx8MTc2NDEzOTIwMnww&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "text blocks"
+    },
+    {
+      "id": "qr-code-generator",
+      "description": "A close-up of a QR code pattern",
+      "imageUrl": "https://images.unsplash.com/photo-1593111358999-5f813a2ea1a5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxRUiUyMGNvZGV8ZW58MHx8fHwxNzY0MTU0MTU0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "QR code"
     }
   ]
 }
