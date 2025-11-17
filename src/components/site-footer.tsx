@@ -17,28 +17,28 @@ export function SiteFooter() {
             <div>
               <h4 className="font-bold text-lg mb-4">Calculators</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="#" className="hover:text-primary transition-colors">Financial</Link></li>
-                <li><Link href="#" className="hover:text-primary transition-colors">Health</Link></li>
-                <li><Link href="#" className="hover:text-primary transition-colors">Math</Link></li>
-                <li><Link href="#" className="hover:text-primary transition-colors">Other</Link></li>
+                <li><Link href="/financial-calculators" className="hover:text-primary transition-colors">Financial</Link></li>
+                <li><Link href="/health-calculators" className="hover:text-primary transition-colors">Health</Link></li>
+                <li><Link href="/math-calculators" className="hover:text-primary transition-colors">Math</Link></li>
+                <li><Link href="/other-calculators" className="hover:text-primary transition-colors">Other</Link></li>
               </ul>
             </div>
             <div>
               <h4 className="font-bold text-lg mb-4">Tools</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li><Link href="/tool/color-picker" className="hover:text-primary transition-colors">Image Tools</Link></li>
-                <li><Link href="/#tools" className="hover:text-primary transition-colors">All Calculators</Link></li>
-                <li><Link href="#" className="hover:text-primary transition-colors">Currency Converter</Link></li>
-                <li><Link href="#" className="hover:text-primary transition-colors">BMI Calculator</Link></li>
+                <li><Link href="/all-calculators" className="hover:text-primary transition-colors">All Calculators</Link></li>
+                <li><Link href="/financial-calculators/currency-converter" className="hover:text-primary transition-colors">Currency Converter</Link></li>
+                <li><Link href="/health-calculators/bmi-calculator" className="hover:text-primary transition-colors">BMI Calculator</Link></li>
               </ul>
             </div>
             <div>
               <h4 className="font-bold text-lg mb-4">Company</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="#" className="hover:text-primary transition-colors">About Us</Link></li>
-                <li><Link href="#" className="hover:text-primary transition-colors">Contact</Link></li>
-                <li><Link href="#" className="hover:text-primary transition-colors">Privacy Policy</Link></li>
-                <li><Link href="#" className="hover:text-primary transition-colors">Terms of Service</Link></li>
+                <li><Link href="/about" className="hover:text-primary transition-colors">About Us</Link></li>
+                <li><Link href="/contact" className="hover:text-primary transition-colors">Contact</Link></li>
+                <li><Link href="/privacy-policy" className="hover:text-primary transition-colors">Privacy Policy</Link></li>
+                <li><Link href="/terms-of-service" className="hover:text-primary transition-colors">Terms of Service</Link></li>
               </ul>
             </div>
           </div>
@@ -49,5 +49,3 @@ export function SiteFooter() {
       </footer>
   );
 }
-
-    
