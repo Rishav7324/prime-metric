@@ -111,7 +111,7 @@
     {
       "id": "hash-generator",
       "description": "Abstract cryptographic block chain",
-      "imageUrl": "https://images.unsplash.com/photo-1642104704074-af0f4871ab18?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjcnlwdG9ncmFwaGljJTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NjQxNDA3MTN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1642104704074-af0f4871ab18?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjcnlwdG9ncmFwaGljJTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NjQxNDA3MTN8MA&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "crypto background"
     },
     {
@@ -141,7 +141,7 @@
     {
       "id": "word-counter",
       "description": "A person writing in a notebook, representing text creation",
-      "imageUrl": "https://images.unsplash.com/photo-1761322572550-967ea8c0bfd9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHx3cml0aW5nJTIwbm90ZWJvb2t8ZW58MHx8fHwxNzYzMjYyOTMyfDA&ixlib-rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1761322572550-967ea8c0bfd9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHx3cml0aW5nJTIwbm90ZWJvb2t8ZW58MHx8fHwxNzYzMjYyOTMyfDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "writing notebook"
     },
     {
@@ -177,25 +177,25 @@
     {
       "id": "calorie-calculator",
       "description": "A colorful arrangement of healthy foods like fruits and vegetables.",
-      "imageUrl": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxoZWFsdGh5JTIwZm9vZHxlbnwwfHx8fDE3Njg1MTg1MjN8MA&ixlib-rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxoZWFsdGh5JTIwZm9vZHxlbnwwfHx8fDE3Njg1MTg1MjN8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "healthy food"
     },
     {
       "id": "carbohydrate-calculator",
       "description": "A bowl of whole grain pasta, representing a source of carbohydrates.",
-      "imageUrl": "https://images.unsplash.com/photo-1585032226651-759b368d7246?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxwYXN0YSUyMGJvd2x8ZW58MHx8fHwxNzY4NTE5ODg2fDA&ixlib-rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1585032226651-759b368d7246?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxwYXN0YSUyMGJvd2x8ZW58MHx8fHwxNzY4NTE5ODg2fDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "pasta bowl"
     },
     {
       "id": "basic-calculator",
       "description": "A simple, clean calculator interface on a digital screen.",
-      "imageUrl": "https://images.unsplash.com/photo-1653074281018-c08f358059ab?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8Y2FsY3VsYXRvciUyMGFwcHxlbnwwfHx8fDE3NjMzNTcxMDF8MA&ixlib-rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1653074281018-c08f358059ab?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8Y2FsY3VsYXRvciUyMGFwcHxlbnwwfHx8fDE3NjMzNTcxMDF8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "calculator app"
     },
     {
       "id": "binary-calculator",
       "description": "Close-up of a circuit board with glowing lines, representing binary data flow.",
-      "imageUrl": "https://images.unsplash.com/photo-1528901166007-3784c7dd3653?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxiaW5hcnklMjBjaXJjdWl0fGVufDB8fHx8MTc2NzE1NzM1Nnww&ixlib-rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1528901166007-3784c7dd3653?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxiaW5hcnklMjBjaXJjdWl0fGVufDB8fHx8MTc2NzE1NzM1Nnww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "binary circuit"
     },
     {
@@ -207,7 +207,7 @@
     {
       "id": "conversion-calculator",
       "description": "Intertwined arrows showing conversion between different states or units.",
-      "imageUrl": "https://images.unsplash.com/photo-1634028399553-95a89f4935e4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMGNvbnZlcnNpb258ZW58MHx8fHwxNzY5NjU0MTgyfDA&ixlib-rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1634028399553-95a89f4935e4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMGNvbnZlcnNpb258ZW58MHx8fHwxNzY5NjU0MTgyfDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "abstract conversion"
     },
     {
@@ -225,7 +225,7 @@
     {
       "id": "dice-roller",
       "description": "A set of polyhedral dice for tabletop role-playing games on a wooden surface.",
-      "imageUrl": "https://images.unsplash.com/photo-1588631114256-0bcb09b3543e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxkcGclMjBkaWNlfGVufDB8fHx8MTc3MjI5NjQ2Nnww&ixlib-rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1588631114256-0bcb09b3543e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxkcGclMjBkaWNlfGVufDB8fHx8MTc3MjI5NjQ2Nnww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "rpg dice"
     },
     {
@@ -269,6 +269,12 @@
       "description": "A person standing on a scale, with a measuring tape nearby, representing healthy weight management.",
       "imageUrl": "https://images.unsplash.com/photo-1524678606370-a47625cb810c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxoZWFsdGh5JTIwd2VpZ2h0fGVufDB8fHx8MTc3OTQ1NTQ2Nnww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "healthy weight"
+    },
+    {
+      "id": "height-calculator",
+      "description": "A measuring tape stretched out vertically against a clean wall.",
+      "imageUrl": "https://images.unsplash.com/photo-1585750474026-c2328193855c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxtZWFzdXJpbmclMjB0YXBlfGVufDB8fHx8MTc3OTQ1NjIyNHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "measuring tape"
     }
   ]
 }

@@ -1,4 +1,4 @@
-import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link, DollarSign, Heart, GraduationCap, Repeat, Percent, Divide, Sigma, Wrench, Clock, CalendarDays, WalletCards, ListOrdered, Square, Car, Flame, PersonStanding, Wallet, Dumbbell, Circle, Dices, MoveHorizontal, FileCheck } from "lucide-react";
+import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link, DollarSign, Heart, GraduationCap, Repeat, Percent, Divide, Sigma, Wrench, Clock, CalendarDays, WalletCards, ListOrdered, Square, Car, Flame, PersonStanding, Wallet, Dumbbell, Circle, Dices, MoveHorizontal, FileCheck, Ruler } from "lucide-react";
 
 export const calculatorTools = [
   {
@@ -275,6 +275,15 @@ export const allCalculators = [...calculatorTools, ...educationalTools,
     icon: PersonStanding,
     href: "/health-calculators/healthy-weight-calculator",
     imageId: "healthy-weight-calculator",
+    category: "health",
+    implemented: true,
+  },
+  {
+    title: "Height Calculator",
+    description: "Convert height between different units.",
+    icon: Ruler,
+    href: "/health-calculators/height-calculator",
+    imageId: "height-calculator",
     category: "health",
     implemented: true,
   },
