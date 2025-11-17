@@ -10,6 +10,20 @@ import { FirebaseClientProvider } from '@/firebase';
 import CookieConsentBanner from '@/components/CookieConsentBanner';
 import { Analytics } from '@vercel/analytics/react';
 import Script from 'next/script';
+import { Inter, Merriweather } from 'next/font/google';
+
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-body',
+});
+
+const merriweather = Merriweather({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-headline',
+  weight: ['400', '700'],
+});
 
 export const metadata: Metadata = {
   title: 'Prime Metric',
@@ -24,17 +38,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet" />
         <Script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6512188660075861"
           crossOrigin="anonymous"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
       </head>
-      <body className={cn("font-body antialiased min-h-screen bg-background")}>
+      <body className={cn("font-body antialiased min-h-screen bg-background", inter.variable, merriweather.variable)}>
         <FirebaseClientProvider>
           <div className="relative flex min-h-dvh flex-col">
             <SiteHeader />
