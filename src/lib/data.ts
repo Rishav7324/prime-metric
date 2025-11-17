@@ -214,6 +214,13 @@ export const allCalculators: CalculatorType[] = [
   ...developerTools,
 ];
 
+export const calculatorTools: CalculatorType[] = [
+  ...financialCalculators,
+  ...healthCalculators,
+  ...mathCalculators,
+  ...otherCalculators,
+];
+
 export const educationalTools: CalculatorType[] = [
   {
     id: "savings-guide",
