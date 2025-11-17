@@ -1,3 +1,40 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "mortgage-calculator",
+      "description": "A futuristic interface for a mortgage calculator",
+      "imageUrl": "https://images.unsplash.com/photo-1720962158883-b0f2021fb51e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxmdXR1cmlzdGljJTIwaW50ZXJmYWNlfGVufDB8fHx8MTc2MzM1NDU0NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "futuristic interface"
+    },
+    {
+      "id": "investment-return",
+      "description": "A chart showing investment returns",
+      "imageUrl": "https://images.unsplash.com/photo-1647511255615-97ca37996022?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxpbnZlc3RtZW50JTIwY2hhcnR8ZW58MHx8fHwxNzYzMjU1MTMyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "investment chart"
+    },
+    {
+      "id": "loan-calculator",
+      "description": "An interface for calculating a loan",
+      "imageUrl": "https://images.unsplash.com/photo-1757301714935-c8127a21abc6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxsb2FuJTIwaW50ZXJmYWNlfGVufDB8fHx8MTc2MzM1NDU0NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "loan interface"
+    },
+    {
+      "id": "savings-guide",
+      "description": "An open book with financial symbols",
+      "imageUrl": "https://images.unsplash.com/photo-1697382608873-acefe3c756fd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxmaW5hbmNpYWwlMjBib29rfGVufDB8fHx8MTc2MzM1NDU0NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "financial book"
+    },
+    {
+      "id": "stock-market-basics",
+      "description": "A screen displaying stock market data",
+      "imageUrl": "https://images.unsplash.com/photo-1730484248642-0169f93ee924?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxzdG9jayUyMGRhdGF8ZW58MHx8fHwxNzYzMzU0NTQ1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "stock data"
+    },
+    {
+      "id": "retirement-planning",
+      "description": "A person looking at a sunset, symbolizing retirement",
+      "imageUrl": "https://images.unsplash.com/photo-1533780898421-b118c81ac26b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxyZXRpcmVtZW50JTIwc3Vuc2V0fGVufDB8fHx8MTc2MzM1NDU0NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "retirement sunset"
+    }
+  ]
 }
