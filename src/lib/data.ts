@@ -29,6 +29,7 @@ export const financialCalculatorsData: Omit<CalculatorType, 'icon'>[] = [
   { id: "budget", name: "Budget Calculator", description: "Plan your budget", category: "financial", path: "/financial-calculators/budget-calculator", implemented: true },
   { id: "apr", name: "APR Calculator", description: "Calculate annual percentage rate", category: "financial", path: "/financial-calculators/apr-calculator", implemented: true },
   { id: "fuel-cost", name: "Fuel Cost Calculator", description: "Calculate fuel costs", category: "financial", path: "/financial-calculators/fuel-cost-calculator", implemented: true },
+  { id: "swp", name: "SWP Calculator", description: "Systematic Withdrawal Plan calculator", category: "financial", path: "/financial-calculators/swp-calculator", implemented: true },
 ];
 
 export const healthCalculatorsData: Omit<CalculatorType, 'icon'>[] = [
