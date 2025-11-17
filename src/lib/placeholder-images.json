@@ -21,7 +21,7 @@
     {
       "id": "apr-calculator",
       "description": "An abstract representation of percentages and rates",
-      "imageUrl": "https://images.unsplash.com/photo-1628258334105-2a0b3d6ef5f3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMHBlcmNlbnRhZ2V8ZW58MHx8fHwxNzY0NzY1MDQ4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1628258334105-2a0b3d6ef5f3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMHBlcmNlbnRhZ2V8ZW58MHx8fHwxNzY0NzYxMDQ4fDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "abstract percentage"
     },
     {
@@ -69,7 +69,7 @@
     {
       "id": "base64-tool",
       "description": "Abstract binary code on a screen",
-      "imageUrl": "https://images.unsplash.com/photo-1569396116180-210c182bedb8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxiaW5hcnklMjBjb2RlfGVufDB8fHx8MTc2MzM1NDM0MXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1569396116180-210c182bedb8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxiaW5hcnklMjBjb2RlfGVufDB8fHx8MTc2MzM1NDM0MXww&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "binary code"
     },
     {
@@ -209,6 +209,12 @@
       "description": "A collage of different world currency notes and coins.",
       "imageUrl": "https://images.unsplash.com/photo-1580519542036-c47de6196ba5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx3b3JsZCUyMGN1cnJlbmN5fGVufDB8fHx8MTc2NTMyNTYwMHww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "world currency"
+    },
+    {
+      "id": "date-calculator",
+      "description": "A stylish calendar on a desk with planning tools.",
+      "imageUrl": "https://images.unsplash.com/photo-1521933579478-a40058b29988?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjYWxlbmRhciUyMHBsYW5uaW5nfGVufDB8fHx8MTc3MjI5NTM5N3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "calendar planning"
     }
   ]
 }
