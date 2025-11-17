@@ -408,10 +408,10 @@ export const allCalculators = [...calculatorTools, ...educationalTools,
     title: "GPA Calculator",
     description: "Calculate your Grade Point Average.",
     icon: GraduationCap,
-    href: "#",
+    href: "/other-calculators/gpa-calculator",
     imageId: "gpa-calculator",
     category: "other",
-    implemented: false,
+    implemented: true,
   },
   {
     title: "Distance Calculator",
@@ -450,7 +450,11 @@ export const mathCalculators = allCalculators.filter(
 
 export const otherCalculators = allCalculators.filter(
   (calc) => calc.category === "other"
-);
+).sort((a, b) => {
+  if (a.implemented && !b.implemented) return -1;
+  if (!a.implemented && b.implemented) return 1;
+  return a.name.localeCompare(b.name);
+});
 
 export const categories = [
     {

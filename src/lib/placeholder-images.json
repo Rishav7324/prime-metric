@@ -87,7 +87,7 @@
     {
       "id": "color-picker",
       "description": "Abstract vibrant colors mixing together",
-      "imageUrl": "https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMGNvbG9yc3xlbnwwfHx8fDE3NjM0Mzk5NjR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMGNvbG9yc3xlbnwwfHx8fDE3NjM0Mzk5NjR8MA&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "abstract colors"
     },
     {
@@ -159,7 +159,7 @@
     {
       "id": "bmi-calculator",
       "description": "A person on a scale, measuring their weight",
-      "imageUrl": "https://images.unsplash.com/photo-1588640733510-0926b0a09a56?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx3ZWlnaHQlMjBzY2FsZXxlbnwwfHx8fDE3NjMzNTI4NzR8MA&ixlib-rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1588640733510-0926b0a09a56?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx3ZWlnaHQlMjBzY2FsZXxlbnwwfHx8fDE3NjMzNTI4NzR8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "weight scale"
     },
     {
@@ -183,13 +183,13 @@
     {
       "id": "carbohydrate-calculator",
       "description": "A bowl of whole grain pasta, representing a source of carbohydrates.",
-      "imageUrl": "https://images.unsplash.com/photo-1585032226651-759b368d7246?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxwYXN0YSUyMGJvd2x8ZW58MHx8fHwxNzY4NTE5ODg2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1585032226651-759b368d7246?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxwYXN0YSUyMGJvd2x8ZW58MHx8fHwxNzY4NTE5ODg2fDA&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "pasta bowl"
     },
     {
       "id": "basic-calculator",
       "description": "A simple, clean calculator interface on a digital screen.",
-      "imageUrl": "https://images.unsplash.com/photo-1653074281018-c08f358059ab?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8Y2FsY3VsYXRvciUyMGFwcHxlbnwwfHx8fDE3NjMzNTcxMDF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1653074281018-c08f358059ab?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8Y2FsY3VsYXRvciUyMGFwcHxlbnwwfHx8fDE3NjMzNTcxMDF8MA&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "calculator app"
     },
     {
@@ -207,7 +207,7 @@
     {
       "id": "conversion-calculator",
       "description": "Intertwined arrows showing conversion between different states or units.",
-      "imageUrl": "https://images.unsplash.com/photo-1634028399553-95a89f4935e4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMGNvbnZlcnNpb258ZW58MHx8fHwxNzY5NjU0MTgyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1634028399553-95a89f4935e4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMGNvbnZlcnNpb258ZW58MHx8fHwxNzY5NjU0MTgyfDA&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "abstract conversion"
     },
     {
@@ -225,7 +225,7 @@
     {
       "id": "dice-roller",
       "description": "A set of polyhedral dice for tabletop role-playing games on a wooden surface.",
-      "imageUrl": "https://images.unsplash.com/photo-1588631114256-0bcb09b3543e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxkcGclMjBkaWNlfGVufDB8fHx8MTc3MjI5NjQ2Nnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1588631114256-0bcb09b3543e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxkcGclMjBkaWNlfGVufDB8fHx8MTc3MjI5NjQ2Nnww&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "rpg dice"
     },
     {
@@ -251,6 +251,12 @@
       "description": "Abstract visual of sliced pie charts representing fractions.",
       "imageUrl": "https://images.unsplash.com/photo-1653715367838-6b83a0e1a3b5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxmcmFjdGlvbiUyMHBpZSUyMGNoYXJ0fGVufDB8fHx8MTc3NDcyNzg4NHww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "fraction pie chart"
+    },
+    {
+      "id": "gpa-calculator",
+      "description": "A graduation cap on a stack of books.",
+      "imageUrl": "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxncmFkdWF0aW9uJTIwY2FwfGVufDB8fHx8MTc3OTM3MjgzOXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "graduation cap"
     }
   ]
 }
