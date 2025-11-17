@@ -178,6 +178,10 @@ export const allCalculators = [...calculatorTools, ...educationalTools].map(tool
   icon: tool.icon,
 }));
 
+export const financialCalculators = allCalculators.filter(
+  (calc) => calc.category === "financial"
+);
+
 export const categories = [
     {
       title: "Financial Calculators",
@@ -185,7 +189,7 @@ export const categories = [
       description: "Loans, EMI, Investment, Tax & More",
       gradient: "from-blue-500 to-purple-600",
       calculators: ["Loan Calculator", "EMI Calculator", "Currency Converter", "ROI Calculator"],
-      path: "#"
+      path: "/financial-calculators"
     },
     {
       title: "Health & Fitness",
