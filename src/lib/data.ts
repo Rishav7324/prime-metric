@@ -1,4 +1,4 @@
-import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link, DollarSign, Heart, GraduationCap, Repeat, Percent, Divide, Sigma, Wrench, Clock, CalendarDays, WalletCards, ListOrdered, Square, Car, Flame, PersonStanding, Wallet, Dumbbell, Circle } from "lucide-react";
+import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link, DollarSign, Heart, GraduationCap, Repeat, Percent, Divide, Sigma, Wrench, Clock, CalendarDays, WalletCards, ListOrdered, Square, Car, Flame, PersonStanding, Wallet, Dumbbell, Circle, Dices } from "lucide-react";
 
 export const calculatorTools = [
   {
@@ -365,6 +365,15 @@ export const allCalculators = [...calculatorTools, ...educationalTools,
     icon: CalendarDays,
     href: "/other-calculators/date-calculator",
     imageId: "date-calculator",
+    category: "other",
+    implemented: true,
+  },
+    {
+    title: "Dice Roller",
+    description: "Roll virtual dice with customizable sides.",
+    icon: Dices,
+    href: "/other-calculators/dice-roller",
+    imageId: "dice-roller",
     category: "other",
     implemented: true,
   },

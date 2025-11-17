@@ -69,7 +69,7 @@
     {
       "id": "base64-tool",
       "description": "Abstract binary code on a screen",
-      "imageUrl": "https://images.unsplash.com/photo-1569396116180-210c182bedb8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxiaW5hcnklMjBjb2RlfGVufDB8fHx8MTc2MzM1NDM0MXww&ixlib-rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1569396116180-210c182bedb8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxiaW5hcnklMjBjb2RlfGVufDB8fHx8MTc2MzM1NDM0MXww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "binary code"
     },
     {
@@ -87,7 +87,7 @@
     {
       "id": "image-compressor",
       "description": "Abstract pixelated image representing compression",
-      "imageUrl": "https://images.unsplash.com/photo-1579546929518-9e396f3a8034?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMHBpeGVsfGVufDB8fHx8MTc2NDA0NzI4MHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1579546929518-9e396f3a8034?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMHBpeGVsfGVufDB8fHx8MTc2NDA0NzI4MHww&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "abstract pixel"
     },
     {
@@ -99,7 +99,7 @@
     {
       "id": "image-cropper",
       "description": "A camera lens focusing on a subject",
-      "imageUrl": "https://images.unsplash.com/photo-1580554336067-3a131b2f3c2b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxjYW1lcmElMjBmb2N1c3xlbnwwfHx8fDE3NjQxMzkxODR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1580554336067-3a131b2f3c2b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxjYW1lcmElMjBmb2N1c3xlbnwwfHx8fDE3NjQxMzkxODR8MA&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "camera focus"
     },
     {
@@ -147,7 +147,7 @@
     {
       "id": "average-calculator",
       "description": "A graph showing statistical data and averages",
-      "imageUrl": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzdGF0aXN0aWNzJTIwZ3JhcGh8ZW58MHx8fHwxNzY2NTc0NTA0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzdGF0aXN0aWNzJTIwZ3JhcGh8ZW58MHx8fHwxNzY2NTc0NTA0fDA&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "statistics graph"
     },
     {
@@ -215,6 +215,12 @@
       "description": "A stylish calendar on a desk with planning tools.",
       "imageUrl": "https://images.unsplash.com/photo-1521933579478-a40058b29988?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjYWxlbmRhciUyMHBsYW5uaW5nfGVufDB8fHx8MTc3MjI5NTM5N3ww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "calendar planning"
+    },
+    {
+      "id": "dice-roller",
+      "description": "A set of polyhedral dice for tabletop role-playing games on a wooden surface.",
+      "imageUrl": "https://images.unsplash.com/photo-1588631114256-0bcb09b3543e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxkcGclMjBkaWNlfGVufDB8fHx8MTc3MjI5NjQ2Nnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "rpg dice"
     }
   ]
 }
