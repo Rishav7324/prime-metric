@@ -2,23 +2,24 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Search, BotMessageSquare, Menu } from 'lucide-react';
+import { Search, BotMessageSquare, Menu, Calculator, DollarSign, Heart, GraduationCap } from 'lucide-react';
 
 const navLinks = [
-  { href: "#tools", label: "Tools" },
-  { href: "#summarizer", label: "AI Summarizer" },
-  { href: "#faq", label: "FAQ" },
+  { href: "#tools", label: "All Calculators" },
+  { href: "#", label: "Financial" },
+  { href: "#", label: "Health" },
+  { href: "/about", label: "About" },
 ];
 
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-14 max-w-screen-2xl items-center">
+      <div className="container flex h-16 max-w-screen-2xl items-center">
         <div className="mr-4 flex">
           <Link href="/" className="mr-6 flex items-center space-x-2">
-            <BotMessageSquare className="h-6 w-6 text-accent" />
-            <span className="font-bold font-headline sm:inline-block">
-              Prime Metric
+            <Calculator className="h-6 w-6 text-accent" />
+            <span className="font-bold font-headline sm:inline-block text-lg">
+              PrimeMetric
             </span>
           </Link>
           <nav className="hidden items-center gap-6 text-sm md:flex">
@@ -26,7 +27,7 @@ export function SiteHeader() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="transition-colors hover:text-foreground/80 text-foreground/60"
+                className="transition-colors hover:text-foreground/80 text-foreground/60 font-medium"
               >
                 {link.label}
               </Link>
@@ -40,7 +41,7 @@ export function SiteHeader() {
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 type="search"
-                placeholder="Search tools..."
+                placeholder="Search calculators..."
                 className="h-9 pl-10 w-full"
               />
             </div>
@@ -66,8 +67,11 @@ export function SiteHeader() {
               </nav>
             </SheetContent>
           </Sheet>
+           <Button>Contact Us</Button>
         </div>
       </div>
     </header>
   );
 }
+
+    

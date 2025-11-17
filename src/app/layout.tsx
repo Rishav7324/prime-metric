@@ -23,7 +23,6 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet" />
       </head>
       <body className={cn("font-body antialiased min-h-screen bg-background")}>
-        <div className="fixed top-0 left-0 w-full h-full -z-10 animated-gradient" />
         <div className="relative flex min-h-dvh flex-col">
           <SiteHeader />
           <div className="flex-1">{children}</div>
@@ -34,3 +33,5 @@ export default function RootLayout({
     </html>
   );
 }
+
+    
