@@ -26,6 +26,8 @@ const RandomNumberGenerator = () => {
       });
       return;
     }
+    // This logic is safe inside an event handler, but to be robust,
+    // we ensure all random generation is client-side.
     const randomNumber = Math.floor(Math.random() * (maxVal - minVal + 1)) + minVal;
     setResult(randomNumber);
     toast({
@@ -85,5 +87,3 @@ const RandomNumberGenerator = () => {
 };
 
 export default RandomNumberGenerator;
-
-    
