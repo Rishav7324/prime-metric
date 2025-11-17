@@ -1,0 +1,116 @@
+{
+  "entities": {
+    "Message": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Message",
+      "type": "object",
+      "description": "Represents a message sent through the website.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the message."
+        },
+        "senderName": {
+          "type": "string",
+          "description": "Name of the message sender."
+        },
+        "senderEmail": {
+          "type": "string",
+          "description": "Email address of the message sender.",
+          "format": "email"
+        },
+        "messageContent": {
+          "type": "string",
+          "description": "The content of the message."
+        },
+        "sentAt": {
+          "type": "string",
+          "description": "The date and time the message was sent.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "senderName",
+        "senderEmail",
+        "messageContent",
+        "sentAt"
+      ]
+    },
+    "Subscriber": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Subscriber",
+      "type": "object",
+      "description": "Represents a user who has subscribed to receive email updates.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the subscriber."
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the subscriber.",
+          "format": "email"
+        },
+        "subscribedAt": {
+          "type": "string",
+          "description": "The date and time the user subscribed.",
+          "format": "date-time"
+        },
+        "isVerified": {
+          "type": "boolean",
+          "description": "Indicates whether the subscriber's email address has been verified."
+        }
+      },
+      "required": [
+        "id",
+        "email",
+        "subscribedAt",
+        "isVerified"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/messages/{messageId}",
+        "definition": {
+          "entityName": "Message",
+          "schema": {
+            "$ref": "#/backend/entities/Message"
+          },
+          "description": "Stores messages received through the website.",
+          "params": [
+            {
+              "name": "messageId",
+              "description": "Unique identifier for the message."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/subscribers/{subscriberId}",
+        "definition": {
+          "entityName": "Subscriber",
+          "schema": {
+            "$ref": "#/backend/entities/Subscriber"
+          },
+          "description": "Stores information about users who have subscribed to email updates.",
+          "params": [
+            {
+              "name": "subscriberId",
+              "description": "Unique identifier for the subscriber."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "This Firestore data structure is designed to collect messages and subscriber emails. It uses separate collections for messages and subscribers to maintain data segregation and simplify security rules. This approach avoids mixing data with different access needs in the same collection, adhering to the Structural Segregation principle. By storing messages and subscribers in their respective collections (`messages` and `subscribers`), the structure enables secure list operations (QAPs) without requiring complex filtering in rules. Each document in these collections represents a distinct message or subscriber, ensuring clarity and predictability."
+  }
+}
