@@ -73,6 +73,15 @@ export const calculatorTools = [
     category: "financial",
     implemented: true,
   },
+    {
+    title: "Fuel Cost Calculator",
+    description: "Estimate the fuel cost for a trip.",
+    icon: Car,
+    href: "/financial-calculators/fuel-cost-calculator",
+    imageId: "fuel-cost-calculator",
+    category: "financial",
+    implemented: true,
+  },
   {
     title: "Base64 Encoder/Decoder",
     description: "Encode text to Base64 or decode from it.",

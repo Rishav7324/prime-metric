@@ -49,6 +49,12 @@
       "imageHint": "growth chart"
     },
     {
+      "id": "fuel-cost-calculator",
+      "description": "A car's fuel gauge showing a full tank, with a road stretching ahead.",
+      "imageUrl": "https://images.unsplash.com/photo-1601062334867-0a448a436215?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxmdWVsJTIwZ2F1Z2V8ZW58MHx8fHwxNzc4OTg2ODU4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "fuel gauge"
+    },
+    {
       "id": "savings-guide",
       "description": "An open book with financial symbols",
       "imageUrl": "https://images.unsplash.com/photo-1697382608873-acefe3c756fd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxmaW5hbmNpYWwlMjBib29rfGVufDB8fHx8MTc2MzM1NDU0NXww&ixlib=rb-4.1.0&q=80&w=1080",
@@ -99,13 +105,13 @@
     {
       "id": "image-cropper",
       "description": "A camera lens focusing on a subject",
-      "imageUrl": "https://images.unsplash.com/photo-1580554336067-3a131b2f3c2b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxjYW1lcmElMjBmb2N1c3xlbnwwfHx8fDE3NjQxMzkxODR8MA&ixlib-rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1580554336067-3a131b2f3c2b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxjYW1lcmElMjBmb2N1c3xlbnwwfHx8fDE3NjQxMzkxODR8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "camera focus"
     },
     {
       "id": "hash-generator",
       "description": "Abstract cryptographic block chain",
-      "imageUrl": "https://images.unsplash.com/photo-1642104704074-af0f4871ab18?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjcnlwdG9ncmFwaGljJTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NjQxNDA3MTN8MA&ixlib-rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1642104704074-af0f4871ab18?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjcnlwdG9ncmFwaGljJTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NjQxNDA3MTN8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "crypto background"
     },
     {
@@ -153,7 +159,7 @@
     {
       "id": "bmi-calculator",
       "description": "A person on a scale, measuring their weight",
-      "imageUrl": "https://images.unsplash.com/photo-1588640733510-0926b0a09a56?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx3ZWlnaHQlMjBzY2FsZXxlbnwwfHx8fDE3NjMzNTI4NzR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1588640733510-0926b0a09a56?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx3ZWlnaHQlMjBzY2FsZXxlbnwwfHx8fDE3NjMzNTI4NzR8MA&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "weight scale"
     },
     {
