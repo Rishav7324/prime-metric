@@ -1,5 +1,5 @@
 
-import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link, DollarSign, Heart, GraduationCap, Repeat, Percent, Divide, Sigma, Wrench, Clock, CalendarDays, WalletCards, ListOrdered } from "lucide-react";
+import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link, DollarSign, Heart, GraduationCap, Repeat, Percent, Divide, Sigma, Wrench, Clock, CalendarDays, WalletCards, ListOrdered, Square } from "lucide-react";
 
 export const calculatorTools = [
   {
@@ -221,9 +221,18 @@ export const allCalculators = [...calculatorTools, ...educationalTools,
     description: "Perform calculations with fractions.",
     icon: Divide,
     href: "#",
-imageId: "fraction-calculator",
+    imageId: "fraction-calculator",
     category: "math",
     implemented: false,
+  },
+  {
+    title: "Area Calculator",
+    description: "Calculate area of different geometric shapes.",
+    icon: Square,
+    href: "/math-calculators/area-calculator",
+    imageId: "area-calculator",
+    category: "math",
+    implemented: true,
   },
   {
     title: "Age Calculator",
