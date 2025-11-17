@@ -6,6 +6,7 @@ import { Search, BotMessageSquare, Menu, Calculator, DollarSign, Heart, Graduati
 
 const navLinks = [
   { href: "/all-calculators", label: "All Calculators" },
+  { href: "/all-tools", label: "All Tools" },
   { href: "/financial-calculators", label: "Financial" },
   { href: "/health-calculators", label: "Health" },
   { href: "/math-calculators", label: "Math" },
