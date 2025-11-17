@@ -1,4 +1,4 @@
-import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp } from "lucide-react";
+import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary } from "lucide-react";
 
 export const calculatorTools = [
   {
@@ -22,6 +22,13 @@ export const calculatorTools = [
     href: "#",
     imageId: "loan-calculator"
   },
+  {
+    title: "Base64 Encoder/Decoder",
+    description: "Encode text to Base64 or decode from it.",
+    icon: Binary,
+    href: "/tool/base64",
+    imageId: "base64-tool"
+  }
 ];
 
 export const educationalTools = [

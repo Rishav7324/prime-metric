@@ -35,6 +35,12 @@
       "description": "A person looking at a sunset, symbolizing retirement",
       "imageUrl": "https://images.unsplash.com/photo-1533780898421-b118c81ac26b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxyZXRpcmVtZW50JTIwc3Vuc2V0fGVufDB8fHx8MTc2MzM1NDU0NXww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "retirement sunset"
+    },
+    {
+      "id": "base64-tool",
+      "description": "Abstract binary code on a screen",
+      "imageUrl": "https://images.unsplash.com/photo-1569396116180-210c182bedb8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxiaW5hcnklMjBjb2RlfGVufDB8fHx8MTc2MzM1NDM0MXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "binary code"
     }
   ]
 }
