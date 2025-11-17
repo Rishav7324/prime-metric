@@ -7,6 +7,7 @@ import { ArrowRight } from "lucide-react";
 
 const ToolCard = ({ tool }: { tool: (typeof calculatorTools)[0] | (typeof educationalTools)[0] }) => {
   const placeholder = tool.imageId ? PlaceHolderImages.find(p => p.id === tool.imageId) : null;
+  const toolName = 'name' in tool ? tool.name : tool.title;
 
   return (
     <Link href={tool.path} className="group block">
@@ -28,7 +29,7 @@ const ToolCard = ({ tool }: { tool: (typeof calculatorTools)[0] | (typeof educat
             <div className="bg-primary/10 p-2 rounded-lg">
               <tool.icon className="h-6 w-6 text-accent" />
             </div>
-            <h3 className="text-xl font-bold font-headline">{tool.title}</h3>
+            <h3 className="text-xl font-bold font-headline">{toolName}</h3>
           </div>
           <p className="mt-3 text-muted-foreground flex-grow">{tool.description}</p>
           <div className="mt-4 flex items-center text-sm font-semibold text-accent opacity-0 group-hover:opacity-100 transition-opacity">
