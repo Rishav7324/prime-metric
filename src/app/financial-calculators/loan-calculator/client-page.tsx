@@ -10,7 +10,7 @@ import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
 
-const LoanCalculator = () => {
+const LoanCalculatorClient = () => {
   const [amount, setAmount] = useState("");
   const [rate, setRate] = useState("");
   const [term, setTerm] = useState("");
@@ -124,4 +124,4 @@ const LoanCalculator = () => {
   );
 };
 
-export default LoanCalculator;
+export default LoanCalculatorClient;

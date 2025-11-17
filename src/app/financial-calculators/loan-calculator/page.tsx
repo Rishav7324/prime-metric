@@ -1,6 +1,6 @@
 
 import { generateMetadata } from "@/components/CalculatorLayout";
-import LoanCalculator from "./client-page";
+import LoanCalculatorClient from "./client-page";
 
 export const metadata = generateMetadata({
   title: "Loan EMI Calculator",
@@ -10,5 +10,5 @@ export const metadata = generateMetadata({
 });
 
 export default function Page() {
-  return <LoanCalculator />;
+  return <LoanCalculatorClient />;
 }
