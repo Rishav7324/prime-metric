@@ -7,6 +7,7 @@ import { SiteFooter } from '@/components/site-footer';
 import { Toaster } from "@/components/ui/toaster";
 import { FirebaseClientProvider } from '@/firebase';
 import CookieConsentBanner from '@/components/CookieConsentBanner';
+import { Analytics } from '@vercel/analytics/react';
 
 export const metadata: Metadata = {
   title: 'Prime Metric',
@@ -35,6 +36,8 @@ export default function RootLayout({
           <Toaster />
         </FirebaseClientProvider>
         <CookieConsentBanner />
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
