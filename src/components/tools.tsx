@@ -6,10 +6,10 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 const ToolCard = ({ tool }: { tool: (typeof calculatorTools)[0] | (typeof educationalTools)[0] }) => {
-  const placeholder = PlaceHolderImages.find(p => p.id === tool.imageId);
+  const placeholder = tool.imageId ? PlaceHolderImages.find(p => p.id === tool.imageId) : null;
 
   return (
-    <Link href={tool.href} className="group block">
+    <Link href={tool.path} className="group block">
       <div className="glass-card p-0 overflow-hidden transition-all duration-300 group-hover:border-accent group-hover:shadow-2xl group-hover:shadow-accent/10 rounded-2xl h-full flex flex-col">
         {placeholder && (
           <div className="overflow-hidden">
@@ -58,14 +58,14 @@ export function Tools() {
           <TabsContent value="calculators" className="mt-10">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {calculatorTools.map((tool) => (
-                <ToolCard key={tool.title} tool={tool} />
+                <ToolCard key={tool.name} tool={tool} />
               ))}
             </div>
           </TabsContent>
           <TabsContent value="education" className="mt-10">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {educationalTools.map((tool) => (
-                <ToolCard key={tool.title} tool={tool} />
+                <ToolCard key={tool.name} tool={tool} />
               ))}
             </div>
           </TabsContent>

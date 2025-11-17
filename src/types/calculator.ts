@@ -8,4 +8,5 @@ export type Calculator = {
   path: string;
   implemented: boolean;
   icon: LucideIcon;
+  imageId?: string;
 };
