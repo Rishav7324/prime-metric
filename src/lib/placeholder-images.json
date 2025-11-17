@@ -69,7 +69,7 @@
     {
       "id": "image-cropper",
       "description": "A camera lens focusing on a subject",
-      "imageUrl": "https://images.unsplash.com/photo-1580554336067-3a131b2f3c2b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxjYW1lcmElMjBmb2N1c3xlbnwwfHx8fDE3NjQxMzkxODR8MA&ixlib-rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1580554336067-3a131b2f3c2b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxjYW1lcmElMjBmb2N1c3xlbnwwfHx8fDE3NjQxMzkxODR8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "camera focus"
     },
     {
@@ -77,6 +77,12 @@
       "description": "Abstract cryptographic block chain",
       "imageUrl": "https://images.unsplash.com/photo-1642104704074-af0f4871ab18?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjcnlwdG9ncmFwaGljJTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NjQxNDA3MTN8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "crypto background"
+    },
+    {
+      "id": "json-formatter",
+      "description": "Abstract data structure visualization",
+      "imageUrl": "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxqc29uJTIwY29kZXxlbnwwfHx8fDE3NjQxNDE1NTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "json code"
     }
   ]
 }

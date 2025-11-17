@@ -1,4 +1,4 @@
-import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash } from "lucide-react";
+import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces } from "lucide-react";
 
 export const calculatorTools = [
   {
@@ -70,6 +70,13 @@ export const calculatorTools = [
     icon: Hash,
     href: "/tool/hash-generator",
     imageId: "hash-generator"
+  },
+  {
+    title: "JSON Formatter",
+    description: "Format, validate, and minify JSON data.",
+    icon: Braces,
+    href: "/tool/json-formatter",
+    imageId: "json-formatter"
   }
 ];
 
