@@ -1,4 +1,4 @@
-import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link, DollarSign, Heart, GraduationCap, Repeat, Percent, Divide, Sigma, Wrench, Clock, CalendarDays, WalletCards, ListOrdered, Square, Car, Flame, PersonStanding, Wallet, Dumbbell, Circle, Dices, MoveHorizontal, FileCheck, Ruler } from "lucide-react";
+import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link, DollarSign, Heart, GraduationCap, Repeat, Percent, Divide, Sigma, Wrench, Clock, CalendarDays, WalletCards, ListOrdered, Square, Car, Flame, PersonStanding, Wallet, Dumbbell, Circle, Dices, MoveHorizontal, FileCheck, Ruler, Home } from "lucide-react";
 
 export const calculatorTools = [
   {
@@ -338,6 +338,15 @@ export const allCalculators = [...calculatorTools, ...educationalTools,
     icon: Briefcase,
     href: "/financial-calculators/finance-calculator",
     imageId: "finance-calculator",
+    category: "financial",
+    implemented: true,
+  },
+  {
+    title: "House Affordability Calculator",
+    description: "Estimate the home price you can afford.",
+    icon: Home,
+    href: "/financial-calculators/house-affordability-calculator",
+    imageId: "house-affordability-calculator",
     category: "financial",
     implemented: true,
   },
