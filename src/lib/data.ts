@@ -65,6 +65,15 @@ export const calculatorTools = [
     implemented: true,
   },
   {
+    title: "Compound Interest Calculator",
+    description: "Calculate the future value of your investment.",
+    icon: TrendingUp,
+    href: "/financial-calculators/compound-interest-calculator",
+    imageId: "compound-interest",
+    category: "financial",
+    implemented: true,
+  },
+  {
     title: "Base64 Encoder/Decoder",
     description: "Encode text to Base64 or decode from it.",
     icon: Binary,
@@ -362,7 +371,11 @@ imageId: "fraction-calculator",
 
 export const financialCalculators = allCalculators.filter(
   (calc) => calc.category === "financial"
-);
+).sort((a, b) => {
+  if (a.implemented && !b.implemented) return -1;
+  if (!a.implemented && b.implemented) return 1;
+  return a.name.localeCompare(b.name);
+});
 
 export const healthCalculators = allCalculators.filter(
   (calc) => calc.category === "health"
