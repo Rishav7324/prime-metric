@@ -69,7 +69,7 @@
     {
       "id": "retirement-planning",
       "description": "A person looking at a sunset, symbolizing retirement",
-      "imageUrl": "https://images.unsplash.com/photo-1533780898421-b118c81ac26b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxyZXRpcmVtZW50JTIwc3Vuc2V0fGVufDB8fHx8MTc2MzM1NDU0NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1533780898421-b118c81ac26b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxyZXRpcmVtZW50JTIwc3Vuc2V0fGVufDB8fHx8MTc2MzM1NDU0NXww&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "retirement sunset"
     },
     {
@@ -105,19 +105,19 @@
     {
       "id": "image-cropper",
       "description": "A camera lens focusing on a subject",
-      "imageUrl": "https://images.unsplash.com/photo-1580554336067-3a131b2f3c2b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxjYW1lcmElMjBmb2N1c3xlbnwwfHx8fDE3NjQxMzkxODR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1580554336067-3a131b2f3c2b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxjYW1lcmElMjBmb2N1c3xlbnwwfHx8fDE3NjQxMzkxODR8MA&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "camera focus"
     },
     {
       "id": "hash-generator",
       "description": "Abstract cryptographic block chain",
-      "imageUrl": "https://images.unsplash.com/photo-1642104704074-af0f4871ab18?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjcnlwdG9ncmFwaGljJTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NjQxNDA3MTN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1642104704074-af0f4871ab18?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjcnlwdG9ncmFwaGljJTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NjQxNDA3MTN8MA&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "crypto background"
     },
     {
       "id": "json-formatter",
       "description": "Abstract data structure visualization",
-      "imageUrl": "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxqc29uJTIwY29kZXxlbnwwfHx8fDE3NjQxNDE1NTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxqc29uJTIwY29kZXxlbnwwfHx8fDE3NjQxNDE1NTB8MA&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "json code"
     },
     {
@@ -135,13 +135,13 @@
     {
       "id": "url-encoder",
       "description": "Abstract network of interconnected nodes",
-      "imageUrl": "https://images.unsplash.com/photo-1605379399642-870262d3d051?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHx1cmwlMjBsaW5rfGVufDB8fHx8MTc2NDc2NDkzM3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1605379399642-870262d3d051?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHx1cmwlMjBsaW5rfGVufDB8fHx8MTc2NDc2NDkzM3ww&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "url link"
     },
     {
       "id": "word-counter",
       "description": "A person writing in a notebook, representing text creation",
-      "imageUrl": "https://images.unsplash.com/photo-1761322572550-967ea8c0bfd9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHx3cml0aW5nJTIwbm90ZWJvb2t8ZW58MHx8fHwxNzYzMjYyOTMyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1761322572550-967ea8c0bfd9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHx3cml0aW5nJTIwbm90ZWJvb2t8ZW58MHx8fHwxNzYzMjYyOTMyfDA&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "writing notebook"
     },
     {
@@ -153,31 +153,31 @@
     {
       "id": "average-calculator",
       "description": "A graph showing statistical data and averages",
-      "imageUrl": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzdGF0aXN0aWNzJTIwZ3JhcGh8ZW58MHx8fHwxNzY2NTc0NTA0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzdGF0aXN0aWNzJTIwZ3JhcGh8ZW58MHx8fHwxNzY2NTc0NTA0fDA&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "statistics graph"
     },
     {
       "id": "bmi-calculator",
       "description": "A person on a scale, measuring their weight",
-      "imageUrl": "https://images.unsplash.com/photo-1588640733510-0926b0a09a56?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx3ZWlnaHQlMjBzY2FsZXxlbnwwfHx8fDE3NjMzNTI4NzR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1588640733510-0926b0a09a56?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx3ZWlnaHQlMjBzY2FsZXxlbnwwfHx8fDE3NjMzNTI4NzR8MA&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "weight scale"
     },
     {
       "id": "bmr-calculator",
       "description": "A silhouette of a person running at sunset",
-      "imageUrl": "https://images.unsplash.com/photo-1538805060514-97d9cc17730c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxydW5uaW5nJTIwc3Vuc2V0fGVufDB8fHx8MTc2NzE1NDY5MHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1538805060514-97d9cc17730c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxydW5uaW5nJTIwc3Vuc2V0fGVufDB8fHx8MTc2NzE1NDY5MHww&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "running sunset"
     },
     {
       "id": "body-fat-calculator",
       "description": "An athlete with visible muscle definition, representing body composition.",
-      "imageUrl": "https://images.unsplash.com/photo-1581009137052-c0b249821925?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhdGhsZXRlJTIwbXVzY2xlfGVufDB8fHx8MTc2NzE2MDQ3M3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1581009137052-c0b249821925?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhdGhsZXRlJTIwbXVzY2xlfGVufDB8fHx8MTc2NzE2MDQ3M3ww&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "athlete muscle"
     },
     {
       "id": "calorie-calculator",
       "description": "A colorful arrangement of healthy foods like fruits and vegetables.",
-      "imageUrl": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxoZWFsdGh5JTIwZm9vZHxlbnwwfHx8fDE3Njg1MTg1MjN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxoZWFsdGh5JTIwZm9vZHxlbnwwfHx8fDE3Njg1MTg1MjN8MA&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "healthy food"
     },
     {
@@ -195,13 +195,13 @@
     {
       "id": "binary-calculator",
       "description": "Close-up of a circuit board with glowing lines, representing binary data flow.",
-      "imageUrl": "https://images.unsplash.com/photo-1528901166007-3784c7dd3653?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxiaW5hcnklMjBjaXJjdWl0fGVufDB8fHx8MTc2NzE1NzM1Nnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1528901166007-3784c7dd3653?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxiaW5hcnklMjBjaXJjdWl0fGVufDB8fHx8MTc2NzE1NzM1Nnww&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "binary circuit"
     },
     {
       "id": "circle-calculator",
       "description": "A vibrant, abstract image of overlapping circles and geometric patterns.",
-      "imageUrl": "https://images.unsplash.com/photo-1509909756405-be0199881695?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMGNpcmNsZXN8ZW58MHx8fHwxNzY5MDM5OTM0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1509909756405-be0199881695?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMGNpcmNsZXN8ZW58MHx8fHwxNzY5MDM5OTM0fDA&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "abstract circles"
     },
     {
@@ -213,7 +213,7 @@
     {
       "id": "currency-converter",
       "description": "A collage of different world currency notes and coins.",
-      "imageUrl": "https://images.unsplash.com/photo-1580519542036-c47de6196ba5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx3b3JsZCUyMGN1cnJlbmN5fGVufDB8fHx8MTc2NTMyNTYwMHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1580519542036-c47de6196ba5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx3b3JsZCUyMGN1cnJlbmN5fGVufDB8fHx8MTc2NTMyNTYwMHww&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "world currency"
     },
     {
@@ -231,7 +231,7 @@
     {
       "id": "discount-calculator",
       "description": "A vibrant 'SALE' sign in a retail store window.",
-      "imageUrl": "https://images.unsplash.com/photo-1529633219428-935c1a0a5568?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzYWxlJTIwc2lnbnxlbnwwfHx8fDE3NzIyOTg3Njd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1529633219428-935c1a0a5568?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzYWxlJTIwc2lnbnxlbnwwfHx8fDE3NzIyOTg3Njd8MA&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "sale sign"
     },
     {
@@ -243,13 +243,13 @@
     {
       "id": "finance-calculator",
       "description": "A digital screen showing various financial charts and graphs.",
-      "imageUrl": "https://images.unsplash.com/photo-1640622300473-977435c23c01?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxmaW5hbmNpYWwlMjBkYXNoYm9hcmR8ZW58MHx8fHwxNzc0NzE2NjMxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1640622300473-977435c23c01?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxmaW5hbmNpYWwlMjBkYXNoYm9hcmR8ZW58MHx8fHwxNzc0NzE2NjMxfDA&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "financial dashboard"
     },
     {
       "id": "fraction-calculator",
       "description": "Abstract visual of sliced pie charts representing fractions.",
-      "imageUrl": "https://images.unsplash.com/photo-1653715367838-6b83a0e1a3b5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxmcmFjdGlvbiUyMHBpZSUyMGNoYXJ0fGVufDB8fHx8MTc3NDcyNzg4NHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1653715367838-6b83a0e1a3b5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxmcmFjdGlvbiUyMHBpZSUyMGNoYXJ0fGVufDB8fHx8MTc3NDcyNzg4NHww&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "fraction pie chart"
     },
     {
@@ -257,6 +257,12 @@
       "description": "A graduation cap on a stack of books.",
       "imageUrl": "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxncmFkdWF0aW9uJTIwY2FwfGVufDB8fHx8MTc3OTM3MjgzOXww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "graduation cap"
+    },
+    {
+      "id": "grade-calculator",
+      "description": "A checked exam paper with a grade on it.",
+      "imageUrl": "https://images.unsplash.com/photo-1518133893776-34b316492343?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxncmFkZSUyMGV4YW18ZW58MHx8fHwxNzc5MzczNTE1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "exam grade"
     }
   ]
 }

@@ -1,4 +1,4 @@
-import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link, DollarSign, Heart, GraduationCap, Repeat, Percent, Divide, Sigma, Wrench, Clock, CalendarDays, WalletCards, ListOrdered, Square, Car, Flame, PersonStanding, Wallet, Dumbbell, Circle, Dices, MoveHorizontal } from "lucide-react";
+import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link, DollarSign, Heart, GraduationCap, Repeat, Percent, Divide, Sigma, Wrench, Clock, CalendarDays, WalletCards, ListOrdered, Square, Car, Flame, PersonStanding, Wallet, Dumbbell, Circle, Dices, MoveHorizontal, FileCheck } from "lucide-react";
 
 export const calculatorTools = [
   {
@@ -410,6 +410,15 @@ export const allCalculators = [...calculatorTools, ...educationalTools,
     icon: GraduationCap,
     href: "/other-calculators/gpa-calculator",
     imageId: "gpa-calculator",
+    category: "other",
+    implemented: true,
+  },
+   {
+    title: "Grade Calculator",
+    description: "Calculate grade percentage and letter grade from scores.",
+    icon: FileCheck,
+    href: "/other-calculators/grade-calculator",
+    imageId: "grade-calculator",
     category: "other",
     implemented: true,
   },
