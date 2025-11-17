@@ -16,28 +16,9 @@ export const metadata: Metadata = {
 
 const FinancialCalculators = () => {
   return (
-    <>
+    
       <div className="min-h-screen">
-      {/* Navbar */}
-      <nav className="sticky top-0 z-50 glass-card border-b border-primary/20">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-2 group">
-              <Calculator className="w-8 h-8 text-primary group-hover:rotate-12 transition-transform" />
-              <span className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                Prime Metric
-              </span>
-            </Link>
-            <Link href="/">
-              <Button variant="outline" size="sm" className="glass-card border-primary/30">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Home
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </nav>
-
+      
       <div className="container mx-auto px-4 py-12">
         {/* Header */}
         <div className="max-w-4xl mx-auto mb-12 text-center">
@@ -93,7 +74,6 @@ const FinancialCalculators = () => {
         </div>
       </div>
     </div>
-    </>
   );
 };
 
