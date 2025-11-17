@@ -1,4 +1,3 @@
-
 import Head from "next/head";
 import { Metadata } from 'next';
 
@@ -8,7 +7,7 @@ type CalculatorLayoutProps = {
   keywords: string;
   canonicalUrl: string;
   formula?: string;
-  explanation?: string;
+  explanation?: React.ReactNode;
   children: React.ReactNode;
 };
 
