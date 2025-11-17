@@ -98,6 +98,13 @@ export const calculatorTools = [
     icon: Link,
     href: "/tool/url-encoder",
     imageId: "url-encoder"
+  },
+  {
+    title: "Word Counter",
+    description: "Count words, characters, sentences, and reading time.",
+    icon: FileText,
+    href: "/tool/word-counter",
+    imageId: "word-counter"
   }
 ];
 

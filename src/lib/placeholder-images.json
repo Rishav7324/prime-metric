@@ -45,7 +45,7 @@
     {
       "id": "case-converter",
       "description": "Abstract letter blocks on a surface",
-      "imageUrl": "https://images.unsplash.com/photo-1759147893749-7c92a92cd9d1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxsZXR0ZXIlMjBibG9ja3N8ZW58MHx8fHwxNzYzMzU1MDU5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1759147893749-7c92a92cd9d1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxsZXR0ZXIlMjBibG9ja3N8ZW58MHx8fHwxNzYzMzU1MDU5fDA&ixlibrb-4.1.0&q=80&w=1080",
       "imageHint": "letter blocks"
     },
     {
@@ -101,6 +101,12 @@
       "description": "Abstract network of interconnected nodes",
       "imageUrl": "https://images.unsplash.com/photo-1605379399642-870262d3d051?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHx1cmwlMjBsaW5rfGVufDB8fHx8MTc2NDc2NDkzM3ww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "url link"
+    },
+    {
+      "id": "word-counter",
+      "description": "A person writing in a notebook, representing text creation",
+      "imageUrl": "https://images.unsplash.com/photo-1761322572550-967ea8c0bfd9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHx3cml0aW5nJTIwbm90ZWJvb2t8ZW58MHx8fHwxNzYzMjYyOTMyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "writing notebook"
     }
   ]
 }

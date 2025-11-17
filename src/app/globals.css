@@ -83,6 +83,12 @@
     background-size: 400% 400%;
     animation: gradient-animation 30s ease infinite;
   }
+  .result-label {
+    @apply text-sm font-medium text-muted-foreground;
+  }
+  .result-value {
+    @apply text-2xl font-bold text-foreground;
+  }
 }
 
 @keyframes gradient-animation {
