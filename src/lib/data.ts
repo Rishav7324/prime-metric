@@ -1,4 +1,5 @@
-import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link, DollarSign, Heart, GraduationCap, Repeat, Percent, Divide, Sigma } from "lucide-react";
+
+import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link, DollarSign, Heart, GraduationCap, Repeat, Percent, Divide, Sigma, Wrench, Clock, CalendarDays } from "lucide-react";
 
 export const calculatorTools = [
   {
@@ -205,7 +206,34 @@ export const allCalculators = [...calculatorTools, ...educationalTools,
     imageId: "fraction-calculator",
     category: "math",
     implemented: false,
-  }
+  },
+  {
+    title: "Age Calculator",
+    description: "Calculate age between two dates.",
+    icon: Clock,
+    href: "#",
+    imageId: "age-calculator",
+    category: "other",
+    implemented: false,
+  },
+  {
+    title: "Date Calculator",
+    description: "Add or subtract days from a date.",
+    icon: CalendarDays,
+    href: "#",
+    imageId: "date-calculator",
+    category: "other",
+    implemented: false,
+  },
+  {
+    title: "GPA Calculator",
+    description: "Calculate your Grade Point Average.",
+    icon: GraduationCap,
+    href: "#",
+    imageId: "gpa-calculator",
+    category: "other",
+    implemented: false,
+  },
 ].map(tool => ({
   id: tool.imageId,
   name: tool.title,
@@ -226,6 +254,10 @@ export const healthCalculators = allCalculators.filter(
 
 export const mathCalculators = allCalculators.filter(
   (calc) => calc.category === "math"
+);
+
+export const otherCalculators = allCalculators.filter(
+  (calc) => calc.category === "other"
 );
 
 export const categories = [
@@ -255,11 +287,11 @@ export const categories = [
     },
     {
       title: "Other Calculators",
-      icon: Repeat,
+      icon: Wrench,
       description: "Converters, Utilities & Daily Tools",
-      gradient: "from-orange-500 to-amber-600",
+      gradient: "from-cyan-500 to-blue-600",
       calculators: ["Date Calculator", "Age Calculator", "Time Zone", "Dice Roller"],
-      path: "#"
+      path: "/other-calculators"
     },
     {
       title: "Image Tools",
