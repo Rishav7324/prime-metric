@@ -151,6 +151,12 @@
       "imageHint": "running sunset"
     },
     {
+      "id": "body-fat-calculator",
+      "description": "An athlete with visible muscle definition, representing body composition.",
+      "imageUrl": "https://images.unsplash.com/photo-1581009137052-c0b249821925?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhdGhsZXRlJTIwbXVzY2xlfGVufDB8fHx8MTc2NzE2MDQ3M3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "athlete muscle"
+    },
+    {
       "id": "basic-calculator",
       "description": "A simple, clean calculator interface on a digital screen.",
       "imageUrl": "https://images.unsplash.com/photo-1653074281018-c08f358059ab?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8Y2FsY3VsYXRvciUyMGFwcHxlbnwwfHx8fDE3NjMzNTcxMDF8MA&ixlib=rb-4.1.0&q=80&w=1080",

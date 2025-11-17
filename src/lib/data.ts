@@ -1,5 +1,5 @@
 
-import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link, DollarSign, Heart, GraduationCap, Repeat, Percent, Divide, Sigma, Wrench, Clock, CalendarDays, WalletCards, ListOrdered, Square, Car, Flame } from "lucide-react";
+import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link, DollarSign, Heart, GraduationCap, Repeat, Percent, Divide, Sigma, Wrench, Clock, CalendarDays, WalletCards, ListOrdered, Square, Car, Flame, PersonStanding } from "lucide-react";
 
 export const calculatorTools = [
   {
@@ -213,6 +213,15 @@ export const allCalculators = [...calculatorTools, ...educationalTools,
     icon: Flame,
     href: "/health-calculators/bmr-calculator",
     imageId: "bmr-calculator",
+    category: "health",
+    implemented: true,
+  },
+  {
+    title: "Body Fat Calculator",
+    description: "Estimate body fat percentage using the U.S. Navy method.",
+    icon: PersonStanding,
+    href: "/health-calculators/body-fat-calculator",
+    imageId: "body-fat-calculator",
     category: "health",
     implemented: true,
   },
