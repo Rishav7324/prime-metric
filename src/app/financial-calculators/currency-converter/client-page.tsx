@@ -20,10 +20,14 @@ const CurrencyCalculator = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    fetch('https://api.exchangerate-api.com/v4/latest/USD')
+    fetch('https://v6.exchangerate-api.com/v6/47d21e70f7f01c637fbd6d49/latest/USD')
       .then(res => res.json())
       .then(data => {
-        setRates(data.rates);
+        if (data.result === 'success') {
+          setRates(data.conversion_rates);
+        } else {
+          throw new Error('Failed to fetch rates');
+        }
       })
       .catch(error => {
         console.error("Failed to fetch exchange rates:", error);
