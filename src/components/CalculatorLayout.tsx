@@ -15,23 +15,36 @@ type CalculatorLayoutProps = {
 type GenerateMetadataProps = Omit<CalculatorLayoutProps, 'children' | 'formula' | 'explanation'>;
 
 export function generateMetadata({ title, description, keywords, canonicalUrl }: GenerateMetadataProps): Metadata {
+  const fullTitle = `${title} | Prime Metric`;
+  const fullUrl = `https://primemetric.online${canonicalUrl}`;
+  const ogImageUrl = 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMGNoYXJ0fGVufDB8fHx8MTc2OTYzOTMwN3ww&ixlib=rb-4.1.0&q=80&w=1200';
+
   return {
-    title: `${title} | Prime Metric`,
+    title: fullTitle,
     description: description,
     keywords: keywords,
     alternates: {
-      canonical: `https://primemetric.online${canonicalUrl}`,
+      canonical: fullUrl,
     },
     openGraph: {
-        title: `${title} | Prime Metric`,
+        title: fullTitle,
         description: description,
-        url: `https://primemetric.online${canonicalUrl}`,
+        url: fullUrl,
         type: 'website',
+        images: [
+            {
+                url: ogImageUrl,
+                width: 1200,
+                height: 630,
+                alt: fullTitle,
+            }
+        ]
     },
     twitter: {
         card: 'summary_large_image',
-        title: `${title} | Prime Metric`,
+        title: fullTitle,
         description: description,
+        images: [ogImageUrl],
     }
   };
 }
