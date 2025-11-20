@@ -17,10 +17,10 @@ const AdBanner = () => {
       <ins
         className="adsbygoogle"
         style={{ display: 'block' }}
-        data-ad-format="fluid"
-        data-ad-layout-key="-gw-3+1f-3d+2z"
         data-ad-client="ca-pub-6512188660075861"
-        data-ad-slot="7139426902"
+        data-ad-slot="6436267054"
+        data-ad-format="auto"
+        data-full-width-responsive="true"
       ></ins>
     </div>
   );
