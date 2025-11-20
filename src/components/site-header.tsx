@@ -18,7 +18,7 @@ export function SiteHeader() {
       <div className="container flex h-16 max-w-screen-2xl items-center">
         <div className="mr-4 flex">
           <Link href="/" className="mr-6 flex items-center space-x-2">
-            <Calculator className="h-6 w-6 text-primary" />
+            <img src="/logo.png" alt="PrimeMetric Logo" className="h-8 w-8" />
             <span className="font-bold font-headline sm:inline-block text-lg">
               PrimeMetric
             </span>
@@ -58,7 +58,7 @@ export function SiteHeader() {
                 <SheetHeader>
                     <SheetTitle>
                         <Link href="/" className="mr-6 flex items-center space-x-2">
-                            <Calculator className="h-6 w-6 text-primary" />
+                            <img src="/logo.png" alt="PrimeMetric Logo" className="h-8 w-8" />
                             <span className="font-bold font-headline sm:inline-block text-lg">
                             PrimeMetric
                             </span>
