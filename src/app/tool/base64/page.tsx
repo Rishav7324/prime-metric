@@ -88,24 +88,23 @@ const Base64Tool = () => {
         </div>
 
         <CalculatorContentSection
-          aboutContent="The Base64 Encoder/Decoder converts text to Base64 encoding and back. Base64 is a binary-to-text encoding scheme that represents binary data in an ASCII string format. It's commonly used for encoding data in emails, URLs, and data transfer where binary data needs to be transmitted over text-based protocols."
+          aboutContent="The Base64 Encoder/Decoder converts text to Base64 encoding and back. Base64 is a binary-to-text encoding scheme that represents binary data (like images or files) in a standard ASCII string format. It's not a form of encryption, but a way to safely transmit data over protocols that are designed to handle only plain text, such as in URLs, email attachments, or JSON files."
           useCases={[
-            { title: "Email Attachments", description: "Email protocols like SMTP were designed for text. Base64 encoding allows binary files (images, documents) to be sent as text in email attachments." },
-            { title: "Data URLs", description: "Embed small images or files directly in HTML or CSS using Base64 data URLs, reducing HTTP requests and simplifying deployment." },
-            { title: "API Authentication", description: "Many APIs use Base64 encoding for Basic Authentication headers, encoding username:password combinations." },
-            { title: "Data Storage", description: "Store binary data in JSON, XML, or databases that only handle text, such as embedding images in JSON API responses." }
+            { title: "Embedding Images in HTML/CSS", description: "Use Base64 to embed small images directly into your code as 'Data URLs', which can reduce HTTP requests and speed up page loads for small assets." },
+            { title: "API Authentication", description: "Basic HTTP Authentication uses Base64 to encode a username and password into a single string for the 'Authorization' header." },
+            { title: "Data Transfer in Text Formats", description: "Safely include binary data within JSON or XML files where raw binary characters would cause parsing errors." },
+            { title: "Email Attachments", description: "Base64 is a key part of the MIME standard, used to encode binary file attachments so they can be sent through text-based email systems." }
           ]}
           tips={[
-            { title: "Not Encryption", description: "Base64 is encoding, not encryption. It doesn't provide security—anyone can decode it. Never use Base64 alone for sensitive data." },
-            { title: "Size Increase", description: "Base64 encoding increases data size by about 33%. Original 100 bytes becomes approximately 133 bytes encoded." },
-            { title: "URL Safety", description: "Standard Base64 uses +, /, and = which aren't URL-safe. For URLs, use URL-safe Base64 variants that replace these characters." },
-            { title: "Line Breaks", description: "Some Base64 implementations add line breaks every 76 characters. This tool doesn't add line breaks, providing compact output." }
+            { title: "Not for Security", description: "Remember that Base64 is an encoding format, not encryption. It can be easily decoded by anyone. Never use it to protect sensitive information." },
+            { title: "Size Increase", description: "Base64 encoding increases the size of the data by approximately 33%. It is best used for small pieces of data where the overhead is negligible." },
+            { title: "URL-Safe Variants", description: "Standard Base64 includes '+' and '/' characters, which have special meanings in URLs. For URL parameters, a 'URL-safe' variant of Base64 is often used (this tool uses the standard variant)." },
           ]}
           faqs={[
-            { question: "Is Base64 encoding secure?", answer: "No. Base64 is encoding, not encryption. It's easily reversible and provides no security. Use proper encryption (AES, RSA) for sensitive data." },
-            { question: "Why does my encoded data look like random text?", answer: "Base64 uses A-Z, a-z, 0-9, +, /, and = characters to represent data. It appears random but is actually a deterministic encoding of your input." },
-            { question: "What causes 'invalid input' errors when decoding?", answer: "The input must be valid Base64 (only A-Z, a-z, 0-9, +, /, =). Other characters, including unencoded text, will cause decode errors." },
-            { question: "Can I encode any type of file?", answer: "This tool works with text input. For files (images, PDFs), use file-specific Base64 tools or programming libraries that can handle binary data." }
+            { question: "Is Base64 encoding secure?", answer: "No, it is not a security feature. It's a method of representing data, and it is easily reversible. For security, you must use encryption algorithms like AES." },
+            { question: "Why does my encoded text look longer than the original?", answer: "Base64 represents 3 bytes of binary data using 4 ASCII characters. This translation results in the final string being about 33% larger than the original data." },
+            { question: "What does the '=' at the end mean?", answer: "The '=' character is used as padding to ensure the Base64 string is a multiple of 4 characters long. You might see one, two, or no '=' characters at the end of a string." },
+            { question: "Can I use this for files?", answer: "This tool is designed for text. While you could technically copy-paste the text content of some files, it will not work for binary files like images or PDFs. File-to-Base64 conversion requires reading the file's raw binary data." }
           ]}
         />
       </CalculatorLayout>
