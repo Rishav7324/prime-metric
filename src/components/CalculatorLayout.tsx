@@ -1,6 +1,7 @@
 
 import Head from "next/head";
 import { Metadata } from 'next';
+import AdBanner from "./AdBanner";
 
 type CalculatorLayoutProps = {
   title: string;
@@ -60,6 +61,7 @@ const CalculatorLayout = ({
             )}
           </div>
           <div className="mt-12">{children}</div>
+          <AdBanner />
         </div>
       </main>
     </>
