@@ -1,12 +1,35 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const HighPerformanceAd = () => {
   const adRef = useRef<HTMLDivElement>(null);
+  const [isIntersecting, setIsIntersecting] = useState(false);
 
   useEffect(() => {
-    if (adRef.current && adRef.current.children.length === 0) {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsIntersecting(true);
+          observer.disconnect();
+        }
+      },
+      {
+        rootMargin: '30px', // Load the ad when it's 30px away from the viewport
+      }
+    );
+
+    if (adRef.current) {
+      observer.observe(adRef.current);
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isIntersecting && adRef.current && adRef.current.children.length === 0) {
       const scriptContainer = document.createElement('div');
 
       const configScript = document.createElement('script');
@@ -30,9 +53,9 @@ const HighPerformanceAd = () => {
       scriptContainer.appendChild(adScript);
       adRef.current.appendChild(scriptContainer);
     }
-  }, []);
+  }, [isIntersecting]);
 
-  return <div ref={adRef} style={{ display: 'flex', justifyContent: 'center', margin: '1rem 0' }} />;
+  return <div ref={adRef} style={{ display: 'flex', justifyContent: 'center', minHeight: '250px' }} />;
 };
 
 export default HighPerformanceAd;

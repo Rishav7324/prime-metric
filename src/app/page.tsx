@@ -148,7 +148,7 @@ const Index = () => {
                   if (index < categories.length - 1) {
                     return [
                       card,
-                      <div key={`ad-cat-${index}`} className="w-full col-span-1 md:col-span-2 lg:col-span-3 flex justify-center items-center my-4">
+                      <div key={`ad-cat-${index}`} className="w-full col-span-1 md:col-span-2 lg:col-span-3 flex justify-center items-center">
                         <HighPerformanceAd2 />
                       </div>
                     ];
@@ -185,7 +185,7 @@ const Index = () => {
                   if (index < features.length - 1) {
                      return [
                       card,
-                      <div key={`ad-feat-${index}`} className="w-full col-span-1 md:col-span-3 flex justify-center items-center my-4">
+                      <div key={`ad-feat-${index}`} className="w-full col-span-1 md:col-span-3 flex justify-center items-center">
                         <HighPerformanceAd2 />
                       </div>
                     ];

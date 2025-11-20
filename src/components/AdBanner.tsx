@@ -1,19 +1,46 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const AdBanner = () => {
+  const adRef = useRef<HTMLDivElement>(null);
+  const [isIntersecting, setIsIntersecting] = useState(false);
+
   useEffect(() => {
-    try {
-      // @ts-ignore
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
-    } catch (err) {
-      console.error(err);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsIntersecting(true);
+          observer.disconnect();
+        }
+      },
+      {
+        rootMargin: '200px', // Load the ad when it's 200px away from the viewport
+      }
+    );
+
+    if (adRef.current) {
+      observer.observe(adRef.current);
     }
+
+    return () => {
+      observer.disconnect();
+    };
   }, []);
 
+  useEffect(() => {
+    if (isIntersecting) {
+      try {
+        // @ts-ignore
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  }, [isIntersecting]);
+
   return (
-    <div className="my-8 text-center">
+    <div ref={adRef} className="text-center" style={{ minHeight: '100px' }}>
       <ins
         className="adsbygoogle"
         style={{ display: 'block' }}
