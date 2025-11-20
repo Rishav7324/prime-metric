@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     }
 };
 
-  
+  <a href="https://beta.publishers.adsterra.com/referral/Mp9pQXYdAp" rel="nofollow"><img alt="banner" src="/public/adba.gif" /></a>
 
 const AboutPage = () => {
   return (
