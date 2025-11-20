@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMGNoYXJ0fGVufDB8fHx8MTc2OTYzOTMwN3ww&ixlib=rb-4.1.0&q=80&w=1200',
+        url: '/public/link-img.jpeg',
         width: 1200,
         height: 630,
         alt: 'Prime Metric - Financial and Educational Tools',
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Prime Metric - Free Online Calculators & Tools',
     description: '100+ premium calculators and educational tools for financial clarity.',
-    images: ['https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMGNoYXJ0fGVufDB8fHx8MTc2OTYzOTMwN3ww&ixlib=rb-4.1.0&q=80&w=1200'],
+    images: ['public/link-img.jpeg']
   },
 };
 
