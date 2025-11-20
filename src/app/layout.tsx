@@ -12,6 +12,8 @@ import { Analytics } from '@vercel/analytics/react';
 import Script from 'next/script';
 import { Inter, Merriweather } from 'next/font/google';
 import AdBanner from '@/components/AdBanner';
+import HighPerformanceAd from '@/components/HighPerformanceAd';
+import HighPerformanceAd2 from '@/components/HighPerformanceAd2';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -50,7 +52,9 @@ export default function RootLayout({
         <FirebaseClientProvider>
           <div className="relative flex min-h-dvh flex-col">
             <SiteHeader />
+            <HighPerformanceAd2 />
             <div className="flex-1">{children}</div>
+            <HighPerformanceAd />
             <AdBanner />
             <SiteFooter />
           </div>

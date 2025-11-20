@@ -13,6 +13,7 @@ import LegalPageLayout from "@/components/LegalPageLayout";
 import { useFirestore } from "@/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { addDocumentNonBlocking } from "@/firebase";
+import AdsterraBanner from '@/components/AdsterraBanner';
 
 const Contact = () => {
   const [name, setName] = useState("");
@@ -122,6 +123,7 @@ const Contact = () => {
             </Card>
           </div>
         </div>
+        <AdsterraBanner />
       </LegalPageLayout>
     </>
   );

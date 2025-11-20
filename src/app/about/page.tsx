@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Calculator, Heart, TrendingUp, Users } from "lucide-react";
-import  AdBanner from '@/components/AdBanner';
+import AdsterraBanner from '@/components/AdsterraBanner';
 
 export const metadata: Metadata = {
     title: "About Us - Prime Metric",
@@ -16,14 +16,14 @@ export const metadata: Metadata = {
     }
 };
 
-  <a href="https://beta.publishers.adsterra.com/referral/Mp9pQXYdAp" rel="nofollow"><img alt="banner" src="/public/adba.gif" /></a>
-
 const AboutPage = () => {
   return (
     <LegalPageLayout title="About Us">
         <p className="text-muted-foreground text-lg text-center mb-12">
             Your trusted source for accurate and easy-to-use calculators
         </p>
+        
+        <AdsterraBanner />
 
         <Card className="p-8 bg-card/80 backdrop-blur mb-8">
           <h2 className="text-2xl font-semibold mb-4">Our Mission</h2>
