@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Calculator, Heart, TrendingUp, Users } from "lucide-react";
+import  AdBanner from '@/components/AdBanner';
 
 export const metadata: Metadata = {
     title: "About Us - Prime Metric",
@@ -14,6 +15,8 @@ export const metadata: Metadata = {
       canonical: "https://primemetric.online/about",
     }
 };
+
+  
 
 const AboutPage = () => {
   return (
@@ -168,7 +171,7 @@ const AboutPage = () => {
             explanations, formulas, and contextual information that helps you learn while you calculate.
           </p>
         </Card>
-
+         
         <div className="text-center mt-8">
           <p className="text-muted-foreground mb-4">
             Have questions or suggestions?
