@@ -11,6 +11,7 @@ import CookieConsentBanner from '@/components/CookieConsentBanner';
 import { Analytics } from '@vercel/analytics/react';
 import Script from 'next/script';
 import { Inter, Merriweather } from 'next/font/google';
+import AdBanner from '@/components/AdBanner';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -50,6 +51,7 @@ export default function RootLayout({
           <div className="relative flex min-h-dvh flex-col">
             <SiteHeader />
             <div className="flex-1">{children}</div>
+            <AdBanner />
             <SiteFooter />
           </div>
           <Toaster />
