@@ -6,15 +6,63 @@ import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 
 const majorCities = [
-  { name: "New York", timeZone: "America/New_York" },
-  { name: "London", timeZone: "Europe/London" },
-  { name: "Paris", timeZone: "Europe/Paris" },
-  { name: "Tokyo", timeZone: "Asia/Tokyo" },
-  { name: "Sydney", timeZone: "Australia/Sydney" },
-  { name: "Dubai", timeZone: "Asia/Dubai" },
-  { name: "Shanghai", timeZone: "Asia/Shanghai" },
-  { name: "Los Angeles", timeZone: "America/Los_Angeles" },
+    { name: "New York", timeZone: "America/New_York" },
+    { name: "Los Angeles", timeZone: "America/Los_Angeles" },
+    { name: "Chicago", timeZone: "America/Chicago" },
+    { name: "London", timeZone: "Europe/London" },
+    { name: "Paris", timeZone: "Europe/Paris" },
+    { name: "Berlin", timeZone: "Europe/Berlin" },
+    { name: "Moscow", timeZone: "Europe/Moscow" },
+    { name: "Tokyo", timeZone: "Asia/Tokyo" },
+    { name: "Beijing", timeZone: "Asia/Shanghai" },
+    { name: "Hong Kong", timeZone: "Asia/Hong_Kong" },
+    { name: "Singapore", timeZone: "Asia/Singapore" },
+    { name: "Sydney", timeZone: "Australia/Sydney" },
+    { name: "Dubai", timeZone: "Asia/Dubai" },
+    { name: "Mumbai", timeZone: "Asia/Kolkata" },
+    { name: "São Paulo", timeZone: "America/Sao_Paulo" },
+    { name: "Buenos Aires", timeZone: "America/Argentina/Buenos_Aires" },
+    { name: "Cairo", timeZone: "Africa/Cairo" },
+    { name: "Johannesburg", timeZone: "Africa/Johannesburg" },
+    { name: "Lagos", timeZone: "Africa/Lagos" },
+    { name: "Nairobi", timeZone: "Africa/Nairobi" },
+    { name: "Toronto", timeZone: "America/Toronto" },
+    { name: "Vancouver", timeZone: "America/Vancouver" },
+    { name: "Mexico City", timeZone: "America/Mexico_City" },
+    { name: "Seoul", timeZone: "Asia/Seoul" },
+    { name: "Jakarta", timeZone: "Asia/Jakarta" },
+    { name: "Bangkok", timeZone: "Asia/Bangkok" },
+    { name: "Istanbul", timeZone: "Europe/Istanbul" },
+    { name: "Rome", timeZone: "Europe/Rome" },
+    { name: "Madrid", timeZone: "Europe/Madrid" },
+    { name: "Amsterdam", timeZone: "Europe/Amsterdam" },
+    { name: "Stockholm", timeZone: "Europe/Stockholm" },
+    { name: "Zurich", timeZone: "Europe/Zurich" },
+    { name: "Auckland", timeZone: "Pacific/Auckland" },
+    { name: "Honolulu", timeZone: "Pacific/Honolulu" },
+    { name: "Denver", timeZone: "America/Denver" },
+    { name: "Phoenix", timeZone: "America/Phoenix" },
+    { name: "Ankara", timeZone: "Europe/Istanbul" },
+    { name: "Riyadh", timeZone: "Asia/Riyadh" },
+    { name: "Baghdad", timeZone: "Asia/Baghdad" },
+    { name: "Tehran", timeZone: "Asia/Tehran" },
+    { name: "Karachi", timeZone: "Asia/Karachi" },
+    { name: "Dhaka", timeZone: "Asia/Dhaka" },
+    { name: "Ho Chi Minh City", timeZone: "Asia/Ho_Chi_Minh" },
+    { name: "Manila", timeZone: "Asia/Manila" },
+    { name: "Taipei", timeZone: "Asia/Taipei" },
+    { name: "Perth", timeZone: "Australia/Perth" },
+    { name: "Brisbane", timeZone: "Australia/Brisbane" },
+    { name: "Helsinki", timeZone: "Europe/Helsinki" },
+    { "name": "Oslo", "timeZone": "Europe/Oslo" },
+    { "name": "Copenhagen", "timeZone": "Europe/Copenhagen" },
+    { "name": "Warsaw", "timeZone": "Europe/Warsaw" },
+    { "name": "Prague", "timeZone": "Europe/Prague" },
+    { "name": "Vienna", "timeZone": "Europe/Vienna" },
+    { "name": "Budapest", "timeZone": "Europe/Budapest" },
+    { "name": "Athens", "timeZone": "Europe/Athens" }
 ];
+
 
 interface CityTime {
   name: string;
@@ -78,12 +126,12 @@ const WorldClockClient = () => {
       description="View the current time in major cities across the globe."
       canonicalUrl="/other-calculators/world-clock"
     >
-      <div className="max-w-4xl mx-auto">
-        <Card className="p-6 mb-8 text-center">
+      <div className="max-w-6xl mx-auto">
+        <Card className="p-6 mb-8 text-center max-w-sm mx-auto">
             <p className="text-muted-foreground">Your Local Time</p>
             <p className="text-4xl font-bold">{localTime}</p>
         </Card>
-        <div className="grid md:grid-cols-2 gap-4">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {times.map((city, index) => (
             <Card key={index} className="p-4 flex justify-between items-center">
                 <div>
