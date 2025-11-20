@@ -1,4 +1,4 @@
-import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link, DollarSign, Heart, GraduationCap, Repeat, Percent, Divide, Sigma, Wrench, Clock, CalendarDays, WalletCards, ListOrdered, Square, Car, Flame, PersonStanding, Wallet, Dumbbell, Circle, Dices, MoveHorizontal, FileCheck, Ruler, Home, Scale, BrainCircuit, Image as ImageIcon } from "lucide-react";
+import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link, DollarSign, Heart, GraduationCap, Repeat, Percent, Divide, Sigma, Wrench, Clock, CalendarDays, WalletCards, ListOrdered, Square, Car, Flame, PersonStanding, Wallet, Dumbbell, Circle, Dices, MoveHorizontal, FileCheck, Ruler, Home, Scale, BrainCircuit, Image as ImageIcon, AlarmClock, Timer as TimerIcon, Globe } from "lucide-react";
 import { Calculator as CalculatorType } from "@/types/calculator";
 
 
@@ -75,12 +75,15 @@ export const otherCalculatorsData: Omit<CalculatorType, 'icon'>[] = [
   { id: "grade", name: "Grade Calculator", description: "Calculate grades and scores", category: "other", path: "/other-calculators/grade-calculator", implemented: true },
   { id: "tip", name: "Tip Calculator", description: "Calculate tips and splits", category: "other", path: "/other-calculators/tip-calculator", implemented: true },
   { id: "date", name: "Date Calculator", description: "Calculate between dates", category: "other", path: "/other-calculators/date-calculator", implemented: true },
-  { id: "time-zone", name: "Time Zone Calculator", description: "Convert time zones", category: "other", path: "/other-calculators/time-zone-converter", implemented: true },
+  { id: "time-zone", name: "Time Zone Converter", description: "Convert time zones", category: "other", path: "/other-calculators/time-zone-converter", implemented: true },
   { id: "height", name: "Height Calculator", description: "Convert height units", category: "other", path: "/other-calculators/height-calculator", implemented: true },
   { id: "conversion", name: "Conversion Calculator", description: "Unit conversions", category: "other", path: "/other-calculators/conversion-calculator", implemented: true },
   { id: "speed", name: "Speed Calculator", description: "Calculate speed", category: "other", path: "/other-calculators/speed-calculator", implemented: true },
   { id: "dice", name: "Dice Roller", description: "Roll virtual dice", category: "other", path: "/other-calculators/dice-roller", implemented: true },
   { id: "mileage", name: "Mileage Calculator", description: "Calculate mileage", category: "other", path: "/other-calculators/mileage-calculator", implemented: true },
+  { id: "stopwatch", name: "Stopwatch", description: "Measure elapsed time with lap functionality", category: "other", path: "/other-calculators/stopwatch", implemented: true },
+  { id: "timer", name: "Timer", description: "Set a countdown timer for any duration", category: "other", path: "/other-calculators/timer", implemented: true },
+  { id: "world-clock", name: "World Clock", description: "Check current times in cities worldwide", category: "other", path: "/other-calculators/world-clock", implemented: true },
 ];
 
 export const imageToolsData: Omit<CalculatorType, 'icon'>[] = [
@@ -189,6 +192,9 @@ const iconMap: { [key: string]: CalculatorType['icon'] } = {
   "qr-code": QrCode,
   "hash-generator": Hash,
   "invoice-generator": FileText,
+  "stopwatch": AlarmClock,
+  "timer": TimerIcon,
+  "world-clock": Globe,
 };
 
 const addIcons = (calculators: Omit<CalculatorType, 'icon'>[]): CalculatorType[] => {
@@ -210,8 +216,6 @@ export const allCalculators: CalculatorType[] = [
   ...healthCalculators,
   ...mathCalculators,
   ...otherCalculators,
-  ...imageTools,
-  ...developerTools,
 ];
 
 export const calculatorTools: CalculatorType[] = [
