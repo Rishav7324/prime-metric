@@ -34,9 +34,11 @@ const FinancialCalculatorsPage = () => {
             Comprehensive suite of financial planning and calculation tools
           </p>
         </div>
+        
+        <AdBanner />
 
         {/* Calculators Grid */}
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-7xl mx-auto mt-12">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {financialCalculators.map((calc, index) => {
                 const Icon = calc.icon;
@@ -68,7 +70,7 @@ const FinancialCalculatorsPage = () => {
                         </div>
                         </Card>
                     </Link>
-                    {(index + 1) % 6 === 0 && <div className="lg:col-span-3 md:col-span-2"><AdBanner/></div>}
+                    {(index + 1) % 6 === 0 && <div className="lg:col-span-3 md:col-span-2" key={`ad-${index}`}><AdBanner/></div>}
                   </React.Fragment>
                 )
             })}

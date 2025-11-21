@@ -40,7 +40,6 @@ const AllCalculatorsClient = () => {
   return (
       <div className="min-h-screen">
       
-
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-4xl mx-auto mb-12 text-center">
           <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
@@ -104,7 +103,7 @@ const AllCalculatorsClient = () => {
                         </div>
                       </Card>
                     </Link>
-                    {(index + 1) % 9 === 0 && <div className="lg:col-span-3 md:col-span-2"><AdBanner/></div>}
+                    {(index + 1) % 9 === 0 && <div className="lg:col-span-3 md:col-span-2" key={`ad-${index}`}><AdBanner/></div>}
                   </React.Fragment>
                 )
             })}

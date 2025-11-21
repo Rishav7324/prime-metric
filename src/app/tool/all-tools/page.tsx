@@ -62,7 +62,7 @@ const AllToolsPage = () => {
                           </div>
                         </Card>
                       </Link>
-                      {(index + 1) % 3 === 0 && <div className="lg:col-span-3 md:col-span-2"><AdBanner/></div>}
+                      {(index + 1) % 3 === 0 && <div className="lg:col-span-3 md:col-span-2" key={`ad-${index}`}><AdBanner/></div>}
                     </React.Fragment>
               )})}
             </div>
@@ -96,7 +96,7 @@ const AllToolsPage = () => {
                           </div>
                         </Card>
                       </Link>
-                       {(index + 1) % 3 === 0 && <div className="lg:col-span-3 md:col-span-2"><AdBanner/></div>}
+                       {(index + 1) % 3 === 0 && <div className="lg:col-span-3 md:col-span-2" key={`ad-${index}`}><AdBanner/></div>}
                     </React.Fragment>
               )})}
             </div>

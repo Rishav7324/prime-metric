@@ -30,8 +30,10 @@ const OtherCalculatorsPage = () => {
             Practical tools for everyday calculations
           </p>
         </div>
+        
+        <AdBanner />
 
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-7xl mx-auto mt-12">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {otherCalculators.map((calc, index) => {
                 const Icon = calc.icon;
@@ -63,7 +65,7 @@ const OtherCalculatorsPage = () => {
                         </div>
                       </Card>
                     </Link>
-                    {(index + 1) % 6 === 0 && <div className="lg:col-span-3 md:col-span-2"><AdBanner/></div>}
+                    {(index + 1) % 6 === 0 && <div className="lg:col-span-3 md:col-span-2" key={`ad-${index}`}><AdBanner/></div>}
                   </React.Fragment>
             )})}
           </div>
