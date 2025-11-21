@@ -7,6 +7,8 @@ import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { allCalculators } from "@/lib/data";
+import React from "react";
+import AdBanner from "@/components/AdBanner";
 
 const AllCalculatorsClient = () => {
   const [search, setSearch] = useState("");
@@ -64,37 +66,39 @@ const AllCalculatorsClient = () => {
             {filteredCalculators.map((calc, index) => {
                 const Icon = calc.icon;
                 return (
-                  <Link
-                    key={calc.id}
-                    href={calc.path}
-                    className="group"
-                  >
-                    <Card className="glass-card p-6 h-full hover:shadow-glow transition-all duration-300 hover:-translate-y-1">
-                      <div className="flex items-start gap-4">
-                        <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${getCategoryColor(calc.category)} flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform`}>
-                          <Icon className="w-6 h-6 text-white" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-bold text-lg mb-2 group-hover:text-primary transition-colors">
-                            {calc.name}
-                          </h3>
-                          <p className="text-sm text-muted-foreground line-clamp-2 mb-2">
-                            {calc.description}
-                          </p>
-                          <div className="flex gap-2">
-                            <span className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary border border-primary/20 capitalize">
-                              {calc.category}
-                            </span>
-                            {!calc.implemented && (
-                              <span className="text-xs px-2 py-1 rounded-full bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">
-                                Coming Soon
+                  <React.Fragment key={calc.id}>
+                    <Link
+                      href={calc.path}
+                      className="group"
+                    >
+                      <Card className="glass-card p-6 h-full hover:shadow-glow transition-all duration-300 hover:-translate-y-1">
+                        <div className="flex items-start gap-4">
+                          <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${getCategoryColor(calc.category)} flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform`}>
+                            <Icon className="w-6 h-6 text-white" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-bold text-lg mb-2 group-hover:text-primary transition-colors">
+                              {calc.name}
+                            </h3>
+                            <p className="text-sm text-muted-foreground line-clamp-2 mb-2">
+                              {calc.description}
+                            </p>
+                            <div className="flex gap-2">
+                              <span className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary border border-primary/20 capitalize">
+                                {calc.category}
                               </span>
-                            )}
+                              {!calc.implemented && (
+                                <span className="text-xs px-2 py-1 rounded-full bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">
+                                  Coming Soon
+                                </span>
+                              )}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </Card>
-                  </Link>
+                      </Card>
+                    </Link>
+                    {(index + 1) % 9 === 0 && <div className="lg:col-span-3 md:col-span-2"><AdBanner/></div>}
+                  </React.Fragment>
                 )
             })}
           </div>

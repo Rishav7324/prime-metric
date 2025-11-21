@@ -4,6 +4,8 @@ import { DollarSign } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { financialCalculators } from "@/lib/data";
 import { Metadata } from "next";
+import AdBanner from "@/components/AdBanner";
+import React from "react";
 
 export const metadata: Metadata = {
   title: "Financial Calculators - Free Online Finance & Investment Tools",
@@ -39,8 +41,8 @@ const FinancialCalculatorsPage = () => {
             {financialCalculators.map((calc, index) => {
                 const Icon = calc.icon;
                 return (
+                  <React.Fragment key={calc.id}>
                     <Link
-                        key={calc.id}
                         href={calc.path}
                         className="group"
                         style={{ animationDelay: `${index * 50}ms` }}
@@ -66,6 +68,8 @@ const FinancialCalculatorsPage = () => {
                         </div>
                         </Card>
                     </Link>
+                    {(index + 1) % 6 === 0 && <div className="lg:col-span-3 md:col-span-2"><AdBanner/></div>}
+                  </React.Fragment>
                 )
             })}
           </div>
