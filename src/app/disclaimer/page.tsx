@@ -5,177 +5,97 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
     title: "Disclaimer | Prime Metric",
-    description: "Read the disclaimer for Prime Metric's calculators and tools.",
+    description: "Read the important disclaimer for Prime Metric's calculators and tools regarding financial, medical, and general use.",
+    keywords: "disclaimer, financial disclaimer, medical disclaimer, calculator accuracy",
+    alternates: {
+        canonical: "https://primemetric.online/disclaimer",
+    }
 };
 
 const DisclaimerPage = () => {
   return (
     <LegalPageLayout title="Disclaimer">
-        <p className="text-muted-foreground mb-6 text-center">Last updated: July 30, 2024</p>
+        <p className="text-muted-foreground mb-6 text-center">Last updated: July 31, 2024</p>
         
-        <div className="space-y-6 text-muted-foreground">
+        <div className="space-y-8 text-muted-foreground">
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">General Information</h2>
+            <h2 className="text-2xl font-semibold mb-3 text-foreground">1. General Information Purpose Only</h2>
             <p>
-              The information provided by our website ("we," "us," or "our") on primemetric.online 
-              (the "Site") is for general informational purposes only. All information on the Site is 
-              provided in good faith, however we make no representation or warranty of any kind, express 
-              or implied, regarding the accuracy, adequacy, validity, reliability, availability, or 
-              completeness of any information on the Site.
+              The information, calculators, tools, and content provided by Prime Metric on https://primemetric.online (the "Site") are for general informational and educational purposes only. All information on the Site is provided in good faith; however, we make no representation or warranty of any kind, express or implied, regarding the accuracy, adequacy, validity, reliability, availability, or completeness of any information on the Site.
+            </p>
+            <p className="mt-2">
+              The tools and calculators are designed to provide estimates and should not be used as the sole basis for making significant decisions. The results are based on standard formulas and user-provided data, and they may not account for all individual circumstances or external factors.
             </p>
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">No Professional Advice</h2>
-            <p className="mb-3">
-              The calculators and tools provided on this website are for informational and educational 
-              purposes only. They should NOT be considered as:
+            <h2 className="text-2xl font-semibold mb-3 text-foreground">2. No Professional Advice</h2>
+            <p className="mb-3 font-semibold text-foreground">
+              The content and tools on this Site are not intended to be, and should not be understood as, professional advice.
             </p>
-            <ul className="list-disc pl-6 space-y-2">
+            <ul className="list-disc pl-6 space-y-3">
               <li>
-                <strong className="text-foreground">Financial Advice:</strong> Our financial calculators 
-                (mortgage, loan, investment, retirement, etc.) do not constitute financial, investment, 
-                or tax advice. Always consult with a qualified financial advisor before making important 
-                financial decisions.
+                <strong className="text-foreground">Financial Disclaimer:</strong> The financial calculators and related content on this Site are not substitutes for professional financial advice. The calculations do not constitute financial, investment, legal, or tax advice. Financial decisions carry risk, and you should always consult with a qualified financial advisor, accountant, or other professional before making any decisions based on information or calculations obtained from this Site.
               </li>
               <li>
-                <strong className="text-foreground">Medical Advice:</strong> Our health calculators 
-                (BMI, BMR, calorie, macro, etc.) are not intended to diagnose, treat, cure, or prevent 
-                any disease or health condition. Always consult with a qualified healthcare professional 
-                before starting any diet, exercise program, or making health-related decisions.
-              </li>
-              <li>
-                <strong className="text-foreground">Legal Advice:</strong> Nothing on this website 
-                should be construed as legal advice. For legal matters, please consult with a qualified 
-                attorney.
-              </li>
-              <li>
-                <strong className="text-foreground">Tax Advice:</strong> Our tax-related calculators 
-                are simplified tools and may not account for all variables in your specific situation. 
-                Consult with a certified tax professional for personalized tax advice.
+                <strong className="text-foreground">Medical and Health Disclaimer:</strong> The health and fitness calculators (e.g., BMI, BMR, Calorie calculators) and content are for informational purposes only and are not intended to be a substitute for professional medical advice, diagnosis, or treatment. Never disregard professional medical advice or delay in seeking it because of something you have read or calculated on this Site. Always consult with a physician or other qualified healthcare provider for any questions about a medical condition.
               </li>
             </ul>
+             <p className="mt-3">
+              Your use of our tools and reliance on any information provided is solely at your own risk. We are not fiduciaries, and no fiduciary relationship is created by your use of this Site.
+            </p>
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">Accuracy of Calculations</h2>
+            <h2 className="text-2xl font-semibold mb-3 text-foreground">3. Limitation of Liability</h2>
             <p>
-              While we strive to provide accurate calculations using standard formulas and methodologies, 
-              we cannot guarantee that all results will be 100% accurate or applicable to your specific 
-              situation. Calculation results may vary based on:
+              Under no circumstance shall Prime Metric, its owners, directors, employees, or affiliates be liable to you or any third party for any loss or damage of any kind, including but not limited to direct, indirect, incidental, special, consequential, or punitive damages, incurred as a result of the use of the Site or reliance on any information or calculation provided on the Site. Your use of the Site and your reliance on its content are solely at your own risk.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-semibold mb-3 text-foreground">4. Accuracy and Completeness</h2>
+            <p>
+              While we strive to keep the information and formulas on the Site up-to-date and correct, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability, or availability with respect to the website or the information, products, services, or related graphics contained on the website for any purpose. Calculation results may vary due to factors such as:
             </p>
             <ul className="list-disc pl-6 space-y-2 mt-3">
-              <li>Input accuracy and completeness</li>
-              <li>Rounding and precision settings</li>
-              <li>Regional differences in calculation methods</li>
-              <li>Changes in laws, regulations, or industry standards</li>
-              <li>Individual circumstances not accounted for in the calculator</li>
+              <li>Accuracy and completeness of the data you input.</li>
+              <li>Simplifications or assumptions made in the underlying formulas.</li>
+              <li>Regional or individual differences not accounted for by the general-purpose calculators.</li>
+              <li>Changes in laws, tax codes, regulations, or scientific standards that may not be immediately reflected on the Site.</li>
             </ul>
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">Use at Your Own Risk</h2>
+            <h2 className="text-2xl font-semibold mb-3 text-foreground">5. External Links and Third-Party Content</h2>
             <p>
-              Under no circumstance shall we have any liability to you for any loss or damage of any kind 
-              incurred as a result of the use of our calculators or tools, or reliance on any information 
-              provided on the Site. Your use of the Site and your reliance on any information is solely 
-              at your own risk.
+              The Site may contain (or you may be sent through the Site) links to other websites or content belonging to or originating from third parties or links to websites and features in banners or other advertising. Such external links are not investigated, monitored, or checked for accuracy, adequacy, validity, reliability, availability, or completeness by us.
+            </p>
+            <p className="mt-2">
+              We do not warrant, endorse, guarantee, or assume responsibility for the accuracy or reliability of any information offered by third-party websites linked through the site or any website or feature linked in any banner or other advertising.
+            </p>
+          </section>
+          
+           <section>
+            <h2 className="text-2xl font-semibold mb-3 text-foreground">6. User Responsibility</h2>
+            <p>
+              You, the user, are solely responsible for how you use the information and tools provided on this Site. It is your responsibility to verify any information or calculation results before relying on them for any personal, financial, or medical decision. You acknowledge that you understand that the tools are for estimation purposes and should be used as a guide, not as an authoritative source.
             </p>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">Third-Party Links and Content</h2>
-            <p>
-              Our Site may contain links to third-party websites or services that are not owned or 
-              controlled by us. We have no control over, and assume no responsibility for, the content, 
-              privacy policies, or practices of any third-party websites or services. We strongly advise 
-              you to read the terms and conditions and privacy policies of any third-party websites or 
-              services that you visit.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">No Warranties</h2>
-            <p>
-              The Site is provided on an "AS IS" and "AS AVAILABLE" basis. We make no warranties, 
-              expressed or implied, and hereby disclaim and negate all other warranties including, 
-              without limitation, implied warranties or conditions of merchantability, fitness for a 
-              particular purpose, or non-infringement of intellectual property or other violation of rights.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">Limitation of Liability</h2>
-            <p>
-              In no event shall we, our directors, employees, partners, agents, suppliers, or affiliates, 
-              be liable for any indirect, incidental, special, consequential, or punitive damages, including 
-              without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting 
-              from:
-            </p>
-            <ul className="list-disc pl-6 space-y-2 mt-3">
-              <li>Your access to or use of or inability to access or use the Site</li>
-              <li>Any conduct or content of any third party on the Site</li>
-              <li>Any content obtained from the Site</li>
-              <li>Unauthorized access, use, or alteration of your transmissions or content</li>
-            </ul>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">Results May Vary</h2>
-            <p>
-              Individual results using our calculators may vary. Past performance does not guarantee future 
-              results. Financial markets, health metrics, and other variables are subject to change and may 
-              not perform as calculated or predicted.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">Updates and Changes</h2>
-            <p>
-              We reserve the right to modify, update, or discontinue any calculator, tool, or feature at 
-              any time without notice. We also reserve the right to update this Disclaimer at any time. 
-              Your continued use of the Site after any changes constitutes your acceptance of the new 
-              Disclaimer.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">Jurisdictional Issues</h2>
-            <p>
-              The information on this Site may not be appropriate or available for use in all jurisdictions. 
-              Users are responsible for compliance with applicable local laws and regulations. We make no 
-              representation that materials on the Site are appropriate or available for use in all locations.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">Educational Purpose</h2>
-            <p>
-              Our calculators and tools are designed primarily for educational purposes to help users 
-              understand various concepts in finance, health, mathematics, and other areas. They are 
-              meant to provide general guidance and should not replace professional consultation for 
-              important decisions.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">Contact Information</h2>
-            <p>
-              If you have any questions or concerns about this Disclaimer, please{" "}
-              <Link href="/contact" className="text-primary hover:underline">
-                contact us
-              </Link>.
-            </p>
-          </section>
-
-          <div className="mt-8 p-4 bg-primary/10 border border-primary/20 rounded-lg">
-            <p className="font-semibold text-foreground mb-2">Important Reminder:</p>
-            <p>
-              Always verify calculation results with professional advisors and official sources before 
-              making important financial, health, legal, or other significant decisions. The calculators 
-              on this site are tools to assist you, not to replace professional advice.
+          <div className="mt-8 p-6 bg-primary/10 border border-primary/20 rounded-lg">
+            <p className="font-semibold text-foreground mb-2 text-xl">Final Reminder:</p>
+            <p className="text-base">
+              The tools on Prime Metric are designed to be powerful aids for estimation and education. They are not a substitute for professional judgment. Always consult with a qualified professional before making significant life decisions.
             </p>
           </div>
+          
+           <section className="mt-8">
+            <h2 className="text-2xl font-semibold mb-3 text-foreground">Contact Us</h2>
+            <p>
+              If you have any questions or concerns about this Disclaimer, please do not hesitate to <Link href="/contact" className="text-primary hover:underline">contact us</Link> at <a href="mailto:help@primemetric.online" className="text-primary hover:underline">help@primemetric.online</a>.
+            </p>
+          </section>
         </div>
     </LegalPageLayout>
   );

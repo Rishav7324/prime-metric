@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from "react";
@@ -6,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
 import { Mail, MessageSquare, Send } from "lucide-react";
 import LegalPageLayout from "@/components/LegalPageLayout";
@@ -23,7 +23,14 @@ const Contact = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!firestore) return;
+    if (!firestore) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Could not connect to our services. Please try again later.",
+      });
+      return;
+    }
 
     const messagesCollection = collection(firestore, "messages");
     addDocumentNonBlocking(messagesCollection, {
@@ -96,9 +103,9 @@ const Contact = () => {
               <div className="flex items-start space-x-4">
                 <Mail className="w-6 h-6 text-primary mt-1" />
                 <div>
-                  <h3 className="font-semibold text-lg mb-2">Help</h3>
+                  <h3 className="font-semibold text-lg mb-2">General Inquiries & Support</h3>
                   <p className="text-muted-foreground">
-                    For general inquiries and support:
+                    For general questions, support, or feedback:
                   </p>
                   <a href="mailto:help@primemetric.online" className="text-primary hover:underline">
                     help@primemetric.online
@@ -111,12 +118,12 @@ const Contact = () => {
               <div className="flex items-start space-x-4">
                 <MessageSquare className="w-6 h-6 text-primary mt-1" />
                 <div>
-                  <h3 className="font-semibold text-lg mb-2">New Request</h3>
+                  <h3 className="font-semibold text-lg mb-2">Feature Requests</h3>
                    <p className="text-muted-foreground">
-                    Request a new tool or calculator:
+                    Have an idea for a new tool or calculator?
                   </p>
-                  <a href="mailto:requestnewtool@primemetric.online" className="text-primary hover:underline">
-                    requestnewtool@primemetric.online
+                  <a href="mailto:help@primemetric.online?subject=Feature%20Request" className="text-primary hover:underline">
+                    help@primemetric.online
                   </a>
                 </div>
               </div>
