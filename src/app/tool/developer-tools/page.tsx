@@ -9,6 +9,9 @@ export const metadata: Metadata = {
     title: "Developer Tools - Text, Encoding, Hashing & More",
     description: "A suite of essential developer tools including text formatters, encoders, and generators. Tools for JSON, Base64, QR codes, and more.",
     keywords: "developer tools, text tools, json formatter, base64 encoder, qr code generator, hash generator",
+    alternates: {
+        canonical: "https://primemetric.online/tool/developer-tools",
+    }
 };
 
 const DeveloperToolsPage = () => {

@@ -9,6 +9,9 @@ export const metadata: Metadata = {
     title: "Image Tools - Crop, Resize, Compress & Convert",
     description: "A collection of free online image tools to crop, resize, compress, and convert your images. Optimize your images for web and other uses.",
     keywords: "image tools, crop image, resize image, compress image, convert image, color picker",
+    alternates: {
+        canonical: "https://primemetric.online/tool/image-tools",
+    }
 };
 
 const ImageToolsPage = () => {

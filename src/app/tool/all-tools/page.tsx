@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     description: "A complete collection of developer and image utility tools. Includes formatters, converters, generators, and image editors.",
     keywords: "developer tools, image tools, text tools, json formatter, image resizer, qr code generator",
     alternates: {
-        canonical: "https://primemetric.online/all-tools",
+        canonical: "https://primemetric.online/tool/all-tools",
     }
 };
 
