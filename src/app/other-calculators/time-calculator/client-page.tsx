@@ -9,7 +9,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Minus } from "lucide-react";
 
 const TimeCalculator = () => {
   const [d1, setD1] = useState("0");
@@ -132,5 +131,3 @@ const TimeCalculator = () => {
 };
 
 export default TimeCalculator;
-
-    

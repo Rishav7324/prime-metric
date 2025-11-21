@@ -1,5 +1,5 @@
-import { generateMetadata } from "@/components/CalculatorLayout";
 import TimeZoneConverter from "./client-page";
+import { generateMetadata } from "@/components/CalculatorLayout";
 
 export const metadata = generateMetadata({
   title: "Time Zone Converter",
@@ -11,5 +11,3 @@ export const metadata = generateMetadata({
 export default function Page() {
   return <TimeZoneConverter />;
 }
-
-    

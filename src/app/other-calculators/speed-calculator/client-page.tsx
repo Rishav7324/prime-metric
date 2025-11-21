@@ -92,5 +92,3 @@ const SpeedCalculator = () => {
 };
 
 export default SpeedCalculator;
-
-    

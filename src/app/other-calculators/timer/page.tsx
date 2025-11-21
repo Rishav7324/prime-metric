@@ -1,5 +1,5 @@
-import { generateMetadata } from "@/components/CalculatorLayout";
 import TimerClient from "./client-page";
+import { generateMetadata } from "@/components/CalculatorLayout";
 
 export const metadata = generateMetadata({
   title: "Countdown Timer",

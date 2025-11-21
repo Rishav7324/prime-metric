@@ -84,5 +84,3 @@ const MileageCalculator = () => {
 };
 
 export default MileageCalculator;
-
-    

@@ -110,5 +110,3 @@ const TipCalculator = () => {
 };
 
 export default TipCalculator;
-
-    

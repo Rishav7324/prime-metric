@@ -1,5 +1,5 @@
-import { generateMetadata } from "@/components/CalculatorLayout";
 import PasswordGenerator from "./client-page";
+import { generateMetadata } from "@/components/CalculatorLayout";
 
 export const metadata = generateMetadata({
   title: "Password Generator",
@@ -11,5 +11,3 @@ export const metadata = generateMetadata({
 export default function Page() {
   return <PasswordGenerator />;
 }
-
-    

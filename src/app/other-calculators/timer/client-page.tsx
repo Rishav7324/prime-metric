@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useRef, useEffect } from "react";
@@ -33,7 +32,7 @@ const TimerClient = () => {
     if (!isRunning) {
       setTime(totalSeconds);
     }
-  }, [hours, minutes, seconds]);
+  }, [hours, minutes, seconds, isRunning]);
 
 
   useEffect(() => {
