@@ -154,22 +154,49 @@ const ResizeImage = () => {
       </div>
 
        <CalculatorContentSection
-        aboutContent="The Image Resizer tool allows you to change the dimensions of your images to specific width and height in pixels. This is useful for fitting images into website layouts, preparing them for social media, or reducing their size for emails and documents."
+        aboutContent="The Image Resizer tool allows you to change the dimensions of your images to a specific width and height in pixels. In the digital world, image size is critical. Large, high-resolution images are great for print but can drastically slow down websites, take up unnecessary storage space, and be difficult to share via email or social media. This tool provides a simple solution by allowing you to downscale images to the exact dimensions you need. Whether you're a web developer optimizing a site for performance, a blogger preparing images for a post, or just someone needing to resize a photo for a profile picture, this tool makes the process quick and easy. The resizing is done directly in your browser, ensuring your images remain private and are never uploaded to a server."
         useCases={[
-          { title: "Social Media Posts", description: "Resize images to the optimal dimensions for platforms like Instagram, Facebook, and Twitter." },
-          { title: "Website Banners", description: "Create banners and hero images with the exact pixel dimensions required by your website's design." },
-          { title: "Email Newsletters", description: "Reduce image dimensions to keep email file sizes small and improve loading times for your subscribers." },
-          { title: "Profile Pictures", description: "Resize your photo to fit the square or circular avatar requirements of various online platforms." }
+          { title: "Web Performance Optimization", description: "Resize large images to the exact dimensions they will be displayed on your website. This reduces file size, which leads to faster page load times, improved user experience, and better SEO rankings." },
+          { title: "Social Media and Profile Pictures", description: "Quickly resize your photos to meet the specific dimension requirements for profile pictures, banners, and posts on platforms like Instagram (e.g., 1080x1080 for posts), Facebook, Twitter, and LinkedIn." },
+          { title: "Email and Document Attachments", description: "Reduce the dimensions of high-resolution photos before attaching them to emails to avoid exceeding file size limits and ensure faster sending and receiving." },
+          { title: "Content Creation", description: "Prepare images for blogs, newsletters, and online articles by resizing them to fit your content layout perfectly, creating a clean and professional look." }
+        ]}
+        examples={[
+          {
+            title: "Preparing a Blog Post Image",
+            description: "A blogger has a high-resolution photo (4000x3000 pixels) but their blog's content area is only 800 pixels wide.",
+            steps: [
+              "Upload the 4000x3000 image.",
+              "The tool shows the original dimensions. The aspect ratio is 4:3.",
+              "To maintain the aspect ratio, if the new width is 800, the new height should be 600 (since 800 / 4 * 3 = 600).",
+              "Enter '800' for the New Width and '600' for the New Height.",
+              "Click 'Resize Image'.",
+              "The preview will show the downsized image, which can then be downloaded and used in the blog post."
+            ]
+          },
+          {
+            title: "Creating a Square Profile Picture",
+            description: "A user wants to use a rectangular photo (e.g., 1200x800) as a profile picture, which requires a square format.",
+            steps: [
+              "Upload the rectangular photo.",
+              "Decide on the desired square dimensions, for example, 500x500 pixels.",
+              "Enter '500' for both New Width and New Height.",
+              "Click 'Resize Image'. The preview will show the image squashed into a square.",
+              "Note: For best results in this scenario, it's often better to first CROP the image to a square shape and then resize it if necessary. This resizer changes dimensions without regard to aspect ratio."
+            ]
+          }
         ]}
         tips={[
-          { title: "Maintain Aspect Ratio", description: "To avoid distorting your image, calculate the new height or width proportionally if you change one of them. (e.g., if you halve the width, also halve the height)." },
-          { title: "Start with High Resolution", description: "It's always better to downsize a large, high-resolution image than to upsize a small one. Upsizing can result in a blurry or pixelated image." },
-          { title: "Consider Compression", description: "After resizing, you may also want to compress the image to further reduce its file size. Use an image compression tool for this." }
+          { title: "Maintain the Aspect Ratio", description: "To avoid distorting or stretching your image, you should maintain its original aspect ratio. If you change the width, calculate the corresponding new height. Formula: New Height = (Original Height / Original Width) * New Width. This tool requires manual input, so be mindful of this." },
+          { title: "Downsizing is Better than Upsizing", description: "Always start with the largest, highest-quality image you have. Making an image smaller (downsizing) usually looks fine. Making an image larger (upsizing) than its original dimensions will cause it to lose quality and appear blurry or pixelated." },
+          { title: "Check Website Dimensions", description: "Before resizing for a website, use your browser's developer tools to inspect the image container and find the exact dimensions (width and height) it will be displayed at. Resize your image to match those dimensions for perfect clarity and performance." },
+          { title: "Compress After Resizing", description: "Resizing an image reduces its dimensions, which also reduces its file size. However, for maximum optimization, you should also compress the resized image. Use a separate image compression tool after resizing to further reduce the file size without changing dimensions." }
         ]}
         faqs={[
-          { question: "Will resizing my image reduce its quality?", answer: "Downsizing (making the image smaller) generally preserves quality well. Upsizing (making it larger) will almost always result in a loss of quality, making the image look blurry or pixelated." },
-          { question: "What are pixels?", answer: "Pixels are the tiny dots that make up a digital image. The width and height in pixels determine the image's dimensions." },
-          { question: "What is aspect ratio?", answer: "Aspect ratio is the proportional relationship between an image's width and its height. For example, a 1920x1080 image and a 1280x720 image both have a 16:9 aspect ratio." }
+          { question: "Will resizing my image reduce its file size?", answer: "Yes, reducing the dimensions (width and height) of an image will significantly reduce its file size because there are fewer pixels to store. This is one of the primary reasons for resizing images for the web." },
+          { question: "What is the difference between resizing and cropping?", answer: "Resizing changes the overall dimensions of the entire image, potentially changing the scale of everything in it. Cropping, on the other hand, cuts out a portion of the image, removing the outer parts to change its frame. You often use both: first crop to frame the subject, then resize to the final dimensions." },
+          { question: "What is aspect ratio?", answer: "Aspect ratio is the proportional relationship between an image's width and its height. A common aspect ratio for TVs and monitors is 16:9. A square image has an aspect ratio of 1:1. If you resize an image without maintaining its aspect ratio, it will look stretched or squashed." },
+          { question: "Are my uploaded images saved on your server?", answer: "No. The entire resizing process is done directly in your web browser using JavaScript. Your images are never uploaded to our or any other server, ensuring your privacy and security." }
         ]}
       />
     </CalculatorLayout>

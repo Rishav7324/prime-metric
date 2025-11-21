@@ -140,21 +140,51 @@ const InvoiceGenerator = () => {
         </div>
       </Card>
        <CalculatorContentSection
-        aboutContent="The Invoice Generator helps freelancers, small businesses, and contractors create professional invoices quickly and easily. Fill in your details, add line items for your products or services, and generate a printable invoice."
+        aboutContent="The Invoice Generator is a practical tool designed for freelancers, small business owners, and contractors to create clean, professional invoices without the need for complex accounting software. An invoice is a commercial document that itemizes and records a transaction between a buyer and a seller. A professional invoice not only serves as a formal request for payment but also as a legal document that records the services rendered or products sold. This tool simplifies the process by providing a clear, structured template where users can input their details, client information, line items with descriptions, quantities, and rates. It automatically calculates subtotals and totals, minimizing errors and saving valuable time. The final output is a print-ready document that can also be saved as a PDF, ensuring a professional presentation to clients. In today's gig economy and with the rise of small businesses, having a quick and reliable way to generate invoices is crucial for maintaining healthy cash flow and projecting a professional image."
         useCases={[
-            { title: "Freelancers", description: "Bill clients for your services with a clean, professional invoice." },
-            { title: "Small Businesses", description: "Create invoices for products sold or services rendered." },
-            { title: "Contractors", description: "Provide detailed invoices for your work, including parts and labor." },
+            { title: "Freelance Services", description: "Freelance writers, designers, developers, and consultants can create detailed invoices for their projects, itemizing tasks or hours worked to ensure clear and transparent billing for their clients." },
+            { title: "Small Business Sales", description: "Small retail businesses or e-commerce stores can generate invoices for individual sales, providing customers with a detailed receipt of their purchase, which is essential for returns or record-keeping." },
+            { title: "Contract and Construction Work", description: "Contractors can create itemized invoices that separate costs for materials, labor, and other expenses, providing clients with a comprehensive breakdown of project costs." },
+            { title: "Rental Services", description: "Individuals or businesses renting out equipment, property, or venues can create recurring or one-time invoices for their tenants or clients." },
+        ]}
+        examples={[
+          {
+            title: "Example: Web Designer Invoicing a Client",
+            description: "A freelance web designer has completed a project for a new website and needs to bill the client.",
+            steps: [
+              "In the 'From' field, enter your name, business name, and address.",
+              "In the 'To' field, enter the client's name and business address.",
+              "Set the Invoice # and Date.",
+              "Add the first line item: 'Website Design & Development', Quantity: 1, Rate: 2500.",
+              "Add a second line item: 'Logo Design', Quantity: 1, Rate: 500.",
+              "Add a third line item: 'Monthly Hosting - First Month', Quantity: 1, Rate: 25.",
+              "The calculator will show a total of $3025.",
+              "Click 'Print / Download PDF' to generate the invoice to send to the client."
+            ]
+          },
+          {
+            title: "Example: Photographer Billing for an Event",
+            description: "A photographer needs to invoice a client for a wedding photography package.",
+            steps: [
+              "Fill in the 'From' and 'To' details for the photographer and the client.",
+              "Add the first line item: 'Full-Day Wedding Photography Package', Quantity: 1, Rate: 3000.",
+              "Add a second line item for an add-on: 'Second Shooter', Quantity: 1, Rate: 600.",
+              "Add a third line item for physical products: 'Fine Art Wedding Album', Quantity: 1, Rate: 800.",
+              "The calculator provides the final total. Use the 'Download PDF' option to create a professional invoice for the client."
+            ]
+          }
         ]}
         tips={[
-            { title: "Be Detailed", description: "Clearly describe each line item so your client knows exactly what they are paying for." },
-            { title: "Include Payment Terms", description: "Add a note about your payment terms (e.g., 'Due upon receipt', 'Net 30') in the 'From' or 'To' section." },
-            { title: "Save a Copy", description: "Always save a copy of the invoice for your own records before sending it to the client." },
+            { title: "Be Detailed in Descriptions", description: "Instead of a generic 'Consulting Work', write 'Social Media Strategy Consulting (10 hours)'. Clear descriptions prevent client disputes and questions, leading to faster payments." },
+            { title: "Establish Clear Payment Terms", description: "Explicitly state your payment terms on the invoice. Common terms include 'Net 30' (payment due in 30 days), 'Net 15', or 'Due upon receipt'. Including a due date creates urgency. You can add this in the 'From' or 'To' sections as a note." },
+            { title: "Use a Consistent Invoicing System", description: "Use sequential invoice numbers (e.g., 001, 002, 003) to make tracking easy for both you and your client. It also helps with bookkeeping and tax preparation." },
+            { title: "Follow Up Professionally", description: "If an invoice is past due, send a polite follow-up email. Reference the invoice number and date. Sometimes invoices simply get misplaced, and a friendly reminder is all that's needed." },
         ]}
         faqs={[
-            { question: "Is this invoice generator free to use?", answer: "Yes, this tool is completely free to use." },
-            { question: "Is my data saved?", answer: "No, all information is processed in your browser and is not saved on our servers. If you refresh the page, the data will be gone." },
-            { question: "How do I download the invoice as a PDF?", answer: "When you click the 'Print / Download PDF' button, your browser's print dialog will open. From there, you can choose to 'Save as PDF' instead of printing to a physical printer." },
+            { question: "Is my invoice data saved anywhere?", answer: "No, this is a client-side tool. All the information you enter is processed directly in your browser and is never sent to our servers. If you close or refresh the page, your data will be cleared." },
+            { question: "How do I save the invoice as a PDF?", answer: "After clicking the 'Print / Download PDF' button, your browser's print preview dialog will appear. In the 'Destination' or 'Printer' dropdown menu, select 'Save as PDF'. This will create a PDF file on your computer instead of sending it to a physical printer." },
+            { question: "Can I add taxes or discounts?", answer: "This is a simple invoice generator. For taxes or discounts, you can add them as separate line items. For example, you could add a line item with a description like 'Sales Tax (8%)' and enter the calculated tax amount in the 'Rate' field, with quantity 1. For a discount, you can add a line item with a negative rate." },
+            { question: "Can I add my logo to the invoice?", answer: "This basic generator does not support direct logo uploads. For a more customized invoice with a logo, you would typically use dedicated invoicing software or a more advanced template." },
         ]}
       />
     </CalculatorLayout>
