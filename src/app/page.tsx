@@ -7,6 +7,7 @@ import Link from "next/link";
 import Head from "next/head";
 import { categories } from "@/lib/data";
 import React from 'react';
+import AdBanner from "@/components/AdBanner";
 
 const Index = () => {
   const featuredCalculators = [
@@ -114,49 +115,43 @@ const Index = () => {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-                {categories.flatMap((category, index) => {
+                {categories.map((category, index) => {
                   const Icon = category.icon;
-                  const card = (
-                    <Link
-                      key={category.title}
-                      href={category.path}
-                      className="group"
-                      style={{ animationDelay: `${index * 100}ms` }}>
-                      <div className="glass-card p-8 rounded-2xl hover:shadow-glow transition-all duration-300 hover:-translate-y-2 h-full">
-                        <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${category.gradient} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
-                          <Icon className="w-8 h-8 text-white" />
-                        </div>
-                        <h3 className="text-2xl font-bold mb-2 group-hover:text-primary transition-colors font-headline">
-                          {category.title}
-                        </h3>
-                        <p className="text-muted-foreground mb-6">{category.description}</p>
-                        <div className="flex flex-wrap gap-2">
-                          {category.calculators.slice(0, 3).map((calc) => (
-                            <span key={calc} className="text-xs px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
-                              {calc}
+                  return (
+                    <React.Fragment key={category.title}>
+                      <Link
+                        href={category.path}
+                        className="group"
+                        style={{ animationDelay: `${index * 100}ms` }}>
+                        <div className="glass-card p-8 rounded-2xl hover:shadow-glow transition-all duration-300 hover:-translate-y-2 h-full">
+                          <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${category.gradient} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
+                            <Icon className="w-8 h-8 text-white" />
+                          </div>
+                          <h3 className="text-2xl font-bold mb-2 group-hover:text-primary transition-colors font-headline">
+                            {category.title}
+                          </h3>
+                          <p className="text-muted-foreground mb-6">{category.description}</p>
+                          <div className="flex flex-wrap gap-2">
+                            {category.calculators.slice(0, 3).map((calc) => (
+                              <span key={calc} className="text-xs px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
+                                {calc}
+                              </span>
+                            ))}
+                            <span className="text-xs px-3 py-1 rounded-full bg-secondary/10 text-secondary-foreground border border-secondary/20">
+                              +More
                             </span>
-                          ))}
-                          <span className="text-xs px-3 py-1 rounded-full bg-secondary/10 text-secondary-foreground border border-secondary/20">
-                            +More
-                          </span>
+                          </div>
                         </div>
-                      </div>
-                    </Link>
+                      </Link>
+                      {index % 2 !== 0 && index < categories.length -1 && <div className="lg:hidden"><AdBanner/></div>}
+                    </React.Fragment>
                   );
-
-                  if (index < categories.length - 1) {
-                    return [
-                      card,
-                      <div key={`ad-cat-${index}`} className="w-full col-span-1 md:col-span-2 lg:col-span-3 flex justify-center items-center">
-                
-                      </div>
-                    ];
-                  }
-                  return [card];
                 })}
               </div>
             </div>
           </section>
+
+          <AdBanner/>
 
           {/* Features Section */}
           <section className="py-20 relative overflow-hidden">
@@ -168,8 +163,8 @@ const Index = () => {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-                {features.flatMap((feature, index) => {
-                   const card = (
+                {features.map((feature, index) => {
+                   return (
                     <div 
                       key={feature.title} 
                       className="glass-card p-6 rounded-xl text-center"
@@ -180,20 +175,12 @@ const Index = () => {
                       <p className="text-muted-foreground">{feature.description}</p>
                     </div>
                   );
-
-                  if (index < features.length - 1) {
-                     return [
-                      card,
-                      <div key={`ad-feat-${index}`} className="w-full col-span-1 md:col-span-3 flex justify-center items-center">
-                        
-                      </div>
-                    ];
-                  }
-                  return [card];
                 })}
               </div>
             </div>
           </section>
+
+          <AdBanner/>
 
           {/* CTA Section */}
           <section className="py-20">

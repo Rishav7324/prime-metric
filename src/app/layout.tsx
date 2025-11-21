@@ -10,8 +10,8 @@ import { FirebaseClientProvider } from '@/firebase';
 import CookieConsentBanner from '@/components/CookieConsentBanner';
 import { Analytics } from '@vercel/analytics/react';
 import { Inter, Merriweather } from 'next/font/google';
-import AdBanner from '@/components/AdBanner'; // Import the AdBanner component
-import Script from 'next/script'; // Import Script component
+import AdBanner from '@/components/AdBanner';
+import Script from 'next/script';
 
 const inter = Inter({
   subsets: ['latin'],

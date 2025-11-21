@@ -13,7 +13,7 @@ const AdBanner = () => {
   }, []);
 
   return (
-    <div className="flex justify-center my-4">
+    <div className="flex justify-center my-8">
       <ins
         className="adsbygoogle"
         style={{ display: 'block' }}
