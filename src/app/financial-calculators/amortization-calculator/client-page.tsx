@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from "react";
@@ -130,24 +129,45 @@ const AmortizationCalculatorClient = () => {
       </Card>
 
       <CalculatorContentSection
-        aboutContent="The amortization calculator generates a detailed payment schedule showing how each loan payment is split between principal and interest over time. Amortization is the process of paying off debt with regular payments over a set period. In early payments, most money goes toward interest with little principal reduction. As the loan progresses, more goes toward principal and less toward interest. This schedule is crucial for understanding the true cost of borrowing and planning strategies to pay off loans faster."
+        aboutContent="The amortization calculator generates a detailed payment schedule for a loan, showing precisely how each payment is allocated between principal and interest over the loan's entire term. Amortization is the financial process of paying off a debt over time through regular, equal payments. A key characteristic of amortizing loans, like mortgages and auto loans, is that the proportion of interest to principal changes with each payment. In the early stages of a loan, a larger portion of the payment goes toward interest. As the loan matures and the principal balance decreases, this ratio shifts, with more of each payment going toward paying down the principal. This calculator provides a transparent, month-by-month breakdown, empowering borrowers to understand the true cost of their loan, visualize their equity growth, and strategically plan for early repayment to save on interest costs."
         useCases={[
           { title: "Mortgage Planning", description: "View your complete mortgage payment schedule to understand how much equity you build over time and plan prepayment strategies to save on interest." },
-          { title: "Loan Comparison", description: "Compare amortization schedules of different loan terms. See how a 15-year vs 30-year mortgage affects total interest paid and payment distribution." },
-          { title: "Extra Payment Strategy", description: "Understand where extra payments have maximum impact. Additional principal payments in early years save significantly more interest than later payments." },
-          { title: "Refinancing Decisions", description: "Evaluate whether refinancing makes sense by comparing remaining principal, interest, and payments on your current loan versus a new loan schedule." }
+          { title: "Auto Loan Analysis", description: "Analyze car loan payments to see how much of your payment goes to interest versus the car's actual value, especially in the early years." },
+          { title: "Personal Loan Transparency", description: "Get a clear picture of how a personal loan is paid down over its term, helping you compare different loan offers effectively." },
+          { title: "Financial Education", description: "A powerful tool for learning about how loans work, the impact of interest rates, and the long-term process of debt repayment." }
+        ]}
+         examples={[
+          {
+            title: "Example: 30-Year Mortgage",
+            description: "Analyze a typical $300,000, 30-year mortgage with a 6% interest rate.",
+            steps: [
+                "Enter Loan Amount: 300000",
+                "Enter Interest Rate: 6",
+                "Enter Loan Term: 30",
+                "Generate the schedule and observe how in the first year, a significant majority of your payments go towards interest. Scroll down to the final years to see how this ratio flips, with most of the payment going towards principal."
+            ]
+          },
+          {
+            title: "Example: 15-Year vs. 30-Year Mortgage Comparison",
+            description: "Compare the total interest paid on a $250,000 loan at 5.5% over 30 years versus 15 years.",
+            steps: [
+                "First, calculate the schedule for a 30-year term. Note the total interest paid.",
+                "Then, change the term to 15 years and recalculate. Note the new, higher monthly payment but significantly lower total interest.",
+                "This demonstrates the trade-off between monthly affordability and long-term interest savings."
+            ]
+          }
         ]}
         tips={[
-          { title: "Early Interest Heavy", description: "Early loan payments are mostly interest. On a 30-year mortgage, over 80% of your first payment may be interest. This ratio gradually reverses over the loan term." },
-          { title: "Extra Payments Impact", description: "Extra principal payments early in the loan have the greatest effect. One extra payment in year 1 saves more interest than multiple extra payments in later years." },
-          { title: "Biweekly Payments", description: "Making half-payments every two weeks results in 13 full monthly payments per year instead of 12, significantly shortening loan terms and saving interest." },
-          { title: "Tax Deductions", description: "For mortgages, interest paid may be tax-deductible. The amortization schedule shows exactly how much interest you pay each year for tax purposes." }
+          { title: "The Power of Extra Payments", description: "Making even one extra principal payment per year can shave years off a 30-year mortgage and save you tens of thousands in interest. Use the schedule to see how your balance would decrease faster." },
+          { title: "Bi-Weekly Payment Strategy", description: "Consider making half-payments every two weeks instead of full payments monthly. This results in 26 half-payments, equivalent to 13 full monthly payments per year, which naturally accelerates your loan payoff." },
+          { title: "Understand Your Equity", description: "The 'Principal' column in the schedule shows how much equity you are building in your home with each payment. This is a key component of your net worth." },
+          { title: "Tax Deduction Insights", description: "The 'Interest' column shows the amount of interest you pay each month. For mortgages, this interest is often tax-deductible. You can sum up the interest for a year to estimate your potential deduction." }
         ]}
         faqs={[
-          { question: "Why does so much of my early payment go to interest?", answer: "Interest is calculated on the remaining principal balance. Early in the loan, the balance is highest, so interest charges are highest. As you pay down principal, interest charges decrease and more payment goes toward principal." },
-          { question: "How much can I save with extra payments?", answer: "Significant amounts. Adding just $100/month to a $200,000 30-year mortgage at 4% can save over $30,000 in interest and pay off the loan 5+ years early. The exact savings depend on your loan terms." },
-          { question: "Should I pay extra on my mortgage or invest instead?", answer: "Compare your mortgage rate to expected investment returns. If your mortgage rate is 4% and investments might return 8%, investing may build more wealth. However, guaranteed interest savings and peace of mind from debt freedom have value too." },
-          { question: "What's the difference between amortization and simple interest?", answer: "Amortized loans have level payments where the principal/interest split changes each month. Simple interest charges interest only on the remaining balance without a fixed payment schedule. Amortization provides predictable payments." }
+          { question: "Why does so much of my early payment go to interest?", answer: "Interest is calculated based on the outstanding loan balance. In the beginning, the balance is at its highest, so the interest charges are also at their highest. As you pay down the principal, the interest portion of each subsequent payment decreases." },
+          { question: "How much can I really save with extra payments?", answer: "The savings can be substantial. For example, on a $300,000, 30-year mortgage at 6%, paying an extra $200 per month can save you over $75,000 in interest and pay off the loan more than 6 years early." },
+          { question: "Should I choose a shorter loan term if I can afford it?", answer: "Generally, yes. A shorter-term loan (like a 15-year mortgage) will have higher monthly payments but typically comes with a lower interest rate and results in far less total interest paid over the life of the loan, building equity much faster." },
+          { question: "What is 'PITI'?", answer: "PITI stands for Principal, Interest, Taxes, and Insurance. This amortization calculator shows your Principal and Interest (P&I) payment. Your actual monthly mortgage payment will also include escrow payments for property taxes and homeowners' insurance, making the total payment higher." }
         ]}
       />
     </CalculatorLayout>

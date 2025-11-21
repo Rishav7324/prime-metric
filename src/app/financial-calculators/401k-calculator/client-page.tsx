@@ -112,22 +112,52 @@ const K401Calculator = () => {
       </Card>
       
       <CalculatorContentSection
-        aboutContent="The 401(k) Calculator estimates the future value of your 401(k) retirement savings based on your current balance, contributions, employer match, and expected investment returns. It helps you visualize how your retirement savings can grow over time and whether you're on track to meet your goals."
+        aboutContent="The 401(k) Calculator is a powerful financial planning tool designed to project the future value of a 401(k) retirement account. By inputting key variables such as current age, desired retirement age, current 401(k) balance, annual salary, contribution percentages (both employee and employer), and the expected annual rate of return, users can receive a detailed forecast of their potential retirement savings. This calculator not only provides a future lump-sum estimate but also helps individuals understand the profound impact of long-term, consistent investing. It illustrates the power of compound interest, the value of employer matching contributions (often referred to as 'free money'), and the importance of starting to save early. The tool assumes a standard 2% annual salary increase to provide a more realistic long-term projection. By visualizing their potential nest egg, users can make informed decisions about their savings strategy, adjust their contributions, and assess whether they are on track to achieve a financially secure retirement. It serves as an essential first step in comprehensive retirement planning, empowering users to take control of their financial future."
         useCases={[
-            { title: "Retirement Planning", description: "Project your retirement savings to see if you are saving enough for a comfortable retirement." },
-            { title: "Contribution Strategy", description: "See how increasing your contribution percentage can significantly boost your nest egg." },
-            { title: "Employer Match Impact", description: "Understand the powerful effect of 'free money' from your employer's matching contributions." },
+            { title: "Retirement Planning", description: "Project your total retirement savings to determine if you are on a path to a comfortable retirement. Use the results to set or adjust long-term financial goals." },
+            { title: "Contribution Strategy", description: "Analyze how different contribution percentages affect your final nest egg. See the significant long-term impact of increasing your contribution by even 1-2%." },
+            { title: "Employer Match Analysis", description: "Understand the powerful effect of employer matching. This calculator quantifies the 'free money' you receive, highlighting why contributing enough to get the full match is crucial." },
+            { title: "Job Offer Comparison", description: "When considering a new job, use this calculator to compare the long-term value of different 401(k) matching programs offered by potential employers." }
+        ]}
+        examples={[
+            {
+                title: "Scenario: Young Professional Starting Out",
+                description: "A 25-year-old starts a new job with a $60,000 salary and no prior 401(k) savings. They decide to contribute 8% of their salary, and their employer matches 50% of the first 6% (a 3% match).",
+                steps: [
+                    "Enter Current Age: 25",
+                    "Enter Retirement Age: 65",
+                    "Enter Current Balance: 0",
+                    "Enter Annual Salary: 60000",
+                    "Enter Your Contribution: 8%",
+                    "Enter Employer Match: 3%",
+                    "Enter Expected Return: 7%",
+                    "The result shows how even modest, early contributions can grow into a substantial sum over 40 years, demonstrating the power of time and compounding."
+                ]
+            },
+            {
+                title: "Scenario: Mid-Career Catch-Up",
+                description: "A 40-year-old with $100,000 in their 401(k) realizes they need to save more aggressively. Their salary is $90,000, and they have a 5% employer match.",
+                steps: [
+                    "Enter Current Age: 40, Retirement Age: 65",
+                    "Enter Current Balance: 100000",
+                    "Enter Annual Salary: 90000",
+                    "Enter Employer Match: 5%",
+                    "First, calculate with their current 8% contribution. Then, re-calculate with an increased 15% contribution.",
+                    "This comparison clearly illustrates how increasing contributions later in a career can still have a dramatic, positive impact on the final retirement balance."
+                ]
+            }
         ]}
         tips={[
-            { title: "Maximize Employer Match", description: "Always contribute at least enough to get the full employer match. It's an instant, guaranteed return on your investment." },
-            { title: "Increase Contributions Annually", description: "Try to increase your contribution percentage by 1% each year. Small, regular increases can have a huge impact over time." },
-            { title: "Stay the Course", description: "Don't panic during market downturns. Consistent contributions allow you to buy more shares when prices are low, which can accelerate growth during a recovery." },
+            { title: "Maximize Employer Match", description: "Always contribute at least enough to receive the full employer match. It is an instant, guaranteed return on your investment and is the fastest way to accelerate your savings." },
+            { title: "Increase Contributions Annually", description: "Try to increase your contribution percentage by 1% each year, perhaps when you get a raise. These small, regular increments can have a huge impact on your final balance over time without drastically affecting your take-home pay." },
+            { title: "Stay the Course During Market Volatility", description: "Market downturns are a normal part of investing. Continuing your regular contributions during these times means you are buying more shares at a lower price (dollar-cost averaging), which can significantly accelerate growth when the market recovers." },
+            { title: "Review Your Investments", description: "Don't just 'set it and forget it.' Review your 401(k) investments annually to ensure they are still aligned with your risk tolerance and time horizon. Consider rebalancing if your asset allocation has drifted." }
         ]}
         faqs={[
-            { question: "What is a 401(k)?", answer: "A 401(k) is an employer-sponsored retirement savings plan that allows you to invest a portion of your paycheck before taxes are taken out. Many employers also offer a matching contribution." },
-            { question: "What's a realistic rate of return to expect?", answer: "Historically, a diversified portfolio of stocks has returned an average of 7-10% annually over the long term. It's often wise to use a more conservative estimate, like 6-7%, for planning." },
-            { question: "How much should I be saving in my 401(k)?", answer: "A common recommendation is to save at least 15% of your pre-tax income for retirement, including any employer match." },
-            { question: "What is the difference between a Traditional and a Roth 401(k)?", answer: "Traditional 401(k) contributions are pre-tax, lowering your current taxable income, but withdrawals in retirement are taxed. Roth 401(k) contributions are after-tax, but qualified withdrawals in retirement are tax-free." }
+            { question: "What is a 401(k)?", answer: "A 401(k) is an employer-sponsored retirement savings plan in the United States that allows employees to invest a portion of their paycheck, often before taxes are taken out. Many employers also offer a matching contribution, which is a powerful incentive to save." },
+            { question: "What is a realistic rate of return to expect?", answer: "Historically, a diversified portfolio of stocks (like an S&P 500 index fund) has returned an average of 7-10% annually over the long term, after adjusting for inflation. However, past performance is not a guarantee of future results. It's often wise to use a more conservative estimate, like 6-7%, for planning purposes." },
+            { question: "How much should I be saving in my 401(k)?", answer: "A common financial rule of thumb is to save at least 15% of your pre-tax income for retirement, which includes any employer match. For example, if you contribute 10% and your employer matches 5%, you've reached the 15% goal." },
+            { question: "What is the difference between a Traditional 401(k) and a Roth 401(k)?", answer: "Traditional 401(k) contributions are made pre-tax, which lowers your current taxable income. You pay taxes on the withdrawals in retirement. Roth 401(k) contributions are made after-tax, meaning you don't get a tax break now, but your qualified withdrawals in retirement are completely tax-free." }
         ]}
       />
     </CalculatorLayout>
@@ -135,5 +165,3 @@ const K401Calculator = () => {
 };
 
 export default K401Calculator;
-
-    
