@@ -245,3 +245,5 @@ const CompressImage = () => {
 };
 
 export default CompressImage;
+
+    
