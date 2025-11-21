@@ -122,8 +122,8 @@ const Contact = () => {
                    <p className="text-muted-foreground">
                     Have an idea for a new tool or calculator?
                   </p>
-                  <a href="mailto:help@primemetric.online?subject=Feature%20Request" className="text-primary hover:underline">
-                    help@primemetric.online
+                  <a href="mailto: requestnewtool@primemetric.online?subject=Feature%20Request" className="text-primary hover:underline">
+                    requestnewtool@primemetric.online
                   </a>
                 </div>
               </div>

@@ -6,10 +6,21 @@ import { Search } from "lucide-react";
 import Link from "next/link";
 import Head from "next/head";
 import { categories } from "@/lib/data";
-import React from 'react';
+import React, { useState } from 'react';
 import AdBanner from "@/components/AdBanner";
+import { useRouter } from "next/navigation";
 
 const Index = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const router = useRouter();
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      router.push(`/all-calculators?q=${encodeURIComponent(searchTerm.trim())}`);
+    }
+  };
+
   const featuredCalculators = [
     { name: "BMI Calculator", path: "/health-calculators/bmi-calculator", uses: "2.4M+" },
     { name: "Loan Calculator", path: "/financial-calculators/loan-calculator", uses: "1.8M+" },
@@ -79,13 +90,17 @@ const Index = () => {
               </p>
               
               <div className="max-w-2xl mx-auto mt-8">
-                <div className="relative group">
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                  <Input 
-                    placeholder="Search calculators... (e.g., BMI, Loan, Currency)" 
-                    className="pl-12 h-14 text-lg glass-card border-primary/30 focus:border-primary transition-all"
-                  />
-                </div>
+                <form onSubmit={handleSearch}>
+                  <div className="relative group">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                    <Input 
+                      placeholder="Search calculators... (e.g., BMI, Loan, Currency)" 
+                      className="pl-12 h-14 text-lg glass-card border-primary/30 focus:border-primary transition-all"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                  </div>
+                </form>
               </div>
 
               <div className="flex flex-wrap justify-center gap-3 pt-4">

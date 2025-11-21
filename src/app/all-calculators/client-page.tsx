@@ -1,7 +1,7 @@
 
 'use client'
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -9,9 +9,16 @@ import { Card } from "@/components/ui/card";
 import { allCalculators } from "@/lib/data";
 import React from "react";
 import AdBanner from "@/components/AdBanner";
+import { useSearchParams } from "next/navigation";
 
 const AllCalculatorsClient = () => {
-  const [search, setSearch] = useState("");
+  const searchParams = useSearchParams();
+  const initialSearch = searchParams.get('q') || "";
+  const [search, setSearch] = useState(initialSearch);
+
+  useEffect(() => {
+    setSearch(initialSearch);
+  }, [initialSearch]);
 
   const filteredCalculators = allCalculators.filter(calc =>
     calc.name.toLowerCase().includes(search.toLowerCase()) ||
