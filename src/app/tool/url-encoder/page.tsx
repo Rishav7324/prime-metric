@@ -88,24 +88,47 @@ const URLEncoder = () => {
         </div>
 
         <CalculatorContentSection
-          aboutContent="The URL Encoder/Decoder converts text and URLs to percent-encoded format (URL encoding) and decodes them back to readable text. URL encoding replaces unsafe characters with '%' followed by two hexadecimal digits. This is essential for passing data in URLs, ensuring special characters are transmitted correctly across the web."
+          aboutContent="The URL Encoder/Decoder is a web utility that converts strings into a URL-safe format and back. This process, known as percent-encoding, is crucial for ensuring that data passed within a Uniform Resource Locator (URL) is transmitted correctly. URLs can only contain a specific set of characters; special characters like spaces, slashes, or ampersands have reserved meanings and must be encoded to be treated as literal data. This tool uses standard JavaScript functions (`encodeURIComponent` and `decodeURIComponent`) to perform this task, which is a fundamental requirement for web development, API interaction, and handling data in web applications."
           useCases={[
-            { title: "Query Parameters", description: "Encode data being passed in URL query strings (e.g., ?search=hello world becomes ?search=hello%20world) for proper HTTP transmission." },
-            { title: "API Requests", description: "Prepare parameters for RESTful API calls, ensuring special characters in usernames, searches, or filters are correctly encoded." },
-            { title: "Email Links", description: "Create mailto: links with pre-filled subjects or bodies containing special characters that need encoding to work across all email clients." },
-            { title: "Debugging", description: "Decode URL-encoded strings from browser address bars, server logs, or error messages to understand actual content being transmitted." }
+            { title: "Creating Safe URL Query Parameters", description: "When passing data in a URL's query string (the part after '?'), values must be encoded. For example, a search query like 'shirts & shoes' must be encoded to 'shirts%20%26%20shoes' to prevent the '&' from being misinterpreted as a separator for a new parameter. This is essential for search bars, filters, and forms that use GET requests." },
+            { title: "Preparing Data for API Requests", description: "Many REST APIs require data to be passed in the URL path or as query parameters. Encoding user-generated content, file names, or any data that might contain special characters ensures the API server interprets the request correctly. For instance, an API endpoint to fetch a user profile might look like `/api/users/john.doe@example.com`, which would need to be encoded to `/api/users/john.doe%40example.com`." },
+            { title: "Generating 'mailto:' Links", description: "To create email links that pre-fill the subject or body, you must URL-encode the content. A link to email someone with the subject 'Hello World!' would require encoding the subject to 'Hello%20World!' to ensure the spaces are handled correctly by email clients." },
+            { title: "Debugging Web Traffic and Logs", description: "Developers and network administrators often need to analyze URLs from server logs, browser history, or network traffic captures. These URLs are typically encoded. This tool allows them to quickly decode the URLs to see the original, human-readable data, which is invaluable for troubleshooting and debugging issues." }
+          ]}
+          examples={[
+            {
+              title: "Encoding a Search Query",
+              description: "You have a search input on your website that redirects to a URL like `https://example.com/search?q=your query`.",
+              steps: [
+                "A user types 'black t-shirt & jeans' into the search box.",
+                "Paste 'black t-shirt & jeans' into the input field of the encoder.",
+                "Click 'Encode URL'.",
+                "The output will be 'black%20t-shirt%20%26%20jeans'.",
+                "The final, safe URL would be `https://example.com/search?q=black%20t-shirt%20%26%20jeans`."
+              ]
+            },
+            {
+              title: "Decoding a URL from a Log File",
+              description: "You see a log entry for a request to your server: `/api/v1/documents/Report%20-%20Q4%202024.pdf`.",
+              steps: [
+                "Copy the encoded part of the URL: `Report%20-%20Q4%202024.pdf`.",
+                "Paste it into the input field of the decoder.",
+                "Click 'Decode URL'.",
+                "The output will reveal the original filename: `Report - Q4 2024.pdf`. This helps you understand which file was being accessed."
+              ]
+            }
           ]}
           tips={[
-            { title: "Space Encoding", description: "Spaces are encoded as %20 (or + in form data). Both are valid but %20 is more universal for general URL encoding." },
-            { title: "Reserved Characters", description: "Characters like ?, &, =, #, / have special meanings in URLs. Encoding prevents them from being interpreted as URL structure when they're part of data." },
-            { title: "Double Encoding", description: "Be careful not to encode already-encoded URLs. Encoding 'hello%20world' again becomes 'hello%2520world' (double-encoded)." },
-            { title: "Encoding Only Data", description: "Only encode the parameter values, not the entire URL structure. Don't encode http://, ?, &, or = that are part of the URL syntax itself." }
+            { title: "Encode Only the Data, Not the Whole URL", description: "A common mistake is to encode an entire URL. You should only encode the individual components (like query parameter values or path segments) that contain special characters. Encoding the 'http://' or the separating '?' and '&' characters will break the URL." },
+            { title: "Spaces Can Be '+' or '%20'", description: "When encoding form data, spaces are often represented as a plus sign ('+'). In most other URL contexts, the standard encoding is '%20'. Both are generally understood by servers, but using `%20` is more universally compatible, which is what this tool does." },
+            { title: "Beware of Double Encoding", description: "Be careful not to encode a string that has already been encoded. This can happen if data is passed through multiple systems. For example, encoding 'hello%20world' again will result in 'hello%2520world' (because '%' is encoded as '%25'), which will not decode correctly." },
+            { title: "Use 'encodeURIComponent' for Safety", description: "This tool uses `encodeURIComponent`, which encodes more characters (like '/', '?', ':', '&', '=') than the older `encodeURI` function. This makes it safer for encoding parameter values, as it prevents those characters from being interpreted as part of the URL structure." }
           ]}
           faqs={[
-            { question: "What characters need URL encoding?", answer: "Non-alphanumeric characters except: - _ . ~. This includes spaces, special symbols (@, #, $), and non-ASCII characters. When in doubt, encode it." },
-            { question: "Why does my URL have %20 instead of spaces?", answer: "%20 is the URL-encoded representation of a space. URLs can't contain literal spaces, so they're encoded as %20 for transmission." },
-            { question: "What's the difference from Base64 encoding?", answer: "URL encoding is for making text URL-safe (replacing problematic characters). Base64 converts binary to text. They serve different purposes." },
-            { question: "Do I need to encode the entire URL?", answer: "No! Only encode the data parts (query parameter values, path segments with special characters). Don't encode the protocol (http://), domain, or URL structure characters." }
+            { question: "What is URL encoding, and why is it necessary?", answer: "URL encoding (or percent-encoding) is a mechanism for representing characters in a URL that are not in the limited set of 'safe' ASCII characters. It replaces unsafe characters with a '%' symbol followed by two hexadecimal digits that represent the character's byte value. It is necessary because certain characters have special meanings in URLs (e.g., '/', '?', '#', '&') and would break the URL structure if used literally within data." },
+            { question: "Which characters need to be URL encoded?", answer: "Any character that is not an unreserved alphanumeric character (`a-z`, `A-Z`, `0-9`) or one of the few unreserved symbols (`-`, `_`, `.`, `~`) should be encoded. This includes spaces, all punctuation marks, and any non-ASCII characters (like accents or emojis)." },
+            { question: "What's the difference between URL encoding and Base64 encoding?", answer: "URL encoding is designed specifically to make text safe to be included in a URL by escaping problematic characters. Base64 encoding is a general-purpose method for representing any binary data as a text string. They are not interchangeable and serve different purposes." },
+            { question: "What does '%20' mean in a URL?", answer: "The string '%20' is the percent-encoded representation of a space character. URLs cannot contain literal spaces, so they are replaced with '%20' to ensure they are transmitted correctly and not misinterpreted by servers or browsers." }
           ]}
         />
       </CalculatorLayout>
