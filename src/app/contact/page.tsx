@@ -13,7 +13,6 @@ import LegalPageLayout from "@/components/LegalPageLayout";
 import { useFirestore } from "@/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { addDocumentNonBlocking } from "@/firebase";
-import AdsterraBanner from '@/components/AdsterraBanner';
 
 const Contact = () => {
   const [name, setName] = useState("");
@@ -46,6 +45,7 @@ const Contact = () => {
   return (
     <>
       <LegalPageLayout title="Contact Us">
+        <p className="text-muted-foreground text-center mb-8">We'd love to hear from you. Whether you have a question, a suggestion for a new calculator, or just want to say hello, please don't hesitate to reach out.</p>
         <div className="grid md:grid-cols-2 gap-6">
           <Card className="p-6 bg-card/80 backdrop-blur">
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -123,7 +123,6 @@ const Contact = () => {
             </Card>
           </div>
         </div>
-        <AdsterraBanner />
       </LegalPageLayout>
     </>
   );

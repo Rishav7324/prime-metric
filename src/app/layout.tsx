@@ -9,11 +9,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { FirebaseClientProvider } from '@/firebase';
 import CookieConsentBanner from '@/components/CookieConsentBanner';
 import { Analytics } from '@vercel/analytics/react';
-import Script from 'next/script';
 import { Inter, Merriweather } from 'next/font/google';
-import AdBanner from '@/components/AdBanner';
-import HighPerformanceAd from '@/components/HighPerformanceAd';
-import HighPerformanceAd2 from '@/components/HighPerformanceAd2';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -60,22 +56,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6512188660075861"
-          crossOrigin="anonymous"
-          strategy="lazyOnload"
-        />
-      </head>
       <body className={cn("font-body antialiased min-h-screen bg-background", inter.variable, merriweather.variable)}>
         <FirebaseClientProvider>
           <div className="relative flex min-h-dvh flex-col">
             <SiteHeader />
-            <HighPerformanceAd2 />
             <div className="flex-1">{children}</div>
-            <HighPerformanceAd />
-            <AdBanner />
             <SiteFooter />
           </div>
           <Toaster />

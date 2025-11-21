@@ -5,7 +5,6 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Calculator, Heart, TrendingUp, Users } from "lucide-react";
-import AdsterraBanner from '@/components/AdsterraBanner';
 
 export const metadata: Metadata = {
     title: "About Us - Prime Metric",
@@ -23,8 +22,6 @@ const AboutPage = () => {
             Your trusted source for accurate and easy-to-use calculators
         </p>
         
-        <AdsterraBanner />
-
         <Card className="p-8 bg-card/80 backdrop-blur mb-8">
           <h2 className="text-2xl font-semibold mb-4">Our Mission</h2>
           <p className="text-muted-foreground mb-4">

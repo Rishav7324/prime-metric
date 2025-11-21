@@ -6,7 +6,6 @@ import { Search } from "lucide-react";
 import Link from "next/link";
 import Head from "next/head";
 import { categories } from "@/lib/data";
-import HighPerformanceAd2 from "@/components/HighPerformanceAd2";
 import React from 'react';
 
 const Index = () => {
@@ -149,7 +148,7 @@ const Index = () => {
                     return [
                       card,
                       <div key={`ad-cat-${index}`} className="w-full col-span-1 md:col-span-2 lg:col-span-3 flex justify-center items-center">
-                        <HighPerformanceAd2 />
+                
                       </div>
                     ];
                   }
@@ -186,7 +185,7 @@ const Index = () => {
                      return [
                       card,
                       <div key={`ad-feat-${index}`} className="w-full col-span-1 md:col-span-3 flex justify-center items-center">
-                        <HighPerformanceAd2 />
+                        
                       </div>
                     ];
                   }
