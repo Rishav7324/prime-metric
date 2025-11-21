@@ -162,5 +162,3 @@ const InvoiceGenerator = () => {
 };
 
 export default InvoiceGenerator;
-
-    

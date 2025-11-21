@@ -120,7 +120,7 @@ const JSONFormatter = () => {
           ]}
           tips={[
             { title: "Understand JSON Structure", description: "JSON consists of key-value pairs, arrays, objects, strings, numbers, booleans, and null. Keys must be strings in double quotes, and proper syntax is critical for validity." },
-            { title: "Common JSON Errors", description: "Watch for trailing commas, single quotes instead of double quotes, missing brackets/braces, and unescaped special characters - these are the most frequent JSON syntax errors." },
+            { title: "Common JSON Errors", description: "Watch for trailing commas, single quotes instead of double quotes, missing brackets/braces, and unescaped special characters in strings - these are the most frequent JSON syntax errors." },
             { title: "Use Browser DevTools", description: "Modern browser developer tools have built-in JSON formatters in the Network tab. However, standalone formatters like this offer better validation and minification features." },
             { title: "Validate Before Use", description: "Always validate JSON before using it in production. Invalid JSON will cause application errors and can be difficult to debug once deployed." },
             { title: "Minify for Production", description: "Use minified JSON in production to reduce file sizes and improve load times. Keep formatted versions for development and documentation purposes." }

@@ -127,9 +127,7 @@ const CropImage = () => {
           ) : (
              <>
               <div className="space-y-2">
-                <Button variant="outline" size="sm" onClick={() => setImage(null)}>
-                  Upload New Image
-                </Button>
+                <Button variant="outline" size="sm" onClick={() => setImage(null)}>Upload New Image</Button>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="space-y-2">

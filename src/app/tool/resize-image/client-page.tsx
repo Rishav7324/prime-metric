@@ -177,5 +177,3 @@ const ResizeImage = () => {
 };
 
 export default ResizeImage;
-
-    

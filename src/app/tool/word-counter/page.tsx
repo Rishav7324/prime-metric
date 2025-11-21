@@ -23,7 +23,7 @@ const WordCounter = () => {
     const charactersNoSpaces = text.replace(/\s/g, "").length;
     const words = text.trim() ? text.trim().split(/\s+/).length : 0;
     const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0).length;
-    const paragraphs = text.split(/\n\n+/).filter(p => p.trim().length > 0).length;
+    const paragraphs = text.split(/\n\s*\n/).filter(p => p.trim().length > 0).length;
     const readingTime = Math.ceil(words / 200); // Average reading speed: 200 words/min
 
     setStats({
