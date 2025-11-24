@@ -14,113 +14,279 @@ export const metadata: Metadata = {
 
 const TermsOfServicePage = () => {
   return (
-    <LegalPageLayout title="Terms of Service">
+    <LegalPageLayout title="Terms & Conditions">
         <p className="text-muted-foreground mb-6 text-center">Last updated: November 24, 2025</p>
         
         <div className="space-y-8 text-muted-foreground">
-          <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">1. Agreement to Terms</h2>
-            <p>
-              By accessing or using our website, https://primemetric.online (the "Site"), and the services, features, content, applications, or tools offered by Prime Metric (collectively, the "Services"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to all of these Terms, do not use our Services.
-            </p>
-            <p className="mt-2">
-              These Terms constitute a legally binding agreement made between you, whether personally or on behalf of an entity (“you”) and Prime Metric (“we,” “us,” or “our”), concerning your access to and use of the Services.
-            </p>
-          </section>
+          <p>
+            Welcome to Prime Metric. These Terms and Conditions (“Terms”, “Agreement”) govern your access to and use of the website located at https://primemetric.online, including all calculators, tools, templates, dashboards, services, and features available through the site (“Services”).
+          </p>
+          <p>
+            By accessing or using Prime Metric, you agree to be bound by these Terms. If you do not agree, you must discontinue use immediately. These Terms apply to all visitors, users, account holders, and anyone who interacts with the website.
+          </p>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">2. Description of Service</h2>
-            <p>
-              Prime Metric provides a collection of online calculators, converters, and educational content for general informational and educational purposes only. The tools cover various domains including finance, health, and mathematics. All calculations are performed within your browser, and we do not store the personal or financial data you enter into the calculators. Our Services are provided free of charge and are supported by advertising.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">3. No Professional Advice (Disclaimer of Warranties)</h2>
-            <p className="font-semibold text-foreground mb-2">
-              The information and tools provided through the Services are for educational and informational purposes only and are not a substitute for professional advice.
-            </p>
-            <p className="mb-3">
-              The Services are provided on an "AS IS" and "AS AVAILABLE" basis. We expressly disclaim all warranties of any kind, whether express or implied, including, but not limited to, the implied warranties of merchantability, fitness for a particular purpose, and non-infringement. We make no warranty that the Services will meet your requirements, be uninterrupted, timely, secure, or error-free.
-            </p>
-            <ul className="list-disc pl-6 space-y-2">
-              <li><strong>No Financial Advice:</strong> The financial calculators are not intended to provide financial, investment, legal, or tax advice. You should consult with a qualified professional before making any financial decisions.</li>
-              <li><strong>No Medical Advice:</strong> The health calculators are not intended to provide medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.</li>
+            <h2 className="text-2xl font-semibold mb-3 text-foreground">1. Acceptance of Terms</h2>
+            <p>By accessing PrimeMetric or using any of our Services, you:</p>
+            <ul className="list-disc pl-6 mt-2 space-y-1">
+                <li>Agree to comply with these Terms</li>
+                <li>Confirm you are at least 13 years old</li>
+                <li>Accept our Privacy Policy and Cookie Policy</li>
+                <li>Agree not to misuse the platform</li>
+                <li>Understand that our calculations are for educational and informational purposes only</li>
             </ul>
-             <p className="mt-3">
-              Your reliance on any information or calculation provided by the Services is solely at your own risk. Please read our full <Link href="/disclaimer" className="text-primary hover:underline">Disclaimer</Link> for more details.
-            </p>
+            <p className="mt-2">If you create an account or use our invoice generator, calculator tools, or downloadable resources, these Terms fully apply.</p>
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">4. User Conduct and Responsibilities</h2>
-            <p className="mb-3">
-              You agree to use the Services only for lawful purposes and in a way that does not infringe the rights of, restrict, or inhibit anyone else's use and enjoyment of the Services. Prohibited behavior includes, but is not limited to:
-            </p>
-            <ul className="list-disc pl-6 space-y-2">
-              <li>Using the Services for any fraudulent or illegal purpose.</li>
-              <li>Attempting to gain unauthorized access to our computer systems or engaging in any activity that disrupts, diminishes the quality of, interferes with the performance of, or impairs the functionality of the Services.</li>
-              <li>Introducing any viruses, trojans, worms, logic bombs, or other material that is malicious or technologically harmful.</li>
-              <li>Scraping, data mining, or extracting data from the Site without our prior written permission.</li>
+            <h2 className="text-2xl font-semibold mb-3 text-foreground">2. About Prime Metric</h2>
+            <p>Prime Metric is an online platform providing:</p>
+            <ul className="list-disc pl-6 mt-2 space-y-1">
+                <li>100+ calculators and tools</li>
+                <li>Educational breakdowns</li>
+                <li>Steps, formulas, and examples</li>
+                <li>Invoice generator templates</li>
+                <li>Saving invoice history</li>
+                <li>Informational guides</li>
             </ul>
+            <p className="mt-2">Prime Metric does not provide certified financial, legal, health, tax, or medical advice. All results generated by our tools should be interpreted responsibly.</p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-semibold mb-3 text-foreground">3. User Accounts</h2>
+            <p>Some features (e.g., invoice saving, dashboard access) require creating an account. When registering:</p>
+             <p className="font-semibold mt-2">You must:</p>
+            <ul className="list-disc pl-6 mt-2 space-y-1">
+                <li>Provide accurate information</li>
+                <li>Not use another person’s identity</li>
+                <li>Not create multiple accounts to misuse services</li>
+                <li>Keep your login credentials secure</li>
+            </ul>
+            <p className="font-semibold mt-2">You agree that:</p>
+            <ul className="list-disc pl-6 mt-2 space-y-1">
+                <li>You are responsible for all activities under your account</li>
+                <li>We may suspend accounts for misuse</li>
+                <li>We may delete inactive or duplicate accounts</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-semibold mb-3 text-foreground">4. Use of Our Services</h2>
+            <p>By using Prime Metric, you agree:</p>
+            <p className="font-semibold mt-2">✔ You WILL:</p>
+            <ul className="list-disc pl-6 mt-2 space-y-1">
+                <li>Use tools only for legal purposes</li>
+                <li>Follow all instructions and limitations</li>
+                <li>Respect our intellectual property</li>
+                <li>Use correct information in calculators (where required)</li>
+            </ul>
+            <p className="font-semibold mt-2">❌ You WILL NOT:</p>
+            <ul className="list-disc pl-6 mt-2 space-y-1">
+                <li>Reverse engineer the site</li>
+                <li>Attempt to hack, disable, or overload servers</li>
+                <li>Post harmful, illegal, malicious content</li>
+                <li>Automate scraping or mass extraction of data</li>
+                <li>Clone or republish our content without permission</li>
+                <li>Use bots or automated tools to generate fake invoices or traffic</li>
+            </ul>
+            <p className="mt-2">Unauthorized usage may lead to account termination.</p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-semibold mb-3 text-foreground">5. Educational Content Disclaimer</h2>
+            <p>All calculators and tools on PrimeMetric provide:</p>
+            <ul className="list-disc pl-6 mt-2 space-y-1">
+                <li>Estimates</li>
+                <li>Suggested values</li>
+                <li>Informational insights</li>
+                <li>Step-by-step explanations</li>
+            </ul>
+            <p className="font-semibold mt-2">However:</p>
+            <ul className="list-disc pl-6 mt-2 space-y-1">
+                <li>They are NOT a replacement for professional advice.</li>
+                <li>They should NOT be used for financial, legal, tax, investment, medical, or professional decision-making without expert consultation.</li>
+            </ul>
+            <p className="mt-2">Prime Metric is not responsible for losses resulting from incorrect usage, interpretation, or reliance on calculated values.</p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-semibold mb-3 text-foreground">6. Accuracy of Information</h2>
+            <p>We regularly review and update our tools, formulas, and educational content. However:</p>
+            <ul className="list-disc pl-6 mt-2 space-y-1">
+                <li>We do not guarantee 100% accuracy</li>
+                <li>Mathematical or formula errors may occasionally occur</li>
+                <li>External factors may influence real-world results</li>
+                <li>Users are responsible for verifying results before action</li>
+            </ul>
+            <p className="mt-2">We disclaim liability for damages caused by calculation inaccuracies.</p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-semibold mb-3 text-foreground">7. Intellectual Property Rights</h2>
+            <p>All content on Prime Metric, including:</p>
+            <ul className="list-disc pl-6 mt-2 space-y-1">
+                <li>Calculator logic</li>
+                <li>Educational content</li>
+                <li>Designs</li>
+                <li>Templates</li>
+                <li>UI/UX assets</li>
+                <li>Text descriptions</li>
+                <li>Graphical elements</li>
+                <li>Branding</li>
+                <li>Logos</li>
+            </ul>
+            <p className="mt-2">is the exclusive property of Prime Metric.</p>
+            <p className="font-semibold mt-2">Users MAY NOT:</p>
+            <ul className="list-disc pl-6 mt-2 space-y-1">
+                <li>Copy or republish tools</li>
+                <li>Use our design system commercially</li>
+                <li>Redistribute or resell calculators</li>
+                <li>Use our educational content elsewhere</li>
+                <li>Download or extract source code</li>
+                <li>Claim authorship of our tools</li>
+                <li>Create competing services using our content</li>
+            </ul>
+            <p className="mt-2">Doing so violates copyright laws.</p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-semibold mb-3 text-foreground">8. Third-Party Services</h2>
+            <p>Prime Metric may integrate with third-party tools like:</p>
+            <ul className="list-disc pl-6 mt-2 space-y-1">
+                <li>Google Analytics</li>
+                <li>Google AdSense</li>
+                <li>Firebase</li>
+                <li>Social platforms</li>
+            </ul>
+            <p className="mt-2">These third parties may collect anonymized data. Prime Metric is not responsible for:</p>
+            <ul className="list-disc pl-6 mt-2 space-y-1">
+                <li>Third-party accuracy</li>
+                <li>Their policies</li>
+                <li>Data handling practices</li>
+            </ul>
+            <p className="mt-2">Users should review their privacy policies for details.</p>
           </section>
           
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">5. Intellectual Property Rights</h2>
-            <p>
-              The Services and their entire contents, features, and functionality (including but not limited to all information, software, text, displays, images, video, and audio, and the design, selection, and arrangement thereof) are owned by Prime Metric, its licensors, or other providers of such material and are protected by international copyright, trademark, patent, trade secret, and other intellectual property or proprietary rights laws.
-            </p>
-             <p className="mt-2">
-              You are granted a limited, non-exclusive, non-transferable license to access and use the Services for your personal, non-commercial use only. You must not reproduce, distribute, modify, create derivative works of, publicly display, publicly perform, republish, download, store, or transmit any of the material on our Site, except as it is necessary for your personal use.
-            </p>
+            <h2 className="text-2xl font-semibold mb-3 text-foreground">9. Advertising and Monetization</h2>
+            <p>Prime Metric uses:</p>
+            <ul className="list-disc pl-6 mt-2 space-y-1">
+                <li>Google AdSense</li>
+                <li>Display ads</li>
+                <li>Affiliate links (in the future)</li>
+            </ul>
+            <p className="mt-2">Ads shown on the site:</p>
+            <ul className="list-disc pl-6 mt-2 space-y-1">
+                <li>Are controlled by external providers</li>
+                <li>Do not represent our endorsement</li>
+                <li>May be targeted based on browsing behavior</li>
+            </ul>
+            <p className="mt-2">We follow Google Publisher Policies strictly.</p>
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">6. Third-Party Links and Advertising</h2>
-            <p>
-              The Services may contain links to third-party websites or services that are not owned or controlled by us. We have no control over, and assume no responsibility for, the content, privacy policies, or practices of any third-party websites or services.
-            </p>
-            <p className="mt-2">
-              Our Services are supported by advertising from third-party networks, such as Google AdSense. These ads are not endorsements, and we are not responsible for the content of these advertisements or the products/services they offer.
-            </p>
+            <h2 className="text-2xl font-semibold mb-3 text-foreground">10. User Content</h2>
+            <p>Some tools allow uploading content, such as:</p>
+            <ul className="list-disc pl-6 mt-2 space-y-1">
+                <li>Logos for invoices</li>
+                <li>Text descriptions</li>
+                <li>Business information</li>
+            </ul>
+            <p className="mt-2">By uploading content, you confirm:</p>
+            <ul className="list-disc pl-6 mt-2 space-y-1">
+                <li>You own the rights to the content</li>
+                <li>It does not infringe third-party rights</li>
+                <li>It is not harmful, illegal, or offensive</li>
+                <li>It does not violate copyright law</li>
+            </ul>
+            <p className="mt-2">We reserve the right to delete inappropriate content.</p>
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">7. Limitation of Liability</h2>
-            <p>
-              To the fullest extent permitted by applicable law, in no event shall Prime Metric, its affiliates, directors, employees, or licensors be liable for any indirect, punitive, incidental, special, consequential, or exemplary damages, including without limitation damages for loss of profits, goodwill, use, data, or other intangible losses, arising out of or relating to the use of, or inability to use, the Services.
-            </p>
-             <p className="mt-2">
-              Under no circumstances will we be responsible for any damage, loss, or injury resulting from hacking, tampering, or other unauthorized access or use of the Services.
-            </p>
+            <h2 className="text-2xl font-semibold mb-3 text-foreground">11. Invoice Generator Terms</h2>
+            <p>The invoice generator feature includes:</p>
+            <ul className="list-disc pl-6 mt-2 space-y-1">
+                <li>Pre-built templates</li>
+                <li>Logo upload</li>
+                <li>PDF/PNG downloads</li>
+                <li>Save invoice history</li>
+            </ul>
+            <p className="mt-2">You agree that:</p>
+            <ul className="list-disc pl-6 mt-2 space-y-1">
+                <li>Templates are for personal/business use only</li>
+                <li>You will not misuse them for fraud</li>
+                <li>You are responsible for legal compliance of created invoices</li>
+                <li>We do not verify authenticity of invoice entries</li>
+            </ul>
+            <p className="mt-2">Prime Metric is not responsible for:</p>
+            <ul className="list-disc pl-6 mt-2 space-y-1">
+                <li>Business losses</li>
+                <li>Tax disputes</li>
+                <li>False invoices created by users</li>
+                <li>Data loss due to user error</li>
+            </ul>
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">8. Indemnification</h2>
-            <p>
-              You agree to defend, indemnify, and hold harmless Prime Metric and its licensee and licensors, and their employees, contractors, agents, officers, and directors, from and against any and all claims, damages, obligations, losses, liabilities, costs or debt, and expenses (including but not limited to attorney's fees), resulting from or arising out of a) your use and access of the Service, or b) a breach of these Terms.
-            </p>
+            <h2 className="text-2xl font-semibold mb-3 text-foreground">12. Limitation of Liability</h2>
+            <p>To the maximum extent allowed by law: Prime Metric is NOT liable for:</p>
+            <ul className="list-disc pl-6 mt-2 space-y-1">
+                <li>Loss of data</li>
+                <li>Financial loss</li>
+                <li>Business damage</li>
+                <li>Incorrect calculation results</li>
+                <li>Billing disputes</li>
+                <li>Health or fitness decisions</li>
+                <li>Damages caused by user negligence</li>
+                <li>Losses based on reliance on calculators</li>
+            </ul>
+            <p className="mt-2">Our tools are educational only.</p>
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">9. Modifications to Terms</h2>
-            <p>
-              We reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a revision is material, we will provide at least 30 days' notice prior to any new terms taking effect by updating the "Last updated" date. What constitutes a material change will be determined at our sole discretion. By continuing to access or use our Service after any revisions become effective, you agree to be bound by the revised terms.
-            </p>
+            <h2 className="text-2xl font-semibold mb-3 text-foreground">13. Termination & Suspension</h2>
+            <p>We may suspend or terminate accounts if:</p>
+            <ul className="list-disc pl-6 mt-2 space-y-1">
+                <li>You violate Terms</li>
+                <li>You misuse tools</li>
+                <li>You attempt to exploit system vulnerabilities</li>
+                <li>You create fraudulent invoices</li>
+                <li>You spam or abuse support</li>
+            </ul>
+            <p className="mt-2">We may also restrict or modify features at any time.</p>
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">10. Governing Law</h2>
-            <p>
-              These Terms shall be governed and construed in accordance with the laws of the jurisdiction in which Prime Metric operates, without regard to its conflict of law provisions.
-            </p>
+            <h2 className="text-2xl font-semibold mb-3 text-foreground">14. Modifications to Services</h2>
+            <p>We reserve the right to:</p>
+            <ul className="list-disc pl-6 mt-2 space-y-1">
+                <li>Update tools</li>
+                <li>Add new calculators</li>
+                <li>Remove outdated features</li>
+                <li>Improve UI/UX</li>
+                <li>Limit access for maintenance</li>
+            </ul>
+            <p className="mt-2">We are not liable for downtime or temporary unavailability.</p>
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">11. Contact Us</h2>
+            <h2 className="text-2xl font-semibold mb-3 text-foreground">15. Governing Law</h2>
+            <p>These Terms are governed by the laws of your country or region unless otherwise specified. All disputes should be resolved through local applicable laws.</p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-semibold mb-3 text-foreground">16. Changes to Terms</h2>
+            <p>We may update these Terms periodically. Continued use after changes indicates acceptance of updated Terms.</p>
+          </section>
+          
+          <section>
+            <h2 className="text-2xl font-semibold mb-3 text-foreground">17. Contact Us</h2>
             <p>
-              If you have any questions about these Terms, please contact us by email at <a href="mailto:help@primemetric.online" className="text-primary hover:underline">help@primemetric.online</a> or through our <Link href="/contact" className="text-primary hover:underline">contact page</Link>.
+              If you have any questions regarding these Terms:
+              <br/>
+              📧 <a href="mailto:help@primemetric.online" className="text-primary hover:underline">help@primemetric.online</a>
             </p>
+            <p className="mt-2">We aim to respond promptly to all genuine queries.</p>
           </section>
         </div>
     </LegalPageLayout>
