@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 const TermsOfServicePage = () => {
   return (
     <LegalPageLayout title="Terms of Service">
-        <p className="text-muted-foreground mb-6 text-center">Last updated: July 31, 2024</p>
+        <p className="text-muted-foreground mb-6 text-center">Last updated: November 24, 2025</p>
         
         <div className="space-y-8 text-muted-foreground">
           <section>
