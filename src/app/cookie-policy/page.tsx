@@ -15,85 +15,186 @@ export const metadata: Metadata = {
 const CookiePolicyPage = () => {
   return (
     <LegalPageLayout title="Cookie Policy">
-      <p className="text-muted-foreground mb-6 text-center">Last updated: November 24, 2025</p>
+      <p className="text-muted-foreground mb-6 text-center">Last Updated: November 26, 2025</p>
       
       <div className="space-y-8 text-muted-foreground">
+        <p>
+          This Cookie Policy explains how Prime Metric ("PrimeMetric", "we", "us", or "our") uses cookies and similar tracking technologies when you visit or interact with our website https://primemetric.online (“Site”) and the tools, calculators, dashboards, invoice systems, and services associated with it (“Services”).
+        </p>
+        <p>
+          By continuing to browse or use Prime Metric, you agree to the use of cookies in accordance with this Cookie Policy. If you do not agree, you may manage cookie preferences through your browser settings.
+        </p>
+        
         <section>
           <h2 className="text-2xl font-semibold mb-3 text-foreground">1. What Are Cookies?</h2>
           <p>
-            Cookies are small text files that are stored on your computer or mobile device when you visit a website. They are widely used to make websites work, or work more efficiently, as well as to provide information to the owners of the site. Cookies allow a website to recognize a user's device and store some information about the user’s preferences or past actions.
+            Cookies are small text files stored in your browser or device when you visit a website. Cookies help websites load faster, remember your preferences, and improve user experience.
           </p>
-          <p className="mt-2">
-            This page explains what information they gather, how we use it, and why we sometimes need to store these cookies. We will also share how you can prevent these cookies from being stored, however, this may downgrade or 'break' certain elements of the site's functionality.
-          </p>
+          <p className="mt-2">Cookies may:</p>
+          <ul className="list-disc pl-6 mt-2 space-y-1">
+            <li>Store settings such as dark/light mode</li>
+            <li>Remember login sessions</li>
+            <li>Track navigation patterns</li>
+            <li>Personalize content and recommendations</li>
+            <li>Analyze website performance</li>
+            <li>Display relevant advertisements</li>
+          </ul>
+          <p className="mt-2">Cookies do not give us access to your personal device or files.</p>
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-3 text-foreground">2. How We Use Cookies</h2>
-          <p className="mb-3">We use cookies for a variety of reasons detailed below. Unfortunately, in most cases, there are no industry standard options for disabling cookies without completely disabling the functionality and features they add to this site. It is recommended that you leave on all cookies if you are not sure whether you need them or not in case they are used to provide a service that you use.</p>
-          <ul className="list-disc pl-6 space-y-3">
-            <li>
-              <strong className="text-foreground">Functionality Cookies:</strong> Some cookies are essential for you to be able to experience the full functionality of our site. For example, when you use a calculator, we may use local storage (similar to a cookie) to remember your inputs so you don't have to re-enter them if you navigate away and come back. Your consent for our cookie policy is also stored to prevent the banner from reappearing on every visit.
-            </li>
-            <li>
-              <strong className="text-foreground">Analytics Cookies:</strong> We use these cookies to understand how visitors interact with our website. They help us identify which calculators are most popular, how users navigate the site, and where we can make improvements. The information collected is aggregated and anonymous. We use services like Vercel Analytics and Google Analytics for this purpose.
-            </li>
-            <li>
-              <strong className="text-foreground">Advertising Cookies:</strong> Our website is free to use because it is supported by advertising. We use third-party advertising services, such as Google AdSense, which use cookies to serve ads that are more relevant to you. These cookies track your browsing habits across websites to build a profile of your interests and show you personalized ads.
-            </li>
+          <h2 className="text-2xl font-semibold mb-3 text-foreground">2. Types of Cookies We Use</h2>
+          <p className="mb-3">Prime Metric uses several categories of cookies, each serving a specific purpose.</p>
+          
+          <h3 className="text-xl font-semibold mt-4 mb-2 text-foreground">2.1 Essential Cookies</h3>
+          <p>These cookies are necessary for the website to operate properly. They enable:</p>
+          <ul className="list-disc pl-6 mt-2 space-y-1">
+            <li>Page navigation</li>
+            <li>Login authentication</li>
+            <li>Keeping users logged in</li>
+            <li>Access to secure pages</li>
+            <li>Saving invoices and dashboards</li>
           </ul>
+          <p className="mt-2">Without these cookies, certain features of the website may not work correctly.</p>
+
+          <h3 className="text-xl font-semibold mt-4 mb-2 text-foreground">2.2 Performance & Analytics Cookies</h3>
+          <p>These cookies help us understand how visitors engage with our website. They collect anonymous statistics such as:</p>
+          <ul className="list-disc pl-6 mt-2 space-y-1">
+            <li>Pages visited</li>
+            <li>Time spent on each page</li>
+            <li>Click patterns</li>
+            <li>Scroll movement</li>
+            <li>Browser and device details</li>
+          </ul>
+          <p className="mt-2">We use analytics cookies to improve:</p>
+          <ul className="list-disc pl-6 mt-2 space-y-1">
+            <li>Website speed</li>
+            <li>UI/UX</li>
+            <li>Tool logic and reliability</li>
+            <li>Content accessibility</li>
+          </ul>
+          <p className="mt-2">Examples include Google Analytics and Firebase Analytics.</p>
+
+          <h3 className="text-xl font-semibold mt-4 mb-2 text-foreground">2.3 Functional Cookies</h3>
+          <p>These cookies improve personalization and convenience, such as:</p>
+          <ul className="list-disc pl-6 mt-2 space-y-1">
+            <li>Saving currency format or tax settings</li>
+            <li>Remembering theme preferences (dark/light)</li>
+            <li>Auto-filling frequently used inputs</li>
+            <li>Storing recently viewed calculators</li>
+          </ul>
+          <p className="mt-2">Functional cookies enhance experience but are not mandatory.</p>
+
+          <h3 className="text-xl font-semibold mt-4 mb-2 text-foreground">2.4 Advertising & Marketing Cookies</h3>
+          <p>Prime Metric uses Google AdSense, which may use advertising cookies to:</p>
+          <ul className="list-disc pl-6 mt-2 space-y-1">
+            <li>Display relevant ads</li>
+            <li>Prevent repetitive ads</li>
+            <li>Measure ad effectiveness</li>
+            <li>Improve quality of ad content</li>
+          </ul>
+          <p className="mt-2">Ads appear based on:</p>
+           <ul className="list-disc pl-6 mt-2 space-y-1">
+            <li>Website context</li>
+            <li>General browsing patterns</li>
+            <li>User interests (based on Google’s systems)</li>
+          </ul>
+          <p className="mt-2">Ad personalization settings are controlled by Google, not Prime Metric.</p>
         </section>
 
         <section>
           <h2 className="text-2xl font-semibold mb-3 text-foreground">3. Third-Party Cookies</h2>
-          <p className="mb-3">
-            In some special cases, we also use cookies provided by trusted third parties. The following section details which third-party cookies you might encounter through this site.
-          </p>
-          <ul className="list-disc pl-6 space-y-3">
-            <li>
-              <strong className="text-foreground">Google Analytics:</strong> This is one of the most widespread and trusted analytics solutions on the web for helping us to understand how you use the site and ways that we can improve your experience. These cookies may track things such as how long you spend on the site and the pages that you visit so we can continue to produce engaging content. For more information on Google Analytics cookies, see the official Google Analytics page.
-            </li>
-            <li>
-              <strong className="text-foreground">Google AdSense:</strong> We use the Google AdSense service to serve advertising. It uses a DoubleClick cookie to serve more relevant ads across the web and limit the number of times that a given ad is shown to you. For more information on Google AdSense, see the official Google AdSense privacy FAQ.
-            </li>
-            <li>
-              <strong className="text-foreground">Vercel Analytics:</strong> As part of our hosting solution, Vercel provides analytics that help us monitor website performance and usage. This data is anonymized and focuses on performance metrics.
-            </li>
+          <p>Some third parties may place cookies when interacting with our website, such as:</p>
+          <ul className="list-disc pl-6 mt-2 space-y-1">
+            <li>Google Analytics</li>
+            <li>Google AdSense</li>
+            <li>Firebase</li>
+            <li>Social networks (if content is shared)</li>
+          </ul>
+          <p className="mt-2">These third-party cookies operate under their own policies, not ours. We suggest reviewing their privacy documentation separately.</p>
+        </section>
+
+        <section>
+          <h2 className="text-2xl font-semibold mb-3 text-foreground">4. Managing and Blocking Cookies</h2>
+          <p className="mb-3">Users can manage or disable cookies at any time.</p>
+          <h3 className="text-xl font-semibold mt-4 mb-2 text-foreground">How to control cookies in your browser</h3>
+          <p>Most browsers allow cookie management. You can:</p>
+          <ul className="list-disc pl-6 mt-2 space-y-1">
+            <li>Block certain types of cookies</li>
+            <li>Delete previously stored cookies</li>
+            <li>Clear browsing data</li>
+            <li>Enable “Do Not Track” mode</li>
+          </ul>
+          <p className="mt-2">Refer to your browser support page for instructions:</p>
+          <ul className="list-disc pl-6 mt-2 space-y-1">
+            <li><a href="https://support.google.com/chrome/answer/95647" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Chrome</a></li>
+            <li><a href="https://support.mozilla.org/en-US/kb/enable-and-disable-cookies-website-preferences" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Firefox</a></li>
+            <li><a href="https://support.microsoft.com/en-us/windows/delete-and-manage-cookies-168dab11-0753-043d-7c16-ede5947fc64d" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Edge</a></li>
+            <li><a href="https://support.apple.com/guide/safari/manage-cookies-and-website-data-sfri11471/mac" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Safari</a></li>
+            <li><a href="https://help.opera.com/en/latest/web-preferences/#cookies" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Opera</a></li>
+            <li>Android / iOS browsers</li>
+          </ul>
+          <p className="mt-2">Note: Disabling cookies may affect website features such as login, saved history, preferences, and invoice generation.</p>
+        </section>
+
+        <section>
+          <h2 className="text-2xl font-semibold mb-3 text-foreground">5. How We Use Data from Cookies</h2>
+          <p>We use cookie-related data for:</p>
+          <ul className="list-disc pl-6 mt-2 space-y-1">
+            <li>Enhancing website performance</li>
+            <li>Fixing bugs</li>
+            <li>Adding new features</li>
+            <li>Improving calculators and invoice tools</li>
+            <li>Personalizing user experience</li>
+            <li>Maintaining security</li>
+            <li>Showing relevant advertisements</li>
+          </ul>
+          <p className="mt-2">We do not:</p>
+          <ul className="list-disc pl-6 mt-2 space-y-1">
+            <li>Sell cookie data</li>
+            <li>Share personally identifiable information without consent</li>
+            <li>Use cookies to access files on user devices</li>
           </ul>
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-3 text-foreground">4. Your Choices and Managing Cookies</h2>
-          <p className="mb-3">
-            You have several options to control or limit how we and our partners use cookies:
-          </p>
-          <ul className="list-disc pl-6 space-y-3">
-            <li>
-              <strong className="text-foreground">Cookie Consent Banner:</strong> When you first visit our site, you can accept our use of cookies via the consent banner. This choice is remembered for subsequent visits.
-            </li>
-            <li>
-              <strong className="text-foreground">Browser Settings:</strong> You can adjust the settings on your browser to refuse some or all cookies. Be aware that disabling cookies will affect the functionality of this and many other websites that you visit. Disabling cookies will usually result in also disabling certain functionality and features of this site. Therefore it is recommended that you do not disable cookies. You can find instructions for managing cookies in popular browsers here:
-              <ul className="list-circle pl-6 mt-2 space-y-1">
-                <li><a href="https://support.google.com/chrome/answer/95647" target="_blank" rel="noopener noreferrer" className="text-primary">Google Chrome</a></li>
-                <li><a href="https://support.mozilla.org/en-US/kb/enable-and-disable-cookies-website-preferences" target="_blank" rel="noopener noreferrer" className="text-primary">Mozilla Firefox</a></li>
-                <li><a href="https://support.apple.com/guide/safari/manage-cookies-and-website-data-sfri11471/mac" target="_blank" rel="noopener noreferrer" className="text-primary">Apple Safari</a></li>
-                <li><a href="https://support.microsoft.com/en-us/windows/delete-and-manage-cookies-168dab11-0753-043d-7c16-ede5947fc64d" target="_blank" rel="noopener noreferrer" className="text-primary">Microsoft Edge</a></li>
-              </ul>
-            </li>
-            <li>
-              <strong className="text-foreground">Advertising Opt-Outs:</strong> You can opt out of personalized advertising from many third-party ad networks by visiting platforms like the <a href="http://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer" className="text-primary">Digital Advertising Alliance</a> or the <a href="https://youronlinechoices.eu/" target="_blank" rel="noopener noreferrer" className="text-primary">Network Advertising Initiative</a>.
-            </li>
+          <h2 className="text-2xl font-semibold mb-3 text-foreground">6. Data Retention</h2>
+          <p>Cookies remain stored for different durations depending on type:</p>
+          <ul className="list-disc pl-6 mt-2 space-y-1">
+            <li><strong>Session cookies:</strong> deleted when browser closes</li>
+            <li><strong>Persistent cookies:</strong> stored until expiry or manual deletion</li>
+          </ul>
+          <p className="mt-2">Expiry may range from a few hours to several months depending on function.</p>
+        </section>
+
+        <section>
+          <h2 className="text-2xl font-semibold mb-3 text-foreground">7. Children’s Use</h2>
+          <ul className="list-disc pl-6 mt-2 space-y-1">
+            <li>Prime Metric is not intended for children under 13.</li>
+            <li>We do not knowingly collect or store personal cookie information from children.</li>
           </ul>
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-3 text-foreground">5. More Information</h2>
+          <h2 className="text-2xl font-semibold mb-3 text-foreground">8. Updates to This Cookie Policy</h2>
+          <p>We may modify this Cookie Policy periodically to reflect:</p>
+          <ul className="list-disc pl-6 mt-2 space-y-1">
+            <li>New regulations</li>
+            <li>Updated advertising practices</li>
+            <li>Analytics improvements</li>
+            <li>Website enhancements</li>
+          </ul>
+          <p className="mt-2">The updated version will always be available on this page with a revised “Last Updated” date.</p>
+        </section>
+
+        <section>
+          <h2 className="text-2xl font-semibold mb-3 text-foreground">9. Contact Information</h2>
           <p>
-            Hopefully, that has clarified things for you. As was previously mentioned, if there is something that you aren't sure whether you need or not, it's usually safer to leave cookies enabled in case it does interact with one of the features you use on our site. For more detailed information on how we handle your data, please review our <Link href="/privacy-policy" className="text-primary">Privacy Policy</Link>.
+            If you have questions regarding this Cookie Policy or want to request changes, contact us anytime:
+            <br />
+            📧 <a href="mailto:help@primemetric.online" className="text-primary hover:underline">help@primemetric.online</a>
           </p>
-          <p className="mt-2">
-            If you are still looking for more information, you can contact us through our preferred contact methods: Email at <a href="mailto:help@primemetric.online" className="text-primary">help@primemetric.online</a> or via our <Link href="/contact" className="text-primary">Contact Page</Link>.
-          </p>
+          <p className="mt-2">We respond to all genuine inquiries as quickly as possible.</p>
         </section>
       </div>
     </LegalPageLayout>
