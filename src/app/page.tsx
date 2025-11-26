@@ -11,8 +11,11 @@ import React, { useState } from 'react';
 import AdBanner from "@/components/AdBanner";
 import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/card";
+import { Tools } from "@/components/tools";
+import { Faq } from "@/components/faq";
+import { Summarizer } from "@/components/summarizer";
 
-const Index = () => {
+const HomePage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const router = useRouter();
 
@@ -232,6 +235,12 @@ const Index = () => {
               </div>
             </div>
           </section>
+          
+          <Tools />
+          
+          <Summarizer />
+          
+          <Faq />
 
           <AdBanner/>
 
@@ -262,4 +271,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default HomePage;
