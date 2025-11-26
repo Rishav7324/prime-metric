@@ -1,14 +1,16 @@
+
 'use client'
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { ArrowRight, Search } from "lucide-react";
 import Link from "next/link";
 import Head from "next/head";
 import { categories } from "@/lib/data";
 import React, { useState } from 'react';
 import AdBanner from "@/components/AdBanner";
 import { useRouter } from "next/navigation";
+import { Card } from "@/components/ui/card";
 
 const Index = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -121,6 +123,58 @@ const Index = () => {
 
         <main>
 
+        <section className="py-20 bg-primary/5">
+            <div className="container mx-auto px-4 max-w-4xl space-y-12">
+              <div className="text-center">
+                <h2 className="text-3xl md:text-4xl font-bold font-headline">Prime Metric — Fast & Accurate Calculators and Tools in One Place</h2>
+                <p className="mt-4 text-muted-foreground">Prime Metric is your one-stop destination for calculations, planning, and informed decision-making. With over 100+ premium calculators and smart digital tools, our platform simplifies everything from finance to health to business analytics — without confusion or complex formulas. Whether you’re a student, a professional, a business owner, or someone curious about everyday calculations, Prime Metric gives you instant, reliable results backed by educational explanations.</p>
+              </div>
+
+              <div>
+                <h3 className="text-2xl font-bold font-headline mb-4">Why Thousands of Users Trust Prime Metric</h3>
+                <p className="text-muted-foreground">Every tool on Prime Metric is designed to be fast, accurate, and easy to understand. We do not just show the numbers — we explain what they mean. Each calculator provides formulas, step-by-step breakdowns, examples, use cases, tips, and helpful FAQs so you can understand the logic behind every result.</p>
+                <p className="text-muted-foreground mt-2">Prime Metric solves a common problem — most online calculators only show answers, not explanations. Here, we focus on clarity and transparency.</p>
+              </div>
+
+              <Card className="p-6">
+                <h3 className="text-2xl font-bold font-headline mb-4">Categories We Cover</h3>
+                <p className="text-muted-foreground mb-6">Our calculators span across a wide range of real-world needs, including:</p>
+                <div className="grid md:grid-cols-2 gap-x-8 gap-y-4">
+                  <ul className="space-y-2">
+                    <li className="flex items-start"><span className="mr-2">🔹</span><div><strong>Finance Calculators:</strong> EMI, Loan interest, GST & tax, Investment returns, Compound interest.</div></li>
+                    <li className="flex items-start"><span className="mr-2">🔹</span><div><strong>Health & Fitness Calculators:</strong> BMI, Calorie, Body fat and fitness tools.</div></li>
+                  </ul>
+                  <ul className="space-y-2">
+                    <li className="flex items-start"><span className="mr-2">🔹</span><div><strong>Business Tools:</strong> Invoice generator, Profit & margin, Salary estimator.</div></li>
+                    <li className="flex items-start"><span className="mr-2">🔹</span><div><strong>Engineering & Technical Tools:</strong> Physics, Electrical, Unit conversions, Mathematical functions.</div></li>
+                    <li className="flex items-start"><span className="mr-2">🔹</span><div><strong>Personal Utilities:</strong> Age, Date difference, Time & productivity tools.</div></li>
+                  </ul>
+                </div>
+              </Card>
+
+              <div>
+                <h3 className="text-2xl font-bold font-headline mb-4">How Prime Metric Helps You Make Better Decisions</h3>
+                <p className="text-muted-foreground mb-4">Our calculators are more than fast — they are informative. With every tool, you get:</p>
+                <ul className="space-y-2 text-muted-foreground">
+                    <li>✔ Clear input fields & Instant accurate results</li>
+                    <li>✔ Formula explanation & Practical examples</li>
+                    <li>✔ Tips & best practices</li>
+                    <li>✔ Frequently asked questions</li>
+                </ul>
+                <p className="text-muted-foreground mt-4">This ensures you not only get the answer — you also understand the answer.</p>
+              </div>
+
+              <div className="text-center">
+                <h3 className="text-2xl font-bold font-headline mb-2">Start Exploring Prime Metric</h3>
+                <p className="text-muted-foreground mb-4">If you are ready to save time and understand important calculations with clarity, start exploring our 100+ calculators today.</p>
+                <Link href="/all-calculators">
+                  <Button>Explore Tools <ArrowRight className="ml-2 h-4 w-4" /></Button>
+                </Link>
+                <p className="text-sm text-muted-foreground mt-8">Need Help or Have Suggestions? We love hearing from users. Contact us anytime: <a href="mailto:help@primemetric.online" className="text-primary underline">help@primemetric.online</a></p>
+              </div>
+            </div>
+        </section>
+
           {/* Categories Grid */}
           <section className="py-20 relative">
             <div className="container mx-auto px-4">
@@ -224,3 +278,5 @@ const Index = () => {
 };
 
 export default Index;
+
+    
