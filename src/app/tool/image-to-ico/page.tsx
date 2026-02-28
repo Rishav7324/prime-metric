@@ -1,5 +1,5 @@
-import LegalPageLayout from "./layout";
-import ClientPage from "./client-page";
+import LegalPageLayout from "@/components/LegalPageLayout";
+import { ClientPage } from "./client-page";
 
 const Page = () => {
     return (
