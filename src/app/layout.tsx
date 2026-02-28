@@ -9,7 +9,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { FirebaseClientProvider } from '@/firebase';
 import CookieConsentBanner from '@/components/CookieConsentBanner';
 import { Analytics } from '@vercel/analytics/react';
-import { Inter, Merriweather } from 'next/font/google';
+import { Inter, Montserrat } from 'next/font/google';
 import AdBanner from '@/components/AdBanner';
 import Script from 'next/script';
 
@@ -19,7 +19,7 @@ const inter = Inter({
   variable: '--font-body',
 });
 
-const merriweather = Merriweather({
+const montserrat = Montserrat({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-headline',
@@ -66,7 +66,7 @@ export default function RootLayout({
           strategy="lazyOnload"
         />
       </head>
-      <body className={cn("font-body antialiased min-h-screen bg-background", inter.variable, merriweather.variable)}>
+      <body className={cn("font-body antialiased min-h-screen bg-background", inter.variable, montserrat.variable)}>
         <FirebaseClientProvider>
           <div className="relative flex min-h-dvh flex-col">
             <SiteHeader />

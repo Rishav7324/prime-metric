@@ -92,6 +92,7 @@ export const imageToolsData: Omit<CalculatorType, 'icon'>[] = [
   { id: "compress-image", name: "Image Compressor", description: "Compress images", category: "tools", path: "/tool/compress-image", implemented: true },
   { id: "convert-image", name: "Image Converter", description: "Convert image formats", category: "tools", path: "/tool/convert-image", implemented: true },
   { id: "color-picker", name: "Color Picker", description: "Pick colors from images", category: "tools", path: "/tool/color-picker", implemented: true },
+  { id: "image-to-ico", name: "Image to ICO Converter", description: "Convert PNG, JPG, WebP to ICO", category: "tools", path: "/tool/image-to-ico", implemented: true },
 ];
 
 export const developerToolsData: Omit<CalculatorType, 'icon'>[] = [
@@ -183,6 +184,7 @@ const iconMap: { [key: string]: CalculatorType['icon'] } = {
   "compress-image": Minimize2,
   "convert-image": RefreshCw,
   "color-picker": Pipette,
+  "image-to-ico": ImageIcon,
   "word-counter": FileText,
   "case-converter": Type,
   "lorem-ipsum": FileText,

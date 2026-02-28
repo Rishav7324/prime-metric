@@ -1,13 +1,13 @@
 "use client";
 
-import { useFormState, useFormStatus } from "react-dom";
+import { useFormStatus } from "react-dom";
 import { handleSummarize, type SummarizerState } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2, Wand2 } from "lucide-react";
-import { useEffect } from "react";
+import { useActionState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 
 function SubmitButton() {
@@ -23,7 +23,7 @@ function SubmitButton() {
 export function Summarizer() {
   const { toast } = useToast();
   const initialState: SummarizerState = { message: null, errors: null, summary: null };
-  const [state, dispatch] = useFormState(handleSummarize, initialState);
+  const [state, dispatch] = useActionState(handleSummarize, initialState);
 
   useEffect(() => {
     if (state.message && state.message !== 'Success') {

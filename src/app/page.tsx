@@ -83,7 +83,7 @@ const HomePage = () => {
           
           <div className="container mx-auto px-4 relative z-10">
             <div className="max-w-4xl mx-auto text-center space-y-8">
-              <h1 className="text-5xl md:text-7xl font-bold leading-tight font-headline">
+              <h1 className="text-5xl md:text-7xl font-bold leading-tight">
                 All Your Calculators
                 <span className="block bg-gradient-to-r from-primary via-primary/80 to-secondary bg-clip-text text-transparent">
                   In One Place
@@ -129,7 +129,7 @@ const HomePage = () => {
         <section className="py-20 bg-background">
             <div className="container mx-auto px-4 max-w-5xl space-y-16">
               <div className="text-center">
-                <h2 className="text-3xl md:text-4xl font-bold font-headline">Fast & Accurate Calculators for Every Need</h2>
+                <h2 className="text-3xl md:text-4xl font-bold">Fast & Accurate Calculators for Every Need</h2>
                 <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
                   Prime Metric is your one-stop destination for calculations, planning, and informed decision-making. With over 100+ premium calculators and smart digital tools, our platform simplifies everything from finance to health—without confusion or complex formulas.
                 </p>
@@ -137,7 +137,7 @@ const HomePage = () => {
 
               <div className="grid md:grid-cols-2 gap-8 items-center">
                 <div>
-                    <h3 className="text-2xl font-bold font-headline mb-4">Why Thousands of Users Trust Prime Metric</h3>
+                    <h3 className="text-2xl font-bold mb-4">Why Thousands of Users Trust Prime Metric</h3>
                     <p className="text-muted-foreground mb-6">
                       Every tool on Prime Metric is designed to be fast, accurate, and easy to understand. We don’t just show the numbers—we explain what they mean. We solve a common problem: most online calculators give answers, but not explanations. Here, we focus on clarity.
                     </p>
@@ -149,7 +149,7 @@ const HomePage = () => {
                     </ul>
                 </div>
                  <Card className="p-6">
-                    <h3 className="text-2xl font-bold font-headline mb-4">Categories We Cover</h3>
+                    <h3 className="text-2xl font-bold mb-4">Categories We Cover</h3>
                     <p className="text-muted-foreground mb-6">Our calculators span across a wide range of real-world needs, including:</p>
                     <div className="space-y-3 text-muted-foreground">
                         <p>🔹 <strong>Finance:</strong> EMI, Loan Interest, GST, Investment Returns, Compound Interest.</p>
@@ -166,7 +166,7 @@ const HomePage = () => {
           <section className="py-20 bg-primary/5">
             <div className="container mx-auto px-4">
               <div className="text-center mb-12">
-                <h2 className="text-4xl md:text-5xl font-bold mb-4 font-headline">Explore by Category</h2>
+                <h2 className="text-4xl md:text-5xl font-bold mb-4">Explore by Category</h2>
                 <p className="text-xl text-muted-foreground">Choose your calculator category</p>
               </div>
 
@@ -183,7 +183,7 @@ const HomePage = () => {
                           <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${category.gradient} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
                             <Icon className="w-8 h-8 text-white" />
                           </div>
-                          <h3 className="text-2xl font-bold mb-2 group-hover:text-primary transition-colors font-headline">
+                          <h3 className="text-2xl font-bold mb-2 group-hover:text-primary transition-colors">
                             {category.title}
                           </h3>
                           <p className="text-muted-foreground mb-6">{category.description}</p>
@@ -214,7 +214,7 @@ const HomePage = () => {
             <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent"></div>
             <div className="container mx-auto px-4 relative z-10">
               <div className="text-center mb-12">
-                <h2 className="text-4xl md:text-5xl font-bold mb-4 font-headline">Why Choose PrimeMetric?</h2>
+                <h2 className="text-4xl md:text-5xl font-bold mb-4">Why Choose PrimeMetric?</h2>
                 <p className="text-xl text-muted-foreground">Powerful features for accurate calculations</p>
               </div>
 
@@ -248,7 +248,7 @@ const HomePage = () => {
           <section className="py-20">
             <div className="container mx-auto px-4">
               <div className="glass-card rounded-3xl p-12 text-center max-w-4xl mx-auto shadow-card">
-                <h2 className="text-4xl md:text-5xl font-bold mb-6 font-headline">
+                <h2 className="text-4xl md:text-5xl font-bold mb-6">
                   Ready to Calculate?
                 </h2>
                 <p className="text-xl text-muted-foreground mb-8">
