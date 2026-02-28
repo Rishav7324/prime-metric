@@ -65,6 +65,12 @@ export default function RootLayout({
           crossOrigin="anonymous"
           strategy="lazyOnload"
         />
+        <Script 
+          src="https://quge5.com/88/tag.min.js" 
+          data-zone="215163" 
+          async 
+          data-cfasync="false"
+        />
       </head>
       <body className={cn("font-body antialiased min-h-screen bg-background", inter.variable, montserrat.variable)}>
         <FirebaseClientProvider>
