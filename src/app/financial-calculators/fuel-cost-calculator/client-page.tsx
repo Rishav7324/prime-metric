@@ -9,42 +9,74 @@ import { Button } from "@/components/ui/button";
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+import { CurrencySelector, getCurrencySymbol } from "@/components/CurrencySelector";
+import { Copy, RotateCcw } from "lucide-react";
+
+type FuelResult = {
+  fuelNeeded: number;
+  totalCost: number;
+  costPerMile: number;
+};
+
+function computeFuel(distanceStr: string, mpgStr: string, priceStr: string): FuelResult | null {
+  const dist = parseFloat(distanceStr);
+  const milesPerGallon = parseFloat(mpgStr);
+  const price = parseFloat(priceStr);
+
+  if (!(dist > 0 && dist <= 1e7) || !(milesPerGallon > 0 && milesPerGallon <= 500) || !(price > 0 && price <= 1000)) {
+    return null;
+  }
+
+  const fuelNeeded = dist / milesPerGallon;
+  const totalCost = fuelNeeded * price;
+  const costPerMile = totalCost / dist;
+  return { fuelNeeded, totalCost, costPerMile };
+}
 
 const FuelCostCalculator = () => {
-  const [distance, setDistance] = useState("");
-  const [mpg, setMpg] = useState("");
-  const [fuelPrice, setFuelPrice] = useState("");
-  const [result, setResult] = useState<any>(null);
+  const [distance, setDistance] = useState("300");
+  const [mpg, setMpg] = useState("30");
+  const [fuelPrice, setFuelPrice] = useState("3.50");
+  const [currency, setCurrency] = useState("USD");
+  // Pre-filled so the result renders instantly (no empty state)
+  const [result, setResult] = useState<FuelResult | null>(() => computeFuel("300", "30", "3.50"));
   const { toast } = useToast();
+  const currencySymbol = getCurrencySymbol(currency);
+
+  const fmt = (n: number) =>
+    n.toLocaleString("en-US", { maximumFractionDigits: 2, minimumFractionDigits: 2 });
 
   const calculate = () => {
-    const dist = parseFloat(distance);
-    const milesPerGallon = parseFloat(mpg);
-    const price = parseFloat(fuelPrice);
+    const computed = computeFuel(distance, mpg, fuelPrice);
 
-    if (isNaN(dist) || isNaN(milesPerGallon) || isNaN(price) || dist <= 0 || milesPerGallon <= 0 || price <= 0) {
+    if (!computed) {
       toast({
         variant: "destructive",
         title: "Invalid Input",
-        description: "Please enter valid positive numbers for all fields.",
+        description: "Enter distance (1+ mi), efficiency (0-500 MPG), price (1+).",
       });
       return;
     }
-    
-    const fuelNeeded = dist / milesPerGallon;
-    const totalCost = fuelNeeded * price;
-    const costPerMile = totalCost / dist;
 
-    setResult({
-      fuelNeeded: fuelNeeded.toFixed(2),
-      totalCost: totalCost.toFixed(2),
-      costPerMile: costPerMile.toFixed(3)
-    });
+    setResult(computed);
 
     toast({
       title: "Calculation Complete",
-      description: `The total fuel cost for your trip is $${totalCost.toFixed(2)}.`,
+      description: `The total fuel cost for your trip is ${currencySymbol}${fmt(computed.totalCost)}.`,
     });
+  };
+
+  const reset = () => { setDistance(""); setMpg(""); setFuelPrice(""); setResult(null); };
+
+  const copyResult = async () => {
+    if (!result) return;
+    const text = `Fuel cost: ${distance} mi at ${mpg} MPG, ${currencySymbol}${fmt(parseFloat(fuelPrice))}/gal → Total ${currencySymbol}${fmt(result.totalCost)} (${fmt(result.fuelNeeded)} gal, ${currencySymbol}${fmt(result.costPerMile)}/mi). — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
 
   return (
@@ -56,6 +88,7 @@ const FuelCostCalculator = () => {
     >
       <Card className="p-6">
         <div className="space-y-4">
+          <CurrencySelector value={currency} onChange={setCurrency} />
           <div>
             <Label>Trip Distance (miles)</Label>
             <Input
@@ -76,7 +109,7 @@ const FuelCostCalculator = () => {
             />
           </div>
           <div>
-            <Label>Fuel Price ($ per gallon)</Label>
+            <Label>Fuel Price ({currencySymbol} per gallon)</Label>
             <Input
               type="number"
               value={fuelPrice}
@@ -85,23 +118,33 @@ const FuelCostCalculator = () => {
               step="0.01"
             />
           </div>
-          <Button onClick={calculate} className="w-full gradient-button">
-            Calculate Cost
-          </Button>
+          <div className="flex gap-2">
+            <Button onClick={calculate} className="flex-1 gradient-button">
+              Calculate Cost
+            </Button>
+            <Button onClick={reset} variant="outline" size="icon" className="shrink-0" aria-label="Reset">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
           {result && (
             <div className="mt-6 space-y-3">
-              <div className="p-4 bg-primary/10 rounded-lg text-center">
-                <p className="text-sm text-muted-foreground">Total Fuel Cost</p>
-                <p className="text-4xl font-bold text-primary">${result.totalCost}</p>
+              <div className="p-4 bg-[#FFF5F2] rounded-lg text-center">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-sm text-neutral-600">Total Fuel Cost</p>
+                  <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                    <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                  </Button>
+                </div>
+                <p className="text-2xl font-bold text-primary">{currencySymbol}{fmt(result.totalCost)}</p>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div className="p-3 bg-muted/50 rounded text-center">
-                  <p className="text-sm text-muted-foreground">Fuel Needed</p>
-                  <p className="text-xl font-bold">{result.fuelNeeded} gal</p>
+                  <p className="text-sm text-neutral-600">Fuel Needed</p>
+                  <p className="text-xl font-bold">{fmt(result.fuelNeeded)} gal</p>
                 </div>
                 <div className="p-3 bg-muted/50 rounded text-center">
-                  <p className="text-sm text-muted-foreground">Cost Per Mile</p>
-                  <p className="text-xl font-bold">${result.costPerMile}</p>
+                  <p className="text-sm text-neutral-600">Cost Per Mile</p>
+                  <p className="text-xl font-bold">{currencySymbol}{fmt(result.costPerMile)}</p>
                 </div>
               </div>
             </div>

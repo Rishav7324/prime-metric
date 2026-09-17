@@ -1,5 +1,5 @@
 'use client';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,20 +8,45 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
-import { Dices } from "lucide-react";
+import { Dices, Copy, RotateCcw } from "lucide-react";
+
+type DiceResult = {
+  rolls: number[];
+  total: number;
+  dice: number;
+  sides: number;
+};
+
+function rollDiceResult(numDiceStr: string, sidesStr: string): DiceResult | null {
+  const dice = parseInt(numDiceStr, 10);
+  const numSides = parseInt(sidesStr, 10);
+  if (isNaN(dice) || !Number.isInteger(dice) || dice < 1 || dice > 100) return null;
+  if (isNaN(numSides) || !Number.isInteger(numSides) || numSides < 1 || numSides > 100) return null;
+  const rolls: number[] = [];
+  for (let i = 0; i < dice; i++) {
+    rolls.push(Math.floor(Math.random() * numSides) + 1);
+  }
+  const total = rolls.reduce((a, b) => a + b, 0);
+  return { rolls, total, dice, sides: numSides };
+}
 
 const DiceRollerClient = () => {
   const [numDice, setNumDice] = useState("1");
   const [sides, setSides] = useState("6");
-  const [results, setResults] = useState<number[]>([]);
-  const [total, setTotal] = useState(0);
+  const [result, setResult] = useState<DiceResult | null>(null);
   const { toast } = useToast();
 
+  useEffect(() => {
+    // Pre-roll once on mount for instant result (no toast on init)
+    const computed = rollDiceResult("1", "6");
+    if (computed) setResult(computed);
+  }, []);
+
   const roll = () => {
-    const dice = parseInt(numDice);
-    const numSides = parseInt(sides);
-    
-    if (isNaN(dice) || dice <= 0 || dice > 100) {
+    const dice = parseInt(numDice, 10);
+    const numSides = parseInt(sides, 10);
+
+    if (isNaN(dice) || !Number.isInteger(dice) || dice < 1 || dice > 100) {
       toast({
         variant: "destructive",
         title: "Invalid Input",
@@ -29,18 +54,42 @@ const DiceRollerClient = () => {
       });
       return;
     }
-
-    const rolls: number[] = [];
-    for (let i = 0; i < dice; i++) {
-      rolls.push(Math.floor(Math.random() * numSides) + 1);
+    if (isNaN(numSides) || !Number.isInteger(numSides) || numSides < 1 || numSides > 100) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Input",
+        description: "Please select valid dice sides (1-100).",
+      });
+      return;
     }
-    
-    setResults(rolls);
-    setTotal(rolls.reduce((a, b) => a + b, 0));
+
+    const computed = rollDiceResult(numDice, sides);
+    if (!computed) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Input",
+        description: "Dice count and sides must each be between 1 and 100.",
+      });
+      return;
+    }
+    setResult(computed);
     toast({
-        title: "Dice Rolled!",
-        description: `You rolled ${dice}d${numSides} for a total of ${rolls.reduce((a, b) => a + b, 0)}.`,
+      title: "Dice Rolled!",
+      description: `You rolled ${computed.dice}d${computed.sides} for a total of ${computed.total.toLocaleString()}.`,
     });
+  };
+
+  const reset = () => setResult(null);
+
+  const copyResult = async () => {
+    if (!result) return;
+    const text = `Rolled ${result.dice}d${result.sides}: [${result.rolls.join(", ")}] Total ${result.total.toLocaleString()} — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
 
   return (
@@ -83,22 +132,32 @@ const DiceRollerClient = () => {
               </Select>
             </div>
           </div>
-          <Button onClick={roll} className="w-full gradient-button h-12">
-            <Dices className="w-5 h-5 mr-2" />
-            Roll Dice
-          </Button>
-          {results.length > 0 && (
+          <div className="flex gap-2">
+            <Button onClick={roll} className="flex-1 gradient-button h-10">
+              <Dices className="w-5 h-5 mr-2" />
+              Roll Dice
+            </Button>
+            <Button onClick={reset} variant="outline" size="icon" className="h-10 w-10 shrink-0" aria-label="Reset">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
+          {result && (
             <div className="mt-6 space-y-4">
-               <div className="p-4 bg-primary/10 rounded-lg text-center">
-                <p className="text-sm text-muted-foreground">Total</p>
-                <p className="text-5xl font-bold text-primary">{total}</p>
+               <div className="p-4 bg-[#FFF5F2] rounded-lg text-center">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-sm text-neutral-600">Total</p>
+                  <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                    <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                  </Button>
+                </div>
+                <p className="text-5xl font-bold text-primary">{result.total.toLocaleString()}</p>
               </div>
               <div className="p-4 bg-muted/50 rounded-lg">
-                <p className="text-sm text-muted-foreground mb-2">Individual Rolls:</p>
+                <p className="text-sm text-neutral-600 mb-2">Individual Rolls:</p>
                 <div className="flex flex-wrap gap-3">
-                  {results.map((result, idx) => (
+                  {result.rolls.map((r, idx) => (
                     <span key={idx} className="text-2xl font-bold px-3 py-1 bg-background rounded-md border">
-                      {result}
+                      {r.toLocaleString()}
                     </span>
                   ))}
                 </div>

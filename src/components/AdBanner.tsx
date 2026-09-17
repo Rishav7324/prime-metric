@@ -1,38 +1,43 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const AdBanner = () => {
   const adRef = useRef<HTMLDivElement>(null);
-  const initialized = useRef(false);
+  const [visible, setVisible] = useState(true);
 
   useEffect(() => {
-    if (!adRef.current || initialized.current) {
-      return;
-    }
-
-    // A small timeout to ensure the container has been rendered and has a width
-    const timeoutId = setTimeout(() => {
+    const t1 = setTimeout(() => {
       if (!adRef.current) return;
-      
       const insElement = adRef.current.querySelector('ins.adsbygoogle');
       if (insElement && insElement.getAttribute('data-ad-status') !== 'filled') {
         try {
           // @ts-ignore
           (window.adsbygoogle = window.adsbygoogle || []).push({});
-          initialized.current = true; // Mark as initialized
-        } catch (err) {
-          console.error("AdSense error:", err);
+        } catch {
+          /* ads blocked - will collapse below */
         }
       }
-    }, 100); // 100ms delay should be sufficient
+    }, 300);
 
-    return () => clearTimeout(timeoutId);
+    // Collapse completely if ad never fills (no empty bands)
+    const t2 = setTimeout(() => {
+      const insElement = adRef.current?.querySelector('ins.adsbygoogle');
+      if (!insElement || insElement.getAttribute('data-ad-status') !== 'filled') {
+        setVisible(false);
+      }
+    }, 4000);
 
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
   }, []);
 
+  if (!visible) return null;
+
   return (
-    <div ref={adRef} className="flex justify-center my-8 min-h-[100px] w-full">
+    <div ref={adRef} className="no-print flex justify-center my-3 w-full mx-auto max-w-6xl px-4" aria-hidden="true">
       <ins
         className="adsbygoogle"
         style={{ display: 'block', width: '100%' }}

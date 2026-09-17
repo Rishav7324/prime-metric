@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,12 +8,49 @@ import { Button } from "@/components/ui/button";
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+import { Copy, RotateCcw } from "lucide-react";
+
+type DateResult = {
+  days: number;
+  weeks: number;
+  months: number;
+  years: number;
+};
+
+function computeDateDiff(startStr: string, endStr: string): DateResult | null {
+  if (!startStr || !endStr) return null;
+  const start = new Date(startStr + "T00:00:00");
+  const end = new Date(endStr + "T00:00:00");
+  if (isNaN(start.getTime()) || isNaN(end.getTime())) return null;
+  const diffTime = Math.abs(end.getTime() - start.getTime());
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+  const diffWeeks = Math.floor(diffDays / 7);
+  const diffMonths = Math.floor(diffDays / 30.44);
+  const diffYears = Math.floor(diffDays / 365.25);
+  return { days: diffDays, weeks: diffWeeks, months: diffMonths, years: diffYears };
+}
+
+function toISODate(d: Date): string {
+  return d.toISOString().split("T")[0];
+}
 
 const DateCalculatorClient = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [result, setResult] = useState<any>(null);
+  // Auto-calculates on mount with default dates so result renders instantly
+  const [result, setResult] = useState<DateResult | null>(null);
   const { toast } = useToast();
+
+  useEffect(() => {
+    const today = new Date();
+    const start = new Date(today.getFullYear(), 0, 1);
+    const startISO = toISODate(start);
+    const endISO = toISODate(today);
+    setStartDate(startISO);
+    setEndDate(endISO);
+    const computed = computeDateDiff(startISO, endISO);
+    if (computed) setResult(computed);
+  }, []);
 
   const calculate = () => {
     if (!startDate || !endDate) {
@@ -25,8 +62,8 @@ const DateCalculatorClient = () => {
       return;
     }
 
-    const start = new Date(startDate);
-    const end = new Date(endDate);
+    const start = new Date(startDate + "T00:00:00");
+    const end = new Date(endDate + "T00:00:00");
     
     if (isNaN(start.getTime()) || isNaN(end.getTime())) {
       toast({
@@ -37,17 +74,33 @@ const DateCalculatorClient = () => {
       return;
     }
     
-    const diffTime = Math.abs(end.getTime() - start.getTime());
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-    const diffWeeks = Math.floor(diffDays / 7);
-    const diffMonths = Math.floor(diffDays / 30.44);
-    const diffYears = Math.floor(diffDays / 365.25);
-    
-    setResult({ days: diffDays, weeks: diffWeeks, months: diffMonths, years: diffYears });
+    const computed = computeDateDiff(startDate, endDate);
+    if (!computed) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Input",
+        description: "Please enter valid dates.",
+      });
+      return;
+    }
+    setResult(computed);
     toast({
         title: "Difference Calculated",
-        description: `The difference is ${diffDays} days.`,
+        description: `The difference is ${computed.days.toLocaleString()} days.`,
     });
+  };
+
+  const reset = () => setResult(null);
+
+  const copyResult = async () => {
+    if (!result) return;
+    const text = `Date difference: ${result.days.toLocaleString()} days (${result.weeks.toLocaleString()} weeks, ${result.months.toLocaleString()} months, ${result.years.toLocaleString()} years) between ${startDate} and ${endDate}. — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
 
   return (
@@ -80,25 +133,35 @@ const DateCalculatorClient = () => {
               />
             </div>
           </div>
-          <Button onClick={calculate} className="w-full gradient-button">
-            Calculate Difference
-          </Button>
+          <div className="flex gap-2">
+            <Button onClick={calculate} className="flex-1 gradient-button">
+              Calculate Difference
+            </Button>
+            <Button onClick={reset} variant="outline" size="icon" className="shrink-0" aria-label="Reset">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
           {result && (
             <div className="mt-6 grid grid-cols-2 gap-3">
-              <div className="p-4 bg-primary/10 rounded-lg col-span-2 text-center">
-                <p className="text-sm text-muted-foreground">Total Difference in Days</p>
-                <p className="text-4xl font-bold text-primary">{result.days.toLocaleString()} Days</p>
+              <div className="p-4 bg-[#FFF5F2] rounded-lg col-span-2 text-center">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-sm text-neutral-600">Total Difference in Days</p>
+                  <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                    <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                  </Button>
+                </div>
+                <p className="text-2xl font-bold text-primary">{result.days.toLocaleString()} Days</p>
               </div>
               <div className="p-3 bg-muted/50 rounded text-center">
-                <p className="text-sm text-muted-foreground">In Weeks</p>
+                <p className="text-sm text-neutral-600">In Weeks</p>
                 <p className="text-xl font-bold">{result.weeks.toLocaleString()}</p>
               </div>
               <div className="p-3 bg-muted/50 rounded text-center">
-                <p className="text-sm text-muted-foreground">In Months</p>
+                <p className="text-sm text-neutral-600">In Months</p>
                 <p className="text-xl font-bold">{result.months.toLocaleString()}</p>
               </div>
               <div className="p-3 bg-muted/50 rounded col-span-2 text-center">
-                <p className="text-sm text-muted-foreground">In Years</p>
+                <p className="text-sm text-neutral-600">In Years</p>
                 <p className="text-xl font-bold">{result.years.toLocaleString()}</p>
               </div>
             </div>

@@ -9,40 +9,78 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+import { CurrencySelector, getCurrencySymbol } from "@/components/CurrencySelector";
+import { Copy, RotateCcw } from "lucide-react";
+
+type AutoLoanResult = { monthlyPayment: number; totalPayment: number; totalInterest: number };
+
+function computeAutoLoan(priceStr: string, downStr: string, rateStr: string, termStr: string): AutoLoanResult | null {
+  const price = parseFloat(priceStr);
+  const down = downStr.trim() === "" ? 0 : parseFloat(downStr);
+  const annualRate = parseFloat(rateStr);
+  const years = parseFloat(termStr);
+
+  if (!(price > 0 && price <= 1e9)) return null;
+  if (isNaN(down) || down < 0 || down > price) return null;
+  if (isNaN(annualRate) || annualRate < 0 || annualRate > 100) return null;
+  if (!(years > 0 && years <= 10)) return null;
+
+  const principal = price - down;
+  if (!(principal > 0 && principal <= 1e9)) return null;
+  const monthlyRate = annualRate / 100 / 12;
+  const months = Math.round(years * 12);
+  if (!(months >= 1 && months <= 120)) return null;
+
+  const monthlyPayment = monthlyRate === 0
+    ? principal / months
+    : (principal * monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1);
+  if (!isFinite(monthlyPayment) || monthlyPayment <= 0) return null;
+
+  const totalPayment = monthlyPayment * months;
+  return { monthlyPayment, totalPayment, totalInterest: totalPayment - principal };
+}
 
 const AutoLoanCalculatorClient = () => {
-  const [carPrice, setCarPrice] = useState("");
-  const [downPayment, setDownPayment] = useState("");
-  const [interestRate, setInterestRate] = useState("");
-  const [loanTerm, setLoanTerm] = useState("");
-  const [result, setResult] = useState<any>(null);
+  const [carPrice, setCarPrice] = useState("25000");
+  const [downPayment, setDownPayment] = useState("5000");
+  const [interestRate, setInterestRate] = useState("5.5");
+  const [loanTerm, setLoanTerm] = useState("5");
+  // Pre-filled so the result renders instantly (no empty state)
+  const [result, setResult] = useState<AutoLoanResult | null>(() => computeAutoLoan("25000", "5000", "5.5", "5"));
+  const [currency, setCurrency] = useState("USD");
   const { toast } = useToast();
+  const currencySymbol = getCurrencySymbol(currency);
+
+  const fmt = (n: number) =>
+    n.toLocaleString("en-US", { maximumFractionDigits: 2, minimumFractionDigits: 2 });
 
   const calculate = () => {
-    const principal = parseFloat(carPrice) - parseFloat(downPayment || "0");
-    const monthlyRate = parseFloat(interestRate) / 100 / 12;
-    const months = parseFloat(loanTerm) * 12;
-
-    if (principal > 0 && monthlyRate >= 0 && months > 0) {
-      const monthlyPayment = monthlyRate === 0 ? principal / months : (principal * monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1);
-      const totalPayment = monthlyPayment * months;
-      const totalInterest = totalPayment - principal;
-
-      setResult({
-        monthlyPayment: monthlyPayment.toFixed(2),
-        totalPayment: totalPayment.toFixed(2),
-        totalInterest: totalInterest.toFixed(2),
+    const computed = computeAutoLoan(carPrice, downPayment, interestRate, loanTerm);
+    if (!computed) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Input",
+        description: "Enter price (1+), down (0 to price), rate (0-100%), term (up to 10 yrs).",
       });
-       toast({
-        title: "Calculation Complete",
-        description: "Your auto loan details have been calculated.",
-      });
-    } else {
-        toast({
-            variant: "destructive",
-            title: "Invalid Input",
-            description: "Please enter valid numbers for all fields.",
-        });
+      return;
+    }
+    setResult(computed);
+    toast({
+      title: "Calculation Complete",
+      description: `Monthly payment ${currencySymbol}${fmt(computed.monthlyPayment)}.`,
+    });
+  };
+
+  const reset = () => { setCarPrice(""); setDownPayment(""); setInterestRate(""); setLoanTerm(""); setResult(null); };
+
+  const copyResult = async () => {
+    if (!result) return;
+    const text = `Auto loan: ${currencySymbol}${fmt(parseFloat(carPrice))} − ${currencySymbol}${fmt(parseFloat(downPayment) || 0)} down at ${interestRate}% for ${loanTerm} yrs → ${currencySymbol}${fmt(result.monthlyPayment)}/month, total ${currencySymbol}${fmt(result.totalPayment)} (interest ${currencySymbol}${fmt(result.totalInterest)}). — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
     }
   };
 
@@ -53,52 +91,65 @@ const AutoLoanCalculatorClient = () => {
       formula="Monthly Payment = P × [r(1+r)^n] / [(1+r)^n-1]"
       canonicalUrl="/financial-calculators/auto-loan-calculator"
     >
-      <div className="grid md:grid-cols-2 gap-8">
-        <Card className="glass-card p-8">
-          <h2 className="text-2xl font-bold mb-6">Car Details</h2>
-          <div className="space-y-6">
+      <div className="grid sm:grid-cols-2 gap-4">
+        <Card className="bg-white border border-neutral-200 p-4 sm:p-5">
+          <h2 className="text-lg font-bold mb-4">Car Details</h2>
+          <div className="space-y-4">
+            <CurrencySelector value={currency} onChange={setCurrency} />
             <div>
-              <Label>Car Price ($)</Label>
-              <Input type="number" value={carPrice} onChange={(e) => setCarPrice(e.target.value)} placeholder="25000" className="mt-2 h-12 glass-card border-primary/30" />
+              <Label>Car Price ({currencySymbol})</Label>
+              <Input type="number" value={carPrice} onChange={(e) => setCarPrice(e.target.value)} placeholder="25000" className="mt-2 h-10 bg-white border border-neutral-200" />
             </div>
             <div>
-              <Label>Down Payment ($)</Label>
-              <Input type="number" value={downPayment} onChange={(e) => setDownPayment(e.target.value)} placeholder="5000" className="mt-2 h-12 glass-card border-primary/30" />
+              <Label>Down Payment ({currencySymbol})</Label>
+              <Input type="number" value={downPayment} onChange={(e) => setDownPayment(e.target.value)} placeholder="5000" className="mt-2 h-10 bg-white border border-neutral-200" />
             </div>
             <div>
               <Label>Interest Rate (%)</Label>
-              <Input type="number" step="0.1" value={interestRate} onChange={(e) => setInterestRate(e.target.value)} placeholder="5.5" className="mt-2 h-12 glass-card border-primary/30" />
+              <Input type="number" step="0.1" value={interestRate} onChange={(e) => setInterestRate(e.target.value)} placeholder="5.5" className="mt-2 h-10 bg-white border border-neutral-200" />
             </div>
             <div>
               <Label>Loan Term (Years)</Label>
-              <Input type="number" value={loanTerm} onChange={(e) => setLoanTerm(e.target.value)} placeholder="5" className="mt-2 h-12 glass-card border-primary/30" />
+              <Input type="number" value={loanTerm} onChange={(e) => setLoanTerm(e.target.value)} placeholder="5" className="mt-2 h-10 bg-white border border-neutral-200" />
             </div>
-            <Button onClick={calculate} className="w-full h-12 gradient-button">Calculate</Button>
+            <div className="flex gap-2">
+              <Button onClick={calculate} className="flex-1 h-10 gradient-button">Calculate</Button>
+              <Button onClick={reset} variant="outline" size="icon" className="h-10 w-10 shrink-0" aria-label="Reset">
+                <RotateCcw className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </Card>
 
-        <Card className="glass-card p-8">
-          <h2 className="text-2xl font-bold mb-6">Results</h2>
+        <Card className="bg-white border border-neutral-200 p-4 sm:p-5">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-bold">Results</h2>
+            {result && (
+              <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+              </Button>
+            )}
+          </div>
           {result ? (
-            <div className="space-y-6">
-              <div className="text-center py-8">
-                <div className="text-sm text-muted-foreground mb-2">Monthly Payment</div>
-                <div className="text-5xl font-bold gradient-text">${result.monthlyPayment}</div>
+            <div className="space-y-4">
+              <div className="text-center py-4">
+                <div className="text-sm text-neutral-600 mb-2">Monthly Payment</div>
+                <div className="text-3xl font-bold gradient-text">{currencySymbol}{fmt(result.monthlyPayment)}</div>
               </div>
               <div className="space-y-4">
-                <div className="p-4 rounded-lg glass-card border border-primary/20">
-                  <div className="text-sm text-muted-foreground">Total Payment</div>
-                  <div className="text-2xl font-bold text-primary">${result.totalPayment}</div>
+                <div className="p-4 rounded-lg bg-white border border-neutral-200 border border-[#F2765E]/25">
+                  <div className="text-sm text-neutral-600">Total Payment</div>
+                  <div className="text-2xl font-bold text-primary">{currencySymbol}{fmt(result.totalPayment)}</div>
                 </div>
-                <div className="p-4 rounded-lg glass-card border border-secondary/20">
-                  <div className="text-sm text-muted-foreground">Total Interest</div>
-                  <div className="text-2xl font-bold">${result.totalInterest}</div>
+                <div className="p-4 rounded-lg bg-white border border-neutral-200 border border-secondary/20">
+                  <div className="text-sm text-neutral-600">Total Interest</div>
+                  <div className="text-2xl font-bold">{currencySymbol}{fmt(result.totalInterest)}</div>
                 </div>
               </div>
             </div>
           ) : (
-            <div className="flex items-center justify-center h-64 text-muted-foreground">
-              <div className="text-center"><div className="text-6xl mb-4">🚗</div><p>Enter details to calculate</p></div>
+            <div className="flex items-center justify-center h-40 text-neutral-600">
+              <div className="text-center"><div className="text-4xl mb-2">🚗</div><p>Enter details to calculate</p></div>
             </div>
           )}
         </Card>

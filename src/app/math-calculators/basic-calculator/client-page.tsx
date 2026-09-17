@@ -6,53 +6,152 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
+import { useToast } from "@/hooks/use-toast";
+import { Copy } from "lucide-react";
+
+function computeBasicOperation(prev: number, current: number, op: string): number | null {
+  if (!Number.isFinite(prev) || !Number.isFinite(current)) return null;
+  let result: number;
+  switch (op) {
+    case "+":
+      result = prev + current;
+      break;
+    case "-":
+      result = prev - current;
+      break;
+    case "×":
+      result = prev * current;
+      break;
+    case "÷":
+      if (current === 0) return null;
+      result = prev / current;
+      break;
+    default:
+      return Number.isFinite(current) ? current : null;
+  }
+  if (!Number.isFinite(result)) return null;
+  // Trim floating-point noise (e.g. 0.1 + 0.2)
+  return parseFloat(result.toPrecision(12));
+}
+
+function parseDisplay(raw: string): number {
+  return parseFloat(raw.replace(/,/g, ""));
+}
+
+function formatDisplayValue(raw: string): string {
+  if (raw === "Error" || raw === "") return raw === "" ? "0" : raw;
+  const cleaned = raw.replace(/,/g, "");
+  if (cleaned === "-" || cleaned === "." || cleaned === "-." || cleaned.endsWith(".")) return cleaned;
+  if (cleaned === "Infinity" || cleaned === "-Infinity" || cleaned === "NaN") return cleaned;
+  const n = Number(cleaned);
+  if (!Number.isFinite(n)) return raw;
+  const [intPart, decPart] = cleaned.split(".");
+  const intNum = Number(intPart);
+  if (!Number.isFinite(intNum)) return raw;
+  const formattedInt = intNum.toLocaleString("en-US");
+  return decPart !== undefined ? `${formattedInt}.${decPart}` : formattedInt;
+}
 
 const BasicCalculator = () => {
   const [display, setDisplay] = useState("0");
   const [previousValue, setPreviousValue] = useState<number | null>(null);
   const [operation, setOperation] = useState<string | null>(null);
   const [newNumber, setNewNumber] = useState(true);
+  const { toast } = useToast();
 
   const handleNumber = (num: string) => {
-    if (display.includes('.') && num === '.') return;
+    if (display === "Error") {
+      setDisplay(num === "." ? "0." : num);
+      setNewNumber(false);
+      return;
+    }
+    const clean = display.replace(/,/g, "");
+    if (clean.includes('.') && num === '.') return;
     if (newNumber) {
-      setDisplay(num);
+      setDisplay(num === "." ? "0." : num);
       setNewNumber(false);
     } else {
-      setDisplay(display === "0" ? num : display + num);
+      setDisplay(clean === "0" && num !== "." ? num : clean + num);
     }
   };
 
   const handleOperation = (op: string) => {
-    if (!newNumber) {
-        handleEquals();
+    if (display === "Error") return;
+    if (!newNumber && operation && previousValue !== null) {
+      const current = parseDisplay(display);
+      if (!Number.isFinite(current)) {
+        toast({
+          variant: "destructive",
+          title: "Invalid Input",
+          description: "The current value is not a valid number.",
+        });
+        setDisplay("Error");
+        setPreviousValue(null);
+        setOperation(null);
+        setNewNumber(true);
+        return;
+      }
+      const chained = computeBasicOperation(previousValue, current, operation);
+      if (chained === null) {
+        toast({
+          variant: "destructive",
+          title: "Cannot Divide by Zero",
+          description: "Division by zero is undefined. Press C to start a new calculation.",
+        });
+        setDisplay("Error");
+        setPreviousValue(null);
+        setOperation(null);
+        setNewNumber(true);
+        return;
+      }
+      setPreviousValue(chained);
+      setOperation(op);
+      setNewNumber(true);
+      return;
     }
-    const current = parseFloat(display);
+    const current = parseDisplay(display);
+    if (!Number.isFinite(current)) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Input",
+        description: "Enter a valid number before choosing an operation.",
+      });
+      return;
+    }
     setPreviousValue(current);
     setOperation(op);
     setNewNumber(true);
   };
 
-  const calculate = (prev: number, current: number, op: string): number => {
-    switch (op) {
-      case "+":
-        return prev + current;
-      case "-":
-        return prev - current;
-      case "×":
-        return prev * current;
-      case "÷":
-        if (current === 0) return Infinity;
-        return prev / current;
-      default:
-        return current;
-    }
-  };
-
   const handleEquals = () => {
     if (operation && previousValue !== null && !newNumber) {
-      const current = parseFloat(display);
-      const result = calculate(previousValue, current, operation);
+      if (display === "Error") return;
+      const current = parseDisplay(display);
+      if (!Number.isFinite(current) || !Number.isFinite(previousValue)) {
+        toast({
+          variant: "destructive",
+          title: "Invalid Input",
+          description: "The calculation contains an invalid number. Press C to reset.",
+        });
+        setDisplay("Error");
+        setPreviousValue(null);
+        setOperation(null);
+        setNewNumber(true);
+        return;
+      }
+      const result = computeBasicOperation(previousValue, current, operation);
+      if (result === null) {
+        toast({
+          variant: "destructive",
+          title: "Cannot Divide by Zero",
+          description: "Division by zero is undefined. Press C to start a new calculation.",
+        });
+        setDisplay("Error");
+        setPreviousValue(null);
+        setOperation(null);
+        setNewNumber(true);
+        return;
+      }
       setDisplay(result.toString());
       setPreviousValue(result);
       setOperation(null);
@@ -68,12 +167,37 @@ const BasicCalculator = () => {
   };
   
   const backspace = () => {
-    if (display.length > 1) {
-        setDisplay(display.slice(0, -1));
+    if (display === "Error") {
+        setDisplay("0");
+        setNewNumber(true);
+        return;
+    }
+    const clean = display.replace(/,/g, "");
+    if (clean.length > 1) {
+        setDisplay(clean.slice(0, -1));
     } else {
         setDisplay("0");
+        setNewNumber(true);
     }
   }
+
+  const copyDisplay = async () => {
+    if (display === "Error") {
+      toast({
+        variant: "destructive",
+        title: "Nothing to Copy",
+        description: "There is no valid result to copy. Clear the error first.",
+      });
+      return;
+    }
+    const text = formatDisplayValue(display);
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Display value copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
+  };
 
   return (
     <CalculatorLayout
@@ -81,10 +205,15 @@ const BasicCalculator = () => {
       description="Simple calculator for basic arithmetic operations"
       canonicalUrl="/math-calculators/basic-calculator"
     >
-      <Card className="p-6 bg-card/50 backdrop-blur border-primary/20 max-w-sm mx-auto shadow-lg">
+      <Card className="p-6 bg-card/50 backdrop-blur border-[#F2765E]/20 max-w-sm mx-auto shadow-lg">
         <div className="space-y-4">
-          <div className="bg-background/80 p-4 rounded-lg text-right text-4xl font-mono min-h-[60px] flex items-center justify-end overflow-x-auto">
-            {display}
+          <div className="flex items-center gap-2">
+            <div className="bg-background/80 p-4 rounded-lg text-right text-4xl font-mono min-h-[60px] flex-1 flex items-center justify-end overflow-x-auto">
+              {formatDisplayValue(display)}
+            </div>
+            <Button onClick={copyDisplay} variant="outline" size="icon" className="h-10 w-10 shrink-0" aria-label="Copy display">
+              <Copy className="h-4 w-4" />
+            </Button>
           </div>
           <div className="grid grid-cols-4 gap-2">
             <Button onClick={clear} variant="destructive" className="col-span-2 text-xl py-6">C</Button>

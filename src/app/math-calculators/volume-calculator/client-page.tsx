@@ -9,49 +9,106 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+import { Copy, RotateCcw } from "lucide-react";
+
+type VolumeResult = { volume: number };
+
+function computeVolume(shape: string, dim1Str: string, dim2Str: string, dim3Str: string): VolumeResult | null {
+  const d1 = parseFloat(dim1Str);
+  const d2 = parseFloat(dim2Str);
+  const d3 = parseFloat(dim3Str);
+  const valid = (n: number) => Number.isFinite(n) && n > 0 && n <= 1_000_000;
+  let out = 0;
+  switch (shape) {
+    case "cube":
+      if (!valid(d1)) return null;
+      out = d1 * d1 * d1;
+      break;
+    case "sphere":
+      if (!valid(d1)) return null;
+      out = (4 / 3) * Math.PI * Math.pow(d1, 3);
+      break;
+    case "cylinder":
+      if (!valid(d1) || !valid(d2)) return null;
+      out = Math.PI * d1 * d1 * d2;
+      break;
+    case "cuboid":
+      if (!valid(d1) || !valid(d2) || !valid(d3)) return null;
+      out = d1 * d2 * d3;
+      break;
+    default:
+      return null;
+  }
+  return Number.isFinite(out) ? { volume: out } : null;
+}
+
+function defaultDimsForVolumeShape(shape: string): [string, string, string] {
+  switch (shape) {
+    case "cube": return ["5", "", ""];
+    case "sphere": return ["5", "", ""];
+    case "cylinder": return ["5", "10", ""];
+    case "cuboid": return ["10", "5", "2"];
+    default: return ["5", "", ""];
+  }
+}
 
 const VolumeCalculator = () => {
   const [shape, setShape] = useState("cube");
-  const [dim1, setDim1] = useState("");
+  const [dim1, setDim1] = useState("5");
   const [dim2, setDim2] = useState("");
   const [dim3, setDim3] = useState("");
-  const [volume, setVolume] = useState<number | null>(null);
+  // Pre-filled so the result renders instantly (no empty state)
+  const [volume, setVolume] = useState<VolumeResult | null>(() => computeVolume("cube", "5", "", ""));
   const { toast } = useToast();
 
   const calculate = () => {
-    const d1 = parseFloat(dim1);
-    const d2 = parseFloat(dim2);
-    const d3 = parseFloat(dim3);
-
-    let result = 0;
-    switch (shape) {
-      case "cube":
-        if (isNaN(d1) || d1 <= 0) {
-            toast({ variant: "destructive", title: "Invalid Input", description: "Please enter a positive side length." }); return;
-        }
-        result = d1 * d1 * d1;
-        break;
-      case "sphere":
-        if (isNaN(d1) || d1 <= 0) {
-            toast({ variant: "destructive", title: "Invalid Input", description: "Please enter a positive radius." }); return;
-        }
-        result = (4/3) * Math.PI * Math.pow(d1, 3);
-        break;
-      case "cylinder":
-        if (isNaN(d1) || d1 <= 0 || isNaN(d2) || d2 <= 0) {
-            toast({ variant: "destructive", title: "Invalid Input", description: "Please enter a positive radius and height." }); return;
-        }
-        result = Math.PI * d1 * d1 * d2;
-        break;
-      case "cuboid":
-         if (isNaN(d1) || d1 <= 0 || isNaN(d2) || d2 <= 0 || isNaN(d3) || d3 <= 0) {
-            toast({ variant: "destructive", title: "Invalid Input", description: "Please enter positive values for length, width, and height." }); return;
-        }
-        result = d1 * d2 * d3;
-        break;
+    const computed = computeVolume(shape, dim1, dim2, dim3);
+    if (!computed) {
+      const d1 = parseFloat(dim1);
+      const d2 = parseFloat(dim2);
+      const d3 = parseFloat(dim3);
+      const required = shape === "cube" || shape === "sphere" ? [d1] : shape === "cylinder" ? [d1, d2] : [d1, d2, d3];
+      if (required.some((v) => !Number.isFinite(v))) {
+        const msg =
+          shape === "cube"
+            ? "Please enter a positive side length."
+            : shape === "sphere"
+              ? "Please enter a positive radius."
+              : shape === "cylinder"
+                ? "Please enter a positive radius and height."
+                : "Please enter positive values for length, width, and height.";
+        toast({ variant: "destructive", title: "Invalid Input", description: msg });
+      } else if (required.some((v) => v <= 0)) {
+        toast({ variant: "destructive", title: "Invalid Input", description: "All dimensions must be greater than zero." });
+      } else {
+        toast({ variant: "destructive", title: "Invalid Input", description: "Dimensions must be no larger than 1,000,000." });
+      }
+      return;
     }
-    setVolume(result);
-    toast({ title: "Volume Calculated", description: `The volume of the ${shape} is ${result.toFixed(2)}.`});
+    setVolume(computed);
+    toast({ title: "Volume Calculated", description: `The volume of the ${shape} is ${computed.volume.toLocaleString(undefined, { maximumFractionDigits: 2 })}.`});
+  };
+
+  const reset = () => {
+    setDim1(""); setDim2(""); setDim3(""); setVolume(null);
+  };
+
+  const copyResult = async () => {
+    if (!volume) return;
+    const text = `Volume of ${shape}: ${volume.volume.toLocaleString(undefined, { maximumFractionDigits: 2 })} cubic units — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
+  };
+
+  const handleShapeChange = (val: string) => {
+    setShape(val);
+    const [nd1, nd2, nd3] = defaultDimsForVolumeShape(val);
+    setDim1(nd1); setDim2(nd2); setDim3(nd3);
+    setVolume(computeVolume(val, nd1, nd2, nd3));
   };
   
   const getLabels = () => {
@@ -76,7 +133,7 @@ const VolumeCalculator = () => {
         <div className="space-y-4">
           <div>
             <Label>Shape</Label>
-            <Select value={shape} onValueChange={(val) => { setShape(val); setVolume(null); setDim1(''); setDim2(''); setDim3('');}}>
+            <Select value={shape} onValueChange={handleShapeChange}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="cube">Cube</SelectItem>
@@ -100,11 +157,21 @@ const VolumeCalculator = () => {
             ))}
           </div>
 
-          <Button onClick={calculate} className="w-full gradient-button">Calculate Volume</Button>
+          <div className="flex gap-2">
+            <Button onClick={calculate} className="flex-1 gradient-button">Calculate Volume</Button>
+            <Button onClick={reset} variant="outline" size="icon" className="shrink-0" aria-label="Reset">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
           {volume !== null && (
-            <div className="mt-6 p-4 bg-primary/10 rounded-lg text-center">
-              <p className="text-sm text-muted-foreground">Volume</p>
-              <p className="text-3xl font-bold text-primary">{volume.toFixed(2)} cubic units</p>
+            <div className="mt-6 p-4 bg-[#FFF5F2] rounded-lg">
+              <div className="flex items-center justify-between mb-1">
+                <p className="text-sm text-neutral-600">Volume</p>
+                <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                  <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                </Button>
+              </div>
+              <p className="text-3xl font-bold text-primary text-center">{volume.volume.toLocaleString(undefined, { maximumFractionDigits: 2 })} cubic units</p>
             </div>
           )}
         </div>

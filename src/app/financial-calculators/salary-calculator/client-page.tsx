@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,6 +9,35 @@ import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
 import { CurrencySelector, getCurrencySymbol } from "@/components/CurrencySelector";
+import { Copy, RotateCcw } from "lucide-react";
+
+type SalaryResult = { hourly: number; weekly: number; monthly: number; annually: number };
+
+function computeSalary(from: string, valueStr: string, hpwStr: string, hourlyStr: string): SalaryResult | null {
+  const hwp = parseFloat(hpwStr);
+  const numValue = parseFloat(valueStr);
+  if (isNaN(hwp) || hwp <= 0 || hwp > 168) return null;
+  if (isNaN(numValue) || numValue < 0 || numValue > 1e12) return null;
+
+  let annual = 0;
+  if (from === 'annually') annual = numValue;
+  else if (from === 'monthly') annual = numValue * 12;
+  else if (from === 'weekly') annual = numValue * 52;
+  else if (from === 'hourly') annual = numValue * hwp * 52;
+  else if (from === 'hpw') {
+    const hourlyNum = parseFloat(hourlyStr);
+    if (isNaN(hourlyNum) || hourlyNum < 0 || hourlyNum > 1e9) return null;
+    annual = hourlyNum * numValue * 52;
+  } else return null;
+
+  if (isNaN(annual) || annual < 0 || annual > 1e15) return null;
+  return {
+    annually: annual,
+    monthly: annual / 12,
+    weekly: annual / 52,
+    hourly: annual / 52 / hwp,
+  };
+}
 
 const SalaryCalculator = () => {
   const [hourly, setHourly] = useState("25");
@@ -20,28 +49,43 @@ const SalaryCalculator = () => {
   const { toast } = useToast();
   const currencySymbol = getCurrencySymbol(currency);
 
-  const calculate = (from: string, value: string) => {
-    const numValue = parseFloat(value);
-    const hwp = parseFloat(hoursPerWeek);
+  const fmt = (n: number) =>
+    n.toLocaleString("en-US", { maximumFractionDigits: 2, minimumFractionDigits: 2 });
 
-    if (isNaN(numValue) || isNaN(hwp) || hwp <= 0) {
-      if (from === 'hpw') toast({ variant: "destructive", title: "Invalid Input", description: "Hours per week must be a positive number."});
+  const calculate = (from: string, value: string) => {
+    const hwp = parseFloat(from === 'hpw' ? value : hoursPerWeek);
+    if (isNaN(hwp) || hwp <= 0 || hwp > 168) {
+      toast({ variant: "destructive", title: "Invalid Input", description: "Hours per week must be between 1 and 168."});
       return;
     }
-    
-    let annual = 0;
-    if (from === 'annually') annual = numValue;
-    if (from === 'monthly') annual = numValue * 12;
-    if (from === 'weekly') annual = numValue * 52;
-    if (from === 'hourly') annual = numValue * hwp * 52;
-    if (from === 'hpw') annual = parseFloat(hourly) * numValue * 52;
+    const computed = computeSalary(from, value, from === 'hpw' ? value : hoursPerWeek, from === 'hourly' ? value : hourly);
+    if (!computed) {
+      toast({ variant: "destructive", title: "Invalid Input", description: "Enter a valid non-negative salary amount (up to 1,000,000,000,000)."});
+      return;
+    }
 
-    if (isNaN(annual)) return;
+    setAnnually(computed.annually.toFixed(2));
+    setMonthly(computed.monthly.toFixed(2));
+    setWeekly(computed.weekly.toFixed(2));
+    setHourly(computed.hourly.toFixed(2));
+  };
 
-    setAnnually(annual.toFixed(2));
-    setMonthly((annual / 12).toFixed(2));
-    setWeekly((annual / 52).toFixed(2));
-    setHourly((annual / 52 / hwp).toFixed(2));
+  const reset = () => {
+    setHourly("25");
+    setWeekly("1000");
+    setMonthly("4333");
+    setAnnually("52000");
+    setHoursPerWeek("40");
+  };
+
+  const copyResult = async () => {
+    const text = `Salary: ${currencySymbol}${fmt(parseFloat(hourly) || 0)}/hour, ${currencySymbol}${fmt(parseFloat(weekly) || 0)}/week, ${currencySymbol}${fmt(parseFloat(monthly) || 0)}/month, ${currencySymbol}${fmt(parseFloat(annually) || 0)}/year (${hoursPerWeek} hrs/week). — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
   
   const handleInputChange = (setter: Function, from: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,6 +126,14 @@ const SalaryCalculator = () => {
               <Label>Annually ({currencySymbol})</Label>
               <Input type="number" value={annually} onChange={handleInputChange(setAnnually, 'annually')} />
             </div>
+          </div>
+          <div className="flex gap-2">
+            <Button onClick={copyResult} variant="outline" className="flex-1">
+              <Copy className="h-4 w-4 mr-2" /> Copy Result
+            </Button>
+            <Button onClick={reset} variant="outline" size="icon" className="h-10 w-10 shrink-0" aria-label="Reset">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
           </div>
         </div>
       </Card>

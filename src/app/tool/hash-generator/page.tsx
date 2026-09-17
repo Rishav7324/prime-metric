@@ -5,63 +5,177 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
-import { Hash, Copy } from "lucide-react";
+import { Hash, Copy, RotateCcw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 
+type HashResults = { md5: string; sha1: string; sha256: string };
+
+const DEMO_INPUT = "hello";
+const DEMO_HASHES: HashResults = {
+  md5: "5d41402abc4b2a76b9719d911017c592",
+  sha1: "aaf4c61ddcc5e8a2dabede0f3b482cd9aea9434d",
+  sha256: "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824",
+};
+
+// Correct MD5 implementation (RFC 1321). MD5 is not exposed via Web Crypto,
+// so a compact JS implementation is used here for real MD5 digests.
+const md5Hash = (input: string): string => {
+  const leftRotate = (x: number, c: number): number =>
+    ((x << c) | (x >>> (32 - c))) >>> 0;
+  const addUnsigned = (x: number, y: number): number =>
+    (((x & 0xffff) + (y & 0xffff)) & 0xffff) |
+    ((((x >>> 16) + (y >>> 16) + (((x & 0xffff) + (y & 0xffff)) >>> 16)) & 0xffff) << 16);
+
+  const s: number[] = [
+    7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22,
+    5, 9, 14, 20, 5, 9, 14, 20, 5, 9, 14, 20, 5, 9, 14, 20,
+    4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23,
+    6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21,
+  ];
+  const K: number[] = Array.from(
+    { length: 64 },
+    (_, i) => Math.floor(Math.abs(Math.sin(i + 1)) * 4294967296) >>> 0
+  );
+
+  const msgBytes = Array.from(new TextEncoder().encode(input));
+  const bitLen = msgBytes.length * 8;
+  msgBytes.push(0x80);
+  while (msgBytes.length % 64 !== 56) {
+    msgBytes.push(0);
+  }
+  // Append 64-bit little-endian bit length
+  for (let i = 0; i < 8; i++) {
+    msgBytes.push(Math.floor(bitLen / Math.pow(2, 8 * i)) & 0xff);
+  }
+
+  let a0 = 0x67452301;
+  let b0 = 0xefcdab89;
+  let c0 = 0x98badcfe;
+  let d0 = 0x10325476;
+
+  for (let offset = 0; offset < msgBytes.length; offset += 64) {
+    const M: number[] = [];
+    for (let j = 0; j < 16; j++) {
+      M[j] =
+        (msgBytes[offset + j * 4] |
+          (msgBytes[offset + j * 4 + 1] << 8) |
+          (msgBytes[offset + j * 4 + 2] << 16) |
+          (msgBytes[offset + j * 4 + 3] << 24)) >>>
+        0;
+    }
+    let A = a0;
+    let B = b0;
+    let C = c0;
+    let D = d0;
+    for (let i = 0; i < 64; i++) {
+      let F: number;
+      let g: number;
+      if (i < 16) {
+        F = (B & C) | (~B & D);
+        g = i;
+      } else if (i < 32) {
+        F = (D & B) | (~D & C);
+        g = (5 * i + 1) % 16;
+      } else if (i < 48) {
+        F = B ^ C ^ D;
+        g = (3 * i + 5) % 16;
+      } else {
+        F = C ^ (B | ~D);
+        g = (7 * i) % 16;
+      }
+      F = addUnsigned(
+        addUnsigned(addUnsigned(addUnsigned(F >>> 0, A), K[i]), M[g]),
+        0
+      );
+      A = D;
+      D = C;
+      C = B;
+      B = addUnsigned(B, leftRotate(F, s[i]));
+    }
+    a0 = addUnsigned(a0, A);
+    b0 = addUnsigned(b0, B);
+    c0 = addUnsigned(c0, C);
+    d0 = addUnsigned(d0, D);
+  }
+
+  const toHexLE = (n: number): string => {
+    let out = "";
+    for (let i = 0; i < 4; i++) {
+      out += (((n >>> (8 * i)) & 0xff).toString(16)).padStart(2, "0");
+    }
+    return out;
+  };
+  return toHexLE(a0) + toHexLE(b0) + toHexLE(c0) + toHexLE(d0);
+};
+
+const bytesToHex = (buffer: ArrayBuffer): string =>
+  Array.from(new Uint8Array(buffer))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+
 const HashGenerator = () => {
-  const [input, setInput] = useState("");
-  const [hashes, setHashes] = useState<{md5: string, sha1: string, sha256: string} | null>(null);
+  const [input, setInput] = useState(DEMO_INPUT);
+  const [hashes, setHashes] = useState<HashResults | null>(DEMO_HASHES);
+  const [isGenerating, setIsGenerating] = useState(false);
   const { toast } = useToast();
+
+  const charCount = input.length;
+  const byteCount = new TextEncoder().encode(input).length;
 
   const generateHashes = async () => {
     if (!input.trim()) {
-      toast({ variant: "destructive", title: "Error", description: "Please enter text" });
+      toast({ variant: "destructive", title: "Empty Input", description: "Please enter text to hash." });
+      return;
+    }
+    if (typeof crypto === "undefined" || !crypto.subtle) {
+      toast({ variant: "destructive", title: "Not Supported", description: "Web Crypto API is unavailable. Use HTTPS or a modern browser." });
       return;
     }
 
     const encoder = new TextEncoder();
     const data = encoder.encode(input);
+    setIsGenerating(true);
 
     try {
       // Generate SHA-1
       const sha1Buffer = await crypto.subtle.digest('SHA-1', data);
-      const sha1 = Array.from(new Uint8Array(sha1Buffer))
-        .map(b => b.toString(16).padStart(2, '0'))
-        .join('');
+      const sha1 = bytesToHex(sha1Buffer);
 
       // Generate SHA-256
       const sha256Buffer = await crypto.subtle.digest('SHA-256', data);
-      const sha256 = Array.from(new Uint8Array(sha256Buffer))
-        .map(b => b.toString(16).padStart(2, '0'))
-        .join('');
+      const sha256 = bytesToHex(sha256Buffer);
 
-      // Simple MD5 implementation (for demonstration - in production use a library)
-      const md5 = simpleMD5(input);
+      const md5 = md5Hash(input);
 
       setHashes({ md5, sha1, sha256 });
-      toast({ title: "Success", description: "Hashes generated!" });
-    } catch(e) {
-        toast({ variant: "destructive", title: "Error", description: "Could not generate hashes. Your browser might not support the Web Crypto API securely." });
+      toast({ title: "Hashes Generated", description: "MD5, SHA-1 and SHA-256 computed." });
+    } catch {
+        toast({ variant: "destructive", title: "Hashing failed", description: "Could not generate hashes. Your browser might not support the Web Crypto API securely." });
+    } finally {
+      setIsGenerating(false);
     }
   };
 
-  // Simplified MD5 (for demo purposes - use crypto-js or similar in production)
-  const simpleMD5 = (str: string): string => {
-    // This is a placeholder - in a real app, use a proper crypto library
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-      const char = str.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
-      hash = hash & hash;
+  // Demo hashes above keep the output visible instantly; regeneration happens on demand.
+
+  const copyHash = async (hash: string, type: string) => {
+    if (!hash) {
+      toast({ variant: "destructive", title: "Nothing to copy", description: "Generate hashes first." });
+      return;
     }
-    // Pad to 32 characters to look like MD5
-    return Math.abs(hash).toString(16).padEnd(32, '0').substring(0,32);
+    try {
+      await navigator.clipboard.writeText(hash);
+      toast({ title: "Copied", description: `${type} copied to clipboard.` });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
 
-  const copyHash = (hash: string, type: string) => {
-    navigator.clipboard.writeText(hash);
-    toast({ title: "Success", description: `${type} copied to clipboard!` });
+  const clear = () => {
+    setInput("");
+    setHashes(null);
+    toast({ title: "Cleared", description: "Input and hashes cleared." });
   };
 
   return (
@@ -71,9 +185,9 @@ const HashGenerator = () => {
         keywords="hash generator, md5 generator, sha1 generator, sha256 generator, checksum generator, hash calculator"
         canonicalUrl="/tool/hash-generator"
       >
-        <div className="max-w-4xl mx-auto space-y-6">
+        <div className="max-w-4xl mx-auto space-y-4">
           <Card className="p-6 space-y-4">
-            <Label htmlFor="input">Input Text</Label>
+            <Label className="text-sm font-medium" htmlFor="input">Input Text</Label>
             <Textarea
               id="input"
               value={input}
@@ -81,11 +195,17 @@ const HashGenerator = () => {
               placeholder="Enter text to hash..."
               className="min-h-[150px]"
             />
+            <p className="text-xs text-neutral-500">{charCount} characters • {byteCount} bytes</p>
             
-            <Button onClick={generateHashes} className="w-full gradient-button">
-              <Hash className="w-4 h-4 mr-2" />
-              Generate Hashes
-            </Button>
+            <div className="flex gap-2">
+              <Button onClick={generateHashes} disabled={isGenerating} className="flex-1 gradient-button">
+                <Hash className="w-4 h-4 mr-2" />
+                Generate Hashes
+              </Button>
+              <Button onClick={clear} variant="outline" size="icon" className="shrink-0" aria-label="Clear">
+                <RotateCcw className="w-4 h-4" />
+              </Button>
+            </div>
           </Card>
 
           {hashes && (

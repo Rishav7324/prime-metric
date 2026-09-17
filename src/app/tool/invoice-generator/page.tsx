@@ -106,7 +106,7 @@ const InvoiceGenerator = () => {
       canonicalUrl="/tool/invoice-generator"
     >
       <Card className="p-6">
-        <div className="space-y-6">
+        <div className="space-y-4">
           <div className="grid md:grid-cols-2 gap-4">
             <div><Label>From</Label><Textarea value={from} onChange={e => setFrom(e.target.value)} /></div>
             <div><Label>To</Label><Textarea value={to} onChange={e => setTo(e.target.value)} /></div>

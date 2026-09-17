@@ -25,15 +25,15 @@ const CookieConsentBanner = () => {
   }
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-background border-t p-4 z-50 flex items-center justify-between flex-wrap gap-4">
-      <p className="text-sm text-muted-foreground">
-        This website uses cookies to enhance your experience. By continuing to use this site, you consent to our use of cookies. Read our{' '}
-        <Link href="/cookie-policy" className="underline hover:text-primary">
+    <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-neutral-200 p-3 z-50 flex items-center justify-between flex-wrap gap-3 shadow-lg">
+      <p className="text-xs text-neutral-600">
+        We use cookies to improve your experience. By using this site, you accept our{' '}
+        <Link href="/cookie-policy" className="underline text-[#F2765E]">
           Cookie Policy
         </Link>
         .
       </p>
-      <Button onClick={handleAccept} size="sm">
+      <Button onClick={handleAccept} size="sm" className="h-8 text-xs">
         Accept
       </Button>
     </div>

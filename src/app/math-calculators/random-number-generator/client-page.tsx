@@ -8,32 +8,94 @@ import { Button } from "@/components/ui/button";
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+import { Copy, RotateCcw } from "lucide-react";
+
+function getValidatedRange(minStr: string, maxStr: string): { min: number; max: number } | null {
+  if (minStr.trim() === "" || maxStr.trim() === "") return null;
+  const minVal = Number(minStr);
+  const maxVal = Number(maxStr);
+  if (!Number.isFinite(minVal) || !Number.isFinite(maxVal)) return null;
+  if (!Number.isInteger(minVal) || !Number.isInteger(maxVal)) return null;
+  if (minVal >= maxVal) return null;
+  return { min: minVal, max: maxVal };
+}
+
+function generateRandomInt(min: number, max: number): number {
+  // This logic is safe inside an event handler / client initializer,
+  // we ensure all random generation is client-side.
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+const DEFAULT_MIN = "1";
+const DEFAULT_MAX = "100";
 
 const RandomNumberGenerator = () => {
-  const [min, setMin] = useState("1");
-  const [max, setMax] = useState("100");
-  const [result, setResult] = useState<number | null>(null);
+  const [min, setMin] = useState(DEFAULT_MIN);
+  const [max, setMax] = useState(DEFAULT_MAX);
+  // Pre-generate one value on mount so the result renders instantly (no toast on init)
+  const [result, setResult] = useState<number | null>(() => {
+    const range = getValidatedRange(DEFAULT_MIN, DEFAULT_MAX);
+    return range ? generateRandomInt(range.min, range.max) : null;
+  });
   const { toast } = useToast();
 
   const generate = () => {
-    const minVal = parseInt(min);
-    const maxVal = parseInt(max);
-    if (isNaN(minVal) || isNaN(maxVal) || minVal > maxVal) {
+    if (min.trim() === "" || max.trim() === "") {
       toast({
         variant: "destructive",
         title: "Invalid Input",
-        description: "Please enter a valid range where min is not greater than max.",
+        description: "Please enter both a minimum and a maximum value.",
       });
       return;
     }
-    // This logic is safe inside an event handler, but to be robust,
-    // we ensure all random generation is client-side.
-    const randomNumber = Math.floor(Math.random() * (maxVal - minVal + 1)) + minVal;
+    const minVal = Number(min);
+    const maxVal = Number(max);
+    if (!Number.isFinite(minVal) || !Number.isFinite(maxVal)) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Input",
+        description: "Min and max must be valid numbers.",
+      });
+      return;
+    }
+    if (!Number.isInteger(minVal) || !Number.isInteger(maxVal)) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Input",
+        description: "Min and max must be whole numbers (integers).",
+      });
+      return;
+    }
+    if (minVal >= maxVal) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Input",
+        description: "Min must be less than max (e.g., min 1, max 100).",
+      });
+      return;
+    }
+    const randomNumber = generateRandomInt(minVal, maxVal);
     setResult(randomNumber);
     toast({
         title: "Number Generated!",
-        description: `Your random number is ${randomNumber}.`,
+        description: `Your random number is ${randomNumber.toLocaleString()}.`,
     });
+  };
+
+  const reset = () => {
+    setMin("");
+    setMax("");
+    setResult(null);
+  };
+
+  const copyResult = async () => {
+    if (result === null) return;
+    try {
+      await navigator.clipboard.writeText(result.toLocaleString());
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
 
   return (
@@ -54,11 +116,21 @@ const RandomNumberGenerator = () => {
               <Input type="number" value={max} onChange={(e) => setMax(e.target.value)} placeholder="e.g., 100" />
             </div>
           </div>
-          <Button onClick={generate} className="w-full gradient-button">Generate Number</Button>
+          <div className="flex gap-2">
+            <Button onClick={generate} className="flex-1 gradient-button">Generate Number</Button>
+            <Button onClick={reset} variant="outline" size="icon" className="h-10 w-10 shrink-0" aria-label="Reset">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
           {result !== null && (
-            <div className="mt-6 p-4 bg-primary/10 rounded-lg text-center">
-              <p className="text-sm text-muted-foreground">Your Random Number</p>
-              <p className="text-5xl font-bold text-primary">{result}</p>
+            <div className="mt-6 p-4 bg-[#FFF5F2] rounded-lg text-center">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-sm text-neutral-600">Your Random Number</p>
+                <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                  <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                </Button>
+              </div>
+              <p className="text-5xl font-bold text-primary">{result.toLocaleString()}</p>
             </div>
           )}
         </div>

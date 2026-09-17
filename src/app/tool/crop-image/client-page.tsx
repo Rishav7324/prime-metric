@@ -5,15 +5,22 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useState, useRef, useEffect } from "react";
-import { Upload, Download, Crop, ImageDown } from "lucide-react";
+import { Upload, Download, Crop, RotateCcw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
+
+type CropArea = { x: number; y: number; width: number; height: number };
+
+const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB
+const MAX_DIMENSION = 8000; // px
+const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 
 const CropImage = () => {
   const [image, setImage] = useState<string | null>(null);
   const [originalImage, setOriginalImage] = useState<HTMLImageElement | null>(null);
   const [croppedImageUrl, setCroppedImageUrl] = useState<string | null>(null);
-  const [cropArea, setCropArea] = useState({ x: 0, y: 0, width: 100, height: 100 });
+  const [cropArea, setCropArea] = useState<CropArea>({ x: 0, y: 0, width: 100, height: 100 });
+  const [isCropping, setIsCropping] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
@@ -29,29 +36,71 @@ const CropImage = () => {
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setImage(event.target?.result as string);
-        setCroppedImageUrl(null);
-        toast({ title: "Success", description: "Image uploaded successfully!" });
-      };
-      reader.readAsDataURL(file);
+    if (!file) return;
+    if (!ALLOWED_TYPES.includes(file.type) && !file.type.startsWith("image/")) {
+      toast({ variant: "destructive", title: "Invalid File Type", description: "Please upload a valid image file (JPG, PNG, WebP, GIF)." });
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
     }
+    if (file.size > MAX_FILE_SIZE) {
+      toast({ variant: "destructive", title: "File Too Large", description: "Please upload an image under 20MB." });
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setImage(event.target?.result as string);
+      setCroppedImageUrl(null);
+      toast({ title: "Success", description: "Image uploaded successfully!" });
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleReset = () => {
+    setImage(null);
+    setOriginalImage(null);
+    setCroppedImageUrl(null);
+    setCropArea({ x: 0, y: 0, width: 100, height: 100 });
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   const handleCrop = () => {
     if (!originalImage) {
-      toast({ variant: "destructive", title: "Error", description: "Please upload an image first." });
+      toast({ variant: "destructive", title: "No Image", description: "Please upload an image first." });
       return;
     }
+
+    const { x, y, width, height } = cropArea;
+    if (![x, y, width, height].every((n) => typeof n === "number" && !isNaN(n))) {
+      toast({ variant: "destructive", title: "Invalid Dimensions", description: "Crop values must be valid numbers." });
+      return;
+    }
+    if (!Number.isInteger(x) || !Number.isInteger(y) || !Number.isInteger(width) || !Number.isInteger(height)) {
+      toast({ variant: "destructive", title: "Invalid Dimensions", description: "Crop values must be whole numbers (integers)." });
+      return;
+    }
+    if (x < 0 || y < 0) {
+      toast({ variant: "destructive", title: "Invalid Position", description: "X and Y positions must be 0 or greater." });
+      return;
+    }
+    if (width <= 0 || height <= 0) {
+      toast({ variant: "destructive", title: "Invalid Dimensions", description: "Width and height must be positive integers." });
+      return;
+    }
+    if (width > MAX_DIMENSION || height > MAX_DIMENSION) {
+      toast({ variant: "destructive", title: "Dimensions Too Large", description: `Width and height must be ${MAX_DIMENSION}px or less.` });
+      return;
+    }
+
+    setIsCropping(true);
 
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext("2d");
     if (!ctx) {
         toast({ variant: "destructive", title: "Error", description: "Could not process image." });
+        setIsCropping(false);
         return;
-    };
+    }
 
     const safeCropArea = {
       x: Math.max(0, cropArea.x),
@@ -61,7 +110,8 @@ const CropImage = () => {
     }
 
     if(safeCropArea.width <= 0 || safeCropArea.height <= 0){
-      toast({ variant: "destructive", title: "Error", description: "Crop dimensions are invalid or out of bounds." });
+      toast({ variant: "destructive", title: "Invalid Crop Area", description: "Crop dimensions are invalid or out of bounds." });
+      setIsCropping(false);
       return;
     }
     
@@ -81,6 +131,7 @@ const CropImage = () => {
     );
 
     setCroppedImageUrl(canvas.toDataURL());
+    setIsCropping(false);
     toast({ title: "Success", description: "Image cropped successfully! You can now download it." });
   };
 
@@ -104,17 +155,17 @@ const CropImage = () => {
       canonicalUrl="/tool/crop-image"
     >
       <div className="max-w-4xl mx-auto">
-        <Card className="p-6 space-y-6">
+        <Card className="p-6 space-y-4">
           {!image ? (
             <div className="space-y-4">
                <Label>Upload Image</Label>
                <div 
-                  className="border-2 border-dashed border-primary/30 rounded-lg p-12 text-center hover:border-primary/50 transition-colors cursor-pointer bg-muted/20"
+                  className="border-2 border-dashed border-neutral-200 rounded-lg p-12 text-center hover:border-[#F2765E]/50 transition-colors cursor-pointer bg-muted/20"
                   onClick={() => fileInputRef.current?.click()}
                 >
-                  <Upload className="w-12 h-12 mx-auto mb-4 text-primary" />
+                  <Upload className="w-12 h-10 mx-auto mb-4 text-primary" />
                   <p className="text-lg font-medium mb-2">Click to upload an image</p>
-                  <p className="text-sm text-muted-foreground">or drag and drop</p>
+                  <p className="text-sm text-neutral-600">or drag and drop</p>
                 </div>
               <input
                 ref={fileInputRef}
@@ -127,11 +178,14 @@ const CropImage = () => {
           ) : (
              <>
               <div className="space-y-2">
-                <Button variant="outline" size="sm" onClick={() => setImage(null)}>Upload New Image</Button>
+                <Button variant="outline" size="sm" onClick={handleReset}>
+                  <RotateCcw className="h-3.5 w-3.5 mr-1" />
+                  Upload New Image
+                </Button>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="x-pos">X Position</Label>
+                  <Label className="text-sm font-medium" htmlFor="x-pos">X Position</Label>
                   <Input
                     id="x-pos"
                     type="number"
@@ -140,7 +194,7 @@ const CropImage = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="y-pos">Y Position</Label>
+                  <Label className="text-sm font-medium" htmlFor="y-pos">Y Position</Label>
                   <Input
                     id="y-pos"
                     type="number"
@@ -149,7 +203,7 @@ const CropImage = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="width">Width</Label>
+                  <Label className="text-sm font-medium" htmlFor="width">Width</Label>
                   <Input
                     id="width"
                     type="number"
@@ -158,7 +212,7 @@ const CropImage = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="height">Height</Label>
+                  <Label className="text-sm font-medium" htmlFor="height">Height</Label>
                   <Input
                     id="height"
                     type="number"
@@ -181,16 +235,16 @@ const CropImage = () => {
                     {croppedImageUrl ? (
                       <img src={croppedImageUrl} alt="Cropped Preview" className="max-w-full h-auto max-h-[300px]" />
                     ): (
-                      <div className="text-muted-foreground text-sm">Crop the image to see a preview</div>
+                      <div className="text-neutral-600 text-sm">Crop the image to see a preview</div>
                     )}
                   </div>
                 </div>
               </div>
 
               <div className="flex gap-2">
-                <Button onClick={handleCrop} className="flex-1">
+                <Button onClick={handleCrop} className="flex-1" disabled={isCropping}>
                   <Crop className="w-4 h-4 mr-2" />
-                  Crop Image
+                  {isCropping ? "Cropping..." : "Crop Image"}
                 </Button>
                 <Button onClick={handleDownload} variant="outline" className="flex-1" disabled={!croppedImageUrl}>
                   <Download className="w-4 h-4 mr-2" />

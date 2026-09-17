@@ -9,41 +9,79 @@ import { Button } from "@/components/ui/button";
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+import { CurrencySelector, getCurrencySymbol } from "@/components/CurrencySelector";
+import { Copy, RotateCcw } from "lucide-react";
+
+type AprResult = { apr: number; monthlyPayment: number; totalInterest: number; totalCost: number };
+
+function computeApr(loanStr: string, feesStr: string, rateStr: string, termStr: string): AprResult | null {
+  const principal = parseFloat(loanStr);
+  const totalFees = parseFloat(feesStr);
+  const annualRate = parseFloat(rateStr);
+  const months = parseInt(termStr);
+
+  if (!(principal > 0 && principal <= 1e12)) return null;
+  if (isNaN(totalFees) || totalFees < 0 || totalFees > 1e9) return null;
+  if (isNaN(annualRate) || annualRate < 0 || annualRate > 100) return null;
+  if (!(months >= 1 && months <= 600)) return null;
+
+  const rate = annualRate / 100 / 12;
+  const monthlyPayment = rate === 0
+    ? principal / months
+    : principal * (rate * Math.pow(1 + rate, months)) / (Math.pow(1 + rate, months) - 1);
+  if (!isFinite(monthlyPayment) || monthlyPayment <= 0) return null;
+
+  const totalPayment = monthlyPayment * months;
+  const totalCost = totalPayment + totalFees;
+  const totalInterest = totalPayment - principal;
+  const apr = ((totalInterest + totalFees) / principal) / (months / 365.25 * 12) * 100;
+
+  return { apr, monthlyPayment, totalInterest, totalCost };
+}
 
 const APRCalculatorClient = () => {
-  const [loanAmount, setLoanAmount] = useState("");
-  const [fees, setFees] = useState("");
-  const [interestRate, setInterestRate] = useState("");
-  const [term, setTerm] = useState("");
-  const [result, setResult] = useState<any>(null);
+  const [loanAmount, setLoanAmount] = useState("100000");
+  const [fees, setFees] = useState("2000");
+  const [interestRate, setInterestRate] = useState("7.5");
+  const [term, setTerm] = useState("60");
+  // Pre-filled so the result renders instantly (no empty state)
+  const [result, setResult] = useState<AprResult | null>(() => computeApr("100000", "2000", "7.5", "60"));
+  const [currency, setCurrency] = useState("USD");
   const { toast } = useToast();
+  const currencySymbol = getCurrencySymbol(currency);
+
+  const fmt = (n: number) =>
+    n.toLocaleString("en-US", { maximumFractionDigits: 2, minimumFractionDigits: 2 });
 
   const calculate = () => {
-    const principal = parseFloat(loanAmount);
-    const totalFees = parseFloat(fees);
-    const rate = parseFloat(interestRate) / 100 / 12;
-    const months = parseInt(term);
-    
-    if (isNaN(principal) || isNaN(totalFees) || isNaN(rate) || isNaN(months) || principal <= 0 || months <= 0) {
+    const computed = computeApr(loanAmount, fees, interestRate, term);
+    if (!computed) {
       toast({
         variant: "destructive",
         title: "Invalid Input",
-        description: "Please enter valid numbers for all fields.",
+        description: "Enter amount (1+), fees (0+), rate (0-100%), term 1-600 months.",
       });
       return;
     }
 
-    const monthlyPayment = principal * (rate * Math.pow(1 + rate, months)) / (Math.pow(1 + rate, months) - 1);
-    const totalPayment = monthlyPayment * months;
-    const totalCost = totalPayment + totalFees;
-    const totalInterest = totalPayment - principal;
-    const apr = ((totalInterest + totalFees) / principal) / (months / 365.25 * 12) * 100;
-    
-    setResult({ apr, monthlyPayment, totalInterest, totalCost });
+    setResult(computed);
     toast({
         title: "APR Calculated",
-        description: "Your APR has been successfully calculated.",
+        description: `APR ${computed.apr.toLocaleString("en-US", { maximumFractionDigits: 2 })}% — payment ${currencySymbol}${fmt(computed.monthlyPayment)}/month.`,
     });
+  };
+
+  const reset = () => { setLoanAmount(""); setFees(""); setInterestRate(""); setTerm(""); setResult(null); };
+
+  const copyResult = async () => {
+    if (!result) return;
+    const text = `APR ${result.apr.toLocaleString("en-US", { maximumFractionDigits: 2 })}% on ${currencySymbol}${fmt(parseFloat(loanAmount))} at ${interestRate}% for ${term} months — payment ${currencySymbol}${fmt(result.monthlyPayment)}/month, total cost ${currencySymbol}${fmt(result.totalCost)}. — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
 
   return (
@@ -55,8 +93,9 @@ const APRCalculatorClient = () => {
     >
         <Card className="p-6">
             <div className="space-y-4">
+            <CurrencySelector value={currency} onChange={setCurrency} />
             <div>
-                <Label>Loan Amount ($)</Label>
+                <Label>Loan Amount ({currencySymbol})</Label>
                 <Input
                 type="number"
                 value={loanAmount}
@@ -65,7 +104,7 @@ const APRCalculatorClient = () => {
                 />
             </div>
             <div>
-                <Label>Total Fees ($)</Label>
+                <Label>Total Fees ({currencySymbol})</Label>
                 <Input
                 type="number"
                 value={fees}
@@ -91,27 +130,37 @@ const APRCalculatorClient = () => {
                 placeholder="Loan duration in months"
                 />
             </div>
-            <Button onClick={calculate} className="w-full gradient-button">Calculate APR</Button>
+            <div className="flex gap-2">
+              <Button onClick={calculate} className="flex-1 gradient-button">Calculate APR</Button>
+              <Button onClick={reset} variant="outline" size="icon" className="h-10 w-10 shrink-0" aria-label="Reset">
+                <RotateCcw className="h-4 w-4" />
+              </Button>
+            </div>
             {result && (
                 <div className="mt-6 space-y-3">
-                <div className="p-4 bg-primary/10 rounded-lg text-center">
-                    <p className="text-sm text-muted-foreground">Annual Percentage Rate (APR)</p>
+                <div className="flex items-center justify-end">
+                  <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                    <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                  </Button>
+                </div>
+                <div className="p-4 bg-[#FFF5F2] rounded-lg text-center">
+                    <p className="text-sm text-neutral-600">Annual Percentage Rate (APR)</p>
                     <p className="text-3xl font-bold text-primary">
-                    {result.apr.toFixed(2)}%
+                    {result.apr.toLocaleString("en-US", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}%
                     </p>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                     <div className="p-3 bg-muted/50 rounded text-center">
-                    <p className="text-sm text-muted-foreground">Monthly Payment</p>
-                    <p className="text-lg font-bold">${result.monthlyPayment.toFixed(2)}</p>
+                    <p className="text-sm text-neutral-600">Monthly Payment</p>
+                    <p className="text-lg font-bold">{currencySymbol}{fmt(result.monthlyPayment)}</p>
                     </div>
                     <div className="p-3 bg-muted/50 rounded text-center">
-                    <p className="text-sm text-muted-foreground">Total Interest</p>
-                    <p className="text-lg font-bold">${result.totalInterest.toFixed(2)}</p>
+                    <p className="text-sm text-neutral-600">Total Interest</p>
+                    <p className="text-lg font-bold">{currencySymbol}{fmt(result.totalInterest)}</p>
                     </div>
                     <div className="p-3 bg-muted/50 rounded col-span-2 text-center">
-                    <p className="text-sm text-muted-foreground">Total Loan Cost (Principal + Interest + Fees)</p>
-                    <p className="text-lg font-bold">${result.totalCost.toFixed(2)}</p>
+                    <p className="text-sm text-neutral-600">Total Loan Cost (Principal + Interest + Fees)</p>
+                    <p className="text-lg font-bold">{currencySymbol}{fmt(result.totalCost)}</p>
                     </div>
                 </div>
                 </div>

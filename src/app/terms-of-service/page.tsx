@@ -26,7 +26,7 @@ const TermsOfServicePage = () => {
           </p>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">1. Acceptance of Terms</h2>
+            <h2 className="text-xl font-semibold mb-3 text-foreground">1. Acceptance of Terms</h2>
             <p>By accessing PrimeMetric or using any of our Services, you:</p>
             <ul className="list-disc pl-6 mt-2 space-y-1">
                 <li>Agree to comply with these Terms</li>
@@ -39,7 +39,7 @@ const TermsOfServicePage = () => {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">2. About Prime Metric</h2>
+            <h2 className="text-xl font-semibold mb-3 text-foreground">2. About Prime Metric</h2>
             <p>Prime Metric is an online platform providing:</p>
             <ul className="list-disc pl-6 mt-2 space-y-1">
                 <li>100+ calculators and tools</li>
@@ -53,7 +53,7 @@ const TermsOfServicePage = () => {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">3. User Accounts</h2>
+            <h2 className="text-xl font-semibold mb-3 text-foreground">3. User Accounts</h2>
             <p>Some features (e.g., invoice saving, dashboard access) require creating an account. When registering:</p>
              <p className="font-semibold mt-2">You must:</p>
             <ul className="list-disc pl-6 mt-2 space-y-1">
@@ -71,7 +71,7 @@ const TermsOfServicePage = () => {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">4. Use of Our Services</h2>
+            <h2 className="text-xl font-semibold mb-3 text-foreground">4. Use of Our Services</h2>
             <p>By using Prime Metric, you agree:</p>
             <p className="font-semibold mt-2">✔ You WILL:</p>
             <ul className="list-disc pl-6 mt-2 space-y-1">
@@ -93,7 +93,7 @@ const TermsOfServicePage = () => {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">5. Educational Content Disclaimer</h2>
+            <h2 className="text-xl font-semibold mb-3 text-foreground">5. Educational Content Disclaimer</h2>
             <p>All calculators and tools on PrimeMetric provide:</p>
             <ul className="list-disc pl-6 mt-2 space-y-1">
                 <li>Estimates</li>
@@ -110,7 +110,7 @@ const TermsOfServicePage = () => {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">6. Accuracy of Information</h2>
+            <h2 className="text-xl font-semibold mb-3 text-foreground">6. Accuracy of Information</h2>
             <p>We regularly review and update our tools, formulas, and educational content. However:</p>
             <ul className="list-disc pl-6 mt-2 space-y-1">
                 <li>We do not guarantee 100% accuracy</li>
@@ -122,7 +122,7 @@ const TermsOfServicePage = () => {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">7. Intellectual Property Rights</h2>
+            <h2 className="text-xl font-semibold mb-3 text-foreground">7. Intellectual Property Rights</h2>
             <p>All content on Prime Metric, including:</p>
             <ul className="list-disc pl-6 mt-2 space-y-1">
                 <li>Calculator logic</li>
@@ -150,7 +150,7 @@ const TermsOfServicePage = () => {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">8. Third-Party Services</h2>
+            <h2 className="text-xl font-semibold mb-3 text-foreground">8. Third-Party Services</h2>
             <p>Prime Metric may integrate with third-party tools like:</p>
             <ul className="list-disc pl-6 mt-2 space-y-1">
                 <li>Google Analytics</li>
@@ -168,7 +168,7 @@ const TermsOfServicePage = () => {
           </section>
           
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">9. Advertising and Monetization</h2>
+            <h2 className="text-xl font-semibold mb-3 text-foreground">9. Advertising and Monetization</h2>
             <p>Prime Metric uses:</p>
             <ul className="list-disc pl-6 mt-2 space-y-1">
                 <li>Google AdSense</li>
@@ -185,7 +185,7 @@ const TermsOfServicePage = () => {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">10. User Content</h2>
+            <h2 className="text-xl font-semibold mb-3 text-foreground">10. User Content</h2>
             <p>Some tools allow uploading content, such as:</p>
             <ul className="list-disc pl-6 mt-2 space-y-1">
                 <li>Logos for invoices</li>
@@ -203,7 +203,7 @@ const TermsOfServicePage = () => {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">11. Invoice Generator Terms</h2>
+            <h2 className="text-xl font-semibold mb-3 text-foreground">11. Invoice Generator Terms</h2>
             <p>The invoice generator feature includes:</p>
             <ul className="list-disc pl-6 mt-2 space-y-1">
                 <li>Pre-built templates</li>
@@ -228,7 +228,7 @@ const TermsOfServicePage = () => {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">12. Limitation of Liability</h2>
+            <h2 className="text-xl font-semibold mb-3 text-foreground">12. Limitation of Liability</h2>
             <p>To the maximum extent allowed by law: Prime Metric is NOT liable for:</p>
             <ul className="list-disc pl-6 mt-2 space-y-1">
                 <li>Loss of data</li>
@@ -244,7 +244,7 @@ const TermsOfServicePage = () => {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">13. Termination & Suspension</h2>
+            <h2 className="text-xl font-semibold mb-3 text-foreground">13. Termination & Suspension</h2>
             <p>We may suspend or terminate accounts if:</p>
             <ul className="list-disc pl-6 mt-2 space-y-1">
                 <li>You violate Terms</li>
@@ -257,7 +257,7 @@ const TermsOfServicePage = () => {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">14. Modifications to Services</h2>
+            <h2 className="text-xl font-semibold mb-3 text-foreground">14. Modifications to Services</h2>
             <p>We reserve the right to:</p>
             <ul className="list-disc pl-6 mt-2 space-y-1">
                 <li>Update tools</li>
@@ -270,17 +270,17 @@ const TermsOfServicePage = () => {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">15. Governing Law</h2>
+            <h2 className="text-xl font-semibold mb-3 text-foreground">15. Governing Law</h2>
             <p>These Terms are governed by the laws of your country or region unless otherwise specified. All disputes should be resolved through local applicable laws.</p>
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">16. Changes to Terms</h2>
+            <h2 className="text-xl font-semibold mb-3 text-foreground">16. Changes to Terms</h2>
             <p>We may update these Terms periodically. Continued use after changes indicates acceptance of updated Terms.</p>
           </section>
           
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">17. Contact Us</h2>
+            <h2 className="text-xl font-semibold mb-3 text-foreground">17. Contact Us</h2>
             <p>
               If you have any questions regarding these Terms:
               <br/>

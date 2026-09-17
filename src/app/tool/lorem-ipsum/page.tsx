@@ -7,14 +7,13 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState } from "react";
-import { FileText, Copy } from "lucide-react";
+import { FileText, Copy, RotateCcw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 
 const LoremIpsum = () => {
-  const [count, setCount] = useState("5");
-  const [type, setType] = useState("paragraphs");
-  const [generated, setGenerated] = useState("");
+  const [count, setCount] = useState<string>("3");
+  const [type, setType] = useState<string>("paragraphs");
   const { toast } = useToast();
 
   const loremText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
@@ -27,34 +26,59 @@ const LoremIpsum = () => {
     "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia.",
   ];
 
-  const generate = () => {
-    const num = parseInt(count) || 1;
-    let result = "";
-
-    if (type === "paragraphs") {
-      result = Array(num).fill(loremText).join("\n\n");
-    } else if (type === "sentences") {
-      const allSentences = [];
+  const buildLorem = (num: number, kind: string): string => {
+    if (kind === "paragraphs") {
+      return Array(num).fill(loremText).join("\n\n");
+    }
+    if (kind === "sentences") {
+      const allSentences: string[] = [];
       for (let i = 0; i < num; i++) {
         allSentences.push(sentences[i % sentences.length]);
       }
-      result = allSentences.join(" ");
-    } else if (type === "words") {
-      const words = loremText.split(" ");
-      const selectedWords = [];
-      for (let i = 0; i < num; i++) {
-        selectedWords.push(words[i % words.length]);
-      }
-      result = selectedWords.join(" ");
+      return allSentences.join(" ");
     }
-
-    setGenerated(result);
-    toast({ title: "Success", description: "Lorem ipsum generated!" });
+    const words = loremText.split(" ");
+    const selectedWords: string[] = [];
+    for (let i = 0; i < num; i++) {
+      selectedWords.push(words[i % words.length]);
+    }
+    return selectedWords.join(" ");
   };
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(generated);
-    toast({ title: "Success", description: "Copied to clipboard!" });
+  // Pre-filled so the output shows instantly (3 paragraphs)
+  const [generated, setGenerated] = useState<string>(() => buildLorem(3, "paragraphs"));
+
+  const generate = () => {
+    if (!count.trim()) {
+      toast({ variant: "destructive", title: "Empty Input", description: "Enter a count between 1 and 100." });
+      return;
+    }
+    const num = parseInt(count, 10);
+    if (isNaN(num) || num < 1 || num > 100) {
+      toast({ variant: "destructive", title: "Invalid Input", description: "Enter a count between 1 and 100." });
+      return;
+    }
+
+    const result = buildLorem(num, type);
+
+    setGenerated(result);
+    toast({ title: "Generated", description: `${num} ${type} of lorem ipsum ready.` });
+  };
+
+  const reset = () => {
+    setCount("3");
+    setType("paragraphs");
+    setGenerated(buildLorem(3, "paragraphs"));
+  };
+
+  const copyToClipboard = async () => {
+    if (!generated) return;
+    try {
+      await navigator.clipboard.writeText(generated);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
 
   return (
@@ -64,7 +88,7 @@ const LoremIpsum = () => {
         keywords="lorem ipsum, placeholder text, dummy text, lorem ipsum generator, filler text, sample text"
         canonicalUrl="/tool/lorem-ipsum"
       >
-        <div className="max-w-4xl mx-auto space-y-6">
+        <div className="max-w-4xl mx-auto space-y-4">
           <Card className="p-6 space-y-4">
             <div className="grid md:grid-cols-2 gap-4">
               <div>
@@ -92,10 +116,15 @@ const LoremIpsum = () => {
               </div>
             </div>
 
-            <Button onClick={generate} className="w-full gradient-button">
-              <FileText className="w-4 h-4 mr-2" />
-              Generate Lorem Ipsum
-            </Button>
+            <div className="flex gap-2">
+              <Button onClick={generate} className="flex-1 gradient-button">
+                <FileText className="w-4 h-4 mr-2" />
+                Generate Lorem Ipsum
+              </Button>
+              <Button onClick={reset} variant="outline" size="icon" className="shrink-0" aria-label="Reset">
+                <RotateCcw className="h-4 w-4" />
+              </Button>
+            </div>
           </Card>
 
           {generated && (

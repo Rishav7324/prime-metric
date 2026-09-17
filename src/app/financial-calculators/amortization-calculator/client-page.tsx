@@ -9,51 +9,92 @@ import CalculatorLayout from "@/components/CalculatorLayout";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+import { CurrencySelector, getCurrencySymbol } from "@/components/CurrencySelector";
+import { Copy, RotateCcw } from "lucide-react";
+
+type AmortRow = { month: number; payment: number; principal: number; interest: number; balance: number };
+type AmortResult = { schedule: AmortRow[]; monthlyPayment: number; totalPayment: number; totalInterest: number };
+
+function computeAmortization(principalStr: string, rateStr: string, yearsStr: string): AmortResult | null {
+  const p = parseFloat(principalStr);
+  const annualRate = parseFloat(rateStr);
+  const years = parseFloat(yearsStr);
+
+  if (!(p > 0 && p <= 1e12)) return null;
+  if (isNaN(annualRate) || annualRate < 0 || annualRate > 100) return null;
+  if (!(years > 0 && years <= 50)) return null;
+
+  const r = annualRate / 100 / 12;
+  const n = Math.round(years * 12);
+  if (!(n >= 1 && n <= 600)) return null;
+
+  const monthlyPayment = r === 0 ? p / n : (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+  if (!isFinite(monthlyPayment) || monthlyPayment <= 0) return null;
+
+  let balance = p;
+  const scheduleData: AmortRow[] = [];
+
+  for (let i = 1; i <= n; i++) {
+    const interestPayment = balance * r;
+    const principalPayment = Math.min(monthlyPayment - interestPayment, balance);
+    balance = Math.max(0, balance - principalPayment);
+
+    scheduleData.push({
+      month: i,
+      payment: monthlyPayment,
+      principal: principalPayment,
+      interest: interestPayment,
+      balance,
+    });
+    if (balance <= 0) break;
+  }
+
+  const totalPayment = monthlyPayment * n;
+  return { schedule: scheduleData, monthlyPayment, totalPayment, totalInterest: totalPayment - p };
+}
 
 const AmortizationCalculatorClient = () => {
-  const [principal, setPrincipal] = useState("");
-  const [rate, setRate] = useState("");
-  const [years, setYears] = useState("");
-  const [schedule, setSchedule] = useState<any[]>([]);
+  const [principal, setPrincipal] = useState("250000");
+  const [rate, setRate] = useState("5.5");
+  const [years, setYears] = useState("30");
+  // Pre-filled so the result renders instantly (no empty state)
+  const [result, setResult] = useState<AmortResult | null>(() => computeAmortization("250000", "5.5", "30"));
+  const [currency, setCurrency] = useState("USD");
   const { toast } = useToast();
+  const currencySymbol = getCurrencySymbol(currency);
+
+  const fmt = (n: number) =>
+    n.toLocaleString("en-US", { maximumFractionDigits: 2, minimumFractionDigits: 2 });
 
   const calculate = () => {
-    const p = parseFloat(principal);
-    const r = parseFloat(rate) / 100 / 12;
-    const n = parseFloat(years) * 12;
-
-    if (isNaN(p) || isNaN(r) || isNaN(n) || p <= 0 || r < 0 || n <= 0) {
+    const computed = computeAmortization(principal, rate, years);
+    if (!computed) {
       toast({
         variant: "destructive",
         title: "Invalid Input",
-        description: "Please enter valid positive numbers for all fields.",
+        description: "Enter amount (1+), rate (0-100%), term (up to 50 yrs).",
       });
       return;
     }
-    
-    const monthlyPayment = (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
-    let balance = p;
-    const scheduleData = [];
 
-    for (let i = 1; i <= n; i++) {
-      const interestPayment = balance * r;
-      const principalPayment = monthlyPayment - interestPayment;
-      balance -= principalPayment;
-
-      scheduleData.push({
-        month: i,
-        payment: monthlyPayment.toFixed(2),
-        principal: principalPayment.toFixed(2),
-        interest: interestPayment.toFixed(2),
-        balance: balance.toFixed(2)
-      });
-    }
-
-    setSchedule(scheduleData);
+    setResult(computed);
     toast({
         title: "Schedule Generated",
-        description: "Your amortization schedule has been calculated.",
+        description: `Monthly payment ${currencySymbol}${fmt(computed.monthlyPayment)} over ${computed.schedule.length} months.`,
     });
+  };
+
+  const reset = () => { setPrincipal(""); setRate(""); setYears(""); setResult(null); };
+
+  const copyResult = async () => {
+    if (!result) return;
+    const text = `Amortization: ${currencySymbol}${fmt(parseFloat(principal))} at ${rate}% for ${years} yrs → ${currencySymbol}${fmt(result.monthlyPayment)}/month, total ${currencySymbol}${fmt(result.totalPayment)} (interest ${currencySymbol}${fmt(result.totalInterest)}). — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
 
   return (
@@ -65,8 +106,9 @@ const AmortizationCalculatorClient = () => {
     >
       <Card className="p-6">
         <div className="space-y-4">
+          <CurrencySelector value={currency} onChange={setCurrency} />
           <div>
-            <Label>Loan Amount ($)</Label>
+            <Label>Loan Amount ({currencySymbol})</Label>
             <Input
               type="number"
               value={principal}
@@ -93,12 +135,22 @@ const AmortizationCalculatorClient = () => {
               placeholder="e.g., 30"
             />
           </div>
-          <Button onClick={calculate} className="w-full gradient-button">
-            Generate Schedule
-          </Button>
-          {schedule.length > 0 && (
+          <div className="flex gap-2">
+            <Button onClick={calculate} className="flex-1 gradient-button">
+              Generate Schedule
+            </Button>
+            <Button onClick={reset} variant="outline" size="icon" className="h-10 w-10 shrink-0" aria-label="Reset">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
+          {result && (
             <div className="mt-6">
-              <h3 className="font-semibold mb-3 text-center text-lg">Amortization Schedule</h3>
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="font-semibold text-center text-lg">Amortization Schedule</h3>
+                <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                  <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                </Button>
+              </div>
               <div className="overflow-x-auto rounded-lg border max-h-[400px] overflow-y-auto">
                 <Table>
                   <TableHeader className="sticky top-0 bg-muted/80 backdrop-blur-sm">
@@ -111,13 +163,13 @@ const AmortizationCalculatorClient = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {schedule.map((row) => (
+                    {result.schedule.map((row) => (
                       <TableRow key={row.month}>
                         <TableCell className="text-center">{row.month}</TableCell>
-                        <TableCell className="text-right">${row.payment}</TableCell>
-                        <TableCell className="text-right text-green-500">${row.principal}</TableCell>
-                        <TableCell className="text-right text-red-500">${row.interest}</TableCell>
-                        <TableCell className="text-right font-medium">${row.balance}</TableCell>
+                        <TableCell className="text-right">{currencySymbol}{fmt(row.payment)}</TableCell>
+                        <TableCell className="text-right text-green-500">{currencySymbol}{fmt(row.principal)}</TableCell>
+                        <TableCell className="text-right text-red-500">{currencySymbol}{fmt(row.interest)}</TableCell>
+                        <TableCell className="text-right font-medium">{currencySymbol}{fmt(row.balance)}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>

@@ -26,7 +26,7 @@ const CookiePolicyPage = () => {
         </p>
         
         <section>
-          <h2 className="text-2xl font-semibold mb-3 text-foreground">1. What Are Cookies?</h2>
+          <h2 className="text-xl font-semibold mb-3 text-foreground">1. What Are Cookies?</h2>
           <p>
             Cookies are small text files stored in your browser or device when you visit a website. Cookies help websites load faster, remember your preferences, and improve user experience.
           </p>
@@ -43,7 +43,7 @@ const CookiePolicyPage = () => {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-3 text-foreground">2. Types of Cookies We Use</h2>
+          <h2 className="text-xl font-semibold mb-3 text-foreground">2. Types of Cookies We Use</h2>
           <p className="mb-3">Prime Metric uses several categories of cookies, each serving a specific purpose.</p>
           
           <h3 className="text-xl font-semibold mt-4 mb-2 text-foreground">2.1 Essential Cookies</h3>
@@ -103,7 +103,7 @@ const CookiePolicyPage = () => {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-3 text-foreground">3. Third-Party Cookies</h2>
+          <h2 className="text-xl font-semibold mb-3 text-foreground">3. Third-Party Cookies</h2>
           <p>Some third parties may place cookies when interacting with our website, such as:</p>
           <ul className="list-disc pl-6 mt-2 space-y-1">
             <li>Google Analytics</li>
@@ -115,7 +115,7 @@ const CookiePolicyPage = () => {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-3 text-foreground">4. Managing and Blocking Cookies</h2>
+          <h2 className="text-xl font-semibold mb-3 text-foreground">4. Managing and Blocking Cookies</h2>
           <p className="mb-3">Users can manage or disable cookies at any time.</p>
           <h3 className="text-xl font-semibold mt-4 mb-2 text-foreground">How to control cookies in your browser</h3>
           <p>Most browsers allow cookie management. You can:</p>
@@ -138,7 +138,7 @@ const CookiePolicyPage = () => {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-3 text-foreground">5. How We Use Data from Cookies</h2>
+          <h2 className="text-xl font-semibold mb-3 text-foreground">5. How We Use Data from Cookies</h2>
           <p>We use cookie-related data for:</p>
           <ul className="list-disc pl-6 mt-2 space-y-1">
             <li>Enhancing website performance</li>
@@ -158,7 +158,7 @@ const CookiePolicyPage = () => {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-3 text-foreground">6. Data Retention</h2>
+          <h2 className="text-xl font-semibold mb-3 text-foreground">6. Data Retention</h2>
           <p>Cookies remain stored for different durations depending on type:</p>
           <ul className="list-disc pl-6 mt-2 space-y-1">
             <li><strong>Session cookies:</strong> deleted when browser closes</li>
@@ -168,7 +168,7 @@ const CookiePolicyPage = () => {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-3 text-foreground">7. Children’s Use</h2>
+          <h2 className="text-xl font-semibold mb-3 text-foreground">7. Children’s Use</h2>
           <ul className="list-disc pl-6 mt-2 space-y-1">
             <li>Prime Metric is not intended for children under 13.</li>
             <li>We do not knowingly collect or store personal cookie information from children.</li>
@@ -176,7 +176,7 @@ const CookiePolicyPage = () => {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-3 text-foreground">8. Updates to This Cookie Policy</h2>
+          <h2 className="text-xl font-semibold mb-3 text-foreground">8. Updates to This Cookie Policy</h2>
           <p>We may modify this Cookie Policy periodically to reflect:</p>
           <ul className="list-disc pl-6 mt-2 space-y-1">
             <li>New regulations</li>
@@ -188,7 +188,7 @@ const CookiePolicyPage = () => {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-3 text-foreground">9. Contact Information</h2>
+          <h2 className="text-xl font-semibold mb-3 text-foreground">9. Contact Information</h2>
           <p>
             If you have questions regarding this Cookie Policy or want to request changes, contact us anytime:
             <br />

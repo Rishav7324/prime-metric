@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,17 +8,91 @@ import { Button } from "@/components/ui/button";
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+import { Copy, RotateCcw } from "lucide-react";
+
+type MileageResult = {
+  mileage: number;
+  display: string;
+};
+
+function computeMileage(distanceStr: string, fuelStr: string): MileageResult | null {
+  const dist = parseFloat(distanceStr);
+  const fuelUsed = parseFloat(fuelStr);
+  if (!distanceStr || isNaN(dist) || !isFinite(dist) || dist <= 0 || dist > 1000000) return null;
+  if (!fuelStr || isNaN(fuelUsed) || !isFinite(fuelUsed) || fuelUsed <= 0 || fuelUsed > 100000) return null;
+  const mileage = dist / fuelUsed;
+  if (!isFinite(mileage)) return null;
+  return {
+    mileage,
+    display: `${mileage.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} per unit of fuel`,
+  };
+}
 
 const MileageCalculator = () => {
-  const [distance, setDistance] = useState("");
-  const [fuel, setFuel] = useState("");
-  const [result, setResult] = useState<any>(null);
+  const [distance, setDistance] = useState("450");
+  const [fuel, setFuel] = useState("30");
+  const [result, setResult] = useState<MileageResult | null>(null);
   const { toast } = useToast();
+
+  useEffect(() => {
+    // Realistic pre-filled defaults + instant result on mount (no toast on init)
+    const computed = computeMileage("450", "30");
+    if (computed) setResult(computed);
+  }, []);
 
   const calculate = () => {
     const dist = parseFloat(distance);
     const fuelUsed = parseFloat(fuel);
-    if (isNaN(dist) || dist <= 0 || isNaN(fuelUsed) || fuelUsed <= 0) {
+    if (distance.trim() === "" || isNaN(dist) || !isFinite(dist)) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Input",
+        description: "Please enter a valid distance.",
+      });
+      return;
+    }
+    if (dist <= 0) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Input",
+        description: "Distance must be greater than zero.",
+      });
+      return;
+    }
+    if (dist > 1000000) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Input",
+        description: "Distance must be between 0 and 1,000,000.",
+      });
+      return;
+    }
+    if (fuel.trim() === "" || isNaN(fuelUsed) || !isFinite(fuelUsed)) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Input",
+        description: "Please enter valid fuel consumed.",
+      });
+      return;
+    }
+    if (fuelUsed <= 0) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Input",
+        description: "Fuel consumed must be greater than zero.",
+      });
+      return;
+    }
+    if (fuelUsed > 100000) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Input",
+        description: "Fuel consumed must be between 0 and 100,000.",
+      });
+      return;
+    }
+    const computed = computeMileage(distance, fuel);
+    if (!computed) {
       toast({
         variant: "destructive",
         title: "Invalid Input",
@@ -26,12 +100,24 @@ const MileageCalculator = () => {
       });
       return;
     }
-    const mileage = dist / fuelUsed;
-    setResult({ mileage: mileage.toFixed(2) });
+    setResult(computed);
     toast({
-        title: "Mileage Calculated",
-        description: `Your vehicle's mileage is ${mileage.toFixed(2)} km/L (or miles/gallon).`,
+      title: "Mileage Calculated",
+      description: `Your vehicle's mileage is ${computed.mileage.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} km/L (or miles/gallon).`,
     });
+  };
+
+  const reset = () => setResult(null);
+
+  const copyResult = async () => {
+    if (!result) return;
+    const text = `Mileage: ${result.mileage.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} per unit of fuel — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
 
   return (
@@ -50,12 +136,22 @@ const MileageCalculator = () => {
             <Label>Fuel Consumed (e.g., in liters or gallons)</Label>
             <Input type="number" value={fuel} onChange={(e) => setFuel(e.target.value)} placeholder="e.g., 30" />
           </div>
-          <Button onClick={calculate} className="w-full gradient-button">Calculate Mileage</Button>
+          <div className="flex gap-2">
+            <Button onClick={calculate} className="flex-1 gradient-button">Calculate Mileage</Button>
+            <Button onClick={reset} variant="outline" size="icon" className="h-10 w-10 shrink-0" aria-label="Reset">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
           {result && (
-            <div className="mt-6 p-4 bg-primary/10 rounded-lg text-center">
-              <p className="text-sm text-muted-foreground">Your Vehicle's Mileage</p>
-              <p className="text-3xl font-bold text-primary">{result.mileage} per unit of fuel</p>
-               <p className="text-sm text-muted-foreground">(e.g., km/L or miles/gallon)</p>
+            <div className="mt-6 p-4 bg-[#FFF5F2] rounded-lg text-center">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-sm text-neutral-600">Your Vehicle's Mileage</p>
+                <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                  <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                </Button>
+              </div>
+              <p className="text-3xl font-bold text-primary">{result.display}</p>
+               <p className="text-sm text-neutral-600">(e.g., km/L or miles/gallon)</p>
             </div>
           )}
         </div>

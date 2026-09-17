@@ -9,42 +9,76 @@ import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+import { Copy, RotateCcw } from "lucide-react";
+
+type CalorieResult = {
+  maintain: number;
+  target: number;
+  goal: string;
+};
+
+function computeCalories(genderStr: string, ageStr: string, weightStr: string, heightStr: string, activityStr: string, goalStr: string): CalorieResult | null {
+  const w = parseFloat(weightStr);
+  const h = parseFloat(heightStr);
+  const a = parseFloat(ageStr);
+  const activityMultiplier = parseFloat(activityStr);
+
+  if (!(w >= 1 && w <= 500) || !(h >= 50 && h <= 300) || !(a >= 10 && a <= 120)) return null;
+  if (!isFinite(activityMultiplier) || activityMultiplier <= 0) return null;
+
+  const bmr = genderStr === "male" ? 10 * w + 6.25 * h - 5 * a + 5 : 10 * w + 6.25 * h - 5 * a - 161;
+  if (!isFinite(bmr) || bmr <= 0) return null;
+  const tdee = bmr * activityMultiplier;
+
+  let targetCalories = tdee;
+  if (goalStr === "lose") targetCalories = tdee - 500;
+  else if (goalStr === "gain") targetCalories = tdee + 500;
+
+  if (!isFinite(targetCalories) || targetCalories <= 0) return null;
+
+  return { maintain: Math.round(tdee), target: Math.round(targetCalories), goal: goalStr };
+}
 
 const CalorieCalculatorClient = () => {
   const [gender, setGender] = useState("male");
-  const [age, setAge] = useState("");
-  const [weight, setWeight] = useState("");
-  const [height, setHeight] = useState("");
+  const [age, setAge] = useState("30");
+  const [weight, setWeight] = useState("70");
+  const [height, setHeight] = useState("175");
   const [activity, setActivity] = useState("1.55");
   const [goal, setGoal] = useState("maintain");
-  const [result, setResult] = useState<any>(null);
+  // Pre-filled so the result renders instantly (no empty state)
+  const [result, setResult] = useState<CalorieResult | null>(() => computeCalories("male", "30", "70", "175", "1.55", "maintain"));
   const { toast } = useToast();
 
   const calculate = () => {
-    const w = parseFloat(weight);
-    const h = parseFloat(height);
-    const a = parseFloat(age);
-    const activityMultiplier = parseFloat(activity);
-
-    if (w > 0 && h > 0 && a > 0) {
-      let bmr = gender === "male" ? 10 * w + 6.25 * h - 5 * a + 5 : 10 * w + 6.25 * h - 5 * a - 161;
-      const tdee = bmr * activityMultiplier;
-      
-      let targetCalories = tdee;
-      if (goal === "lose") targetCalories = tdee - 500;
-      else if (goal === "gain") targetCalories = tdee + 500;
-      
-      setResult({ maintain: tdee.toFixed(0), target: targetCalories.toFixed(0), goal });
+    const computed = computeCalories(gender, age, weight, height, activity, goal);
+    if (!computed) {
       toast({
-        title: "Calories Calculated",
-        description: `Your daily target is ${targetCalories.toFixed(0)} calories.`
+        variant: "destructive",
+        title: "Invalid Input",
+        description: "Enter weight (1-500 kg), height (50-300 cm), and age (10-120 years).",
       });
-    } else {
-        toast({
-            variant: "destructive",
-            title: "Invalid Input",
-            description: "Please enter valid numbers for all fields."
-        });
+      return;
+    }
+    setResult(computed);
+    toast({
+      title: "Calories Calculated",
+      description: `Your daily target is ${computed.target.toLocaleString()} calories.`
+    });
+  };
+
+  const reset = () => {
+    setAge(""); setWeight(""); setHeight(""); setResult(null);
+  };
+
+  const copyResult = async () => {
+    if (!result) return;
+    const text = `My daily calories: ${result.target.toLocaleString()} kcal/day (maintenance ${result.maintain.toLocaleString()} kcal/day) — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
     }
   };
 
@@ -55,33 +89,33 @@ const CalorieCalculatorClient = () => {
       keywords="calorie calculator, tdee calculator, calorie intake, weight loss calculator, weight gain calculator"
       canonicalUrl="/health-calculators/calorie-calculator"
     >
-      <div className="grid md:grid-cols-2 gap-8">
-        <Card className="glass-card p-8">
-          <h2 className="text-2xl font-bold mb-6">Your Details</h2>
+      <div className="grid sm:grid-cols-2 gap-4">
+        <Card className="bg-white border border-neutral-200 p-4 sm:p-5">
+          <h2 className="text-lg font-bold mb-4">Your Details</h2>
           <div className="space-y-4">
             <div>
               <Label>Gender</Label>
               <Select value={gender} onValueChange={setGender}>
-                <SelectTrigger className="mt-1 h-12 glass-card border-primary/30"><SelectValue /></SelectTrigger>
+                <SelectTrigger className="mt-1 h-10 bg-white border border-neutral-200"><SelectValue /></SelectTrigger>
                 <SelectContent><SelectItem value="male">Male</SelectItem><SelectItem value="female">Female</SelectItem></SelectContent>
               </Select>
             </div>
              <div>
               <Label>Age (years)</Label>
-              <Input type="number" value={age} onChange={(e) => setAge(e.target.value)} placeholder="e.g., 30" className="mt-1 h-12 glass-card border-primary/30" />
+              <Input type="number" min={10} max={120} value={age} onChange={(e) => setAge(e.target.value)} placeholder="e.g., 30" className="mt-1 h-10 bg-white border border-neutral-200" />
             </div>
             <div>
               <Label>Weight (kg)</Label>
-              <Input type="number" value={weight} onChange={(e) => setWeight(e.target.value)} placeholder="e.g., 70" className="mt-1 h-12 glass-card border-primary/30" />
+              <Input type="number" min={1} max={500} value={weight} onChange={(e) => setWeight(e.target.value)} placeholder="e.g., 70" className="mt-1 h-10 bg-white border border-neutral-200" />
             </div>
             <div>
               <Label>Height (cm)</Label>
-              <Input type="number" value={height} onChange={(e) => setHeight(e.target.value)} placeholder="e.g., 175" className="mt-1 h-12 glass-card border-primary/30" />
+              <Input type="number" min={50} max={300} value={height} onChange={(e) => setHeight(e.target.value)} placeholder="e.g., 175" className="mt-1 h-10 bg-white border border-neutral-200" />
             </div>
             <div>
               <Label>Activity Level</Label>
               <Select value={activity} onValueChange={setActivity}>
-                <SelectTrigger className="mt-1 h-12 glass-card border-primary/30"><SelectValue /></SelectTrigger>
+                <SelectTrigger className="mt-1 h-10 bg-white border border-neutral-200"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="1.2">Sedentary (office job)</SelectItem>
                   <SelectItem value="1.375">Lightly Active (1-3 days/week exercise)</SelectItem>
@@ -94,7 +128,7 @@ const CalorieCalculatorClient = () => {
             <div>
               <Label>Goal</Label>
               <Select value={goal} onValueChange={setGoal}>
-                <SelectTrigger className="mt-1 h-12 glass-card border-primary/30"><SelectValue /></SelectTrigger>
+                <SelectTrigger className="mt-1 h-10 bg-white border border-neutral-200"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="lose">Lose Weight</SelectItem>
                   <SelectItem value="maintain">Maintain Weight</SelectItem>
@@ -102,27 +136,39 @@ const CalorieCalculatorClient = () => {
                 </SelectContent>
               </Select>
             </div>
-            <Button onClick={calculate} className="w-full h-12 gradient-button">Calculate Calories</Button>
+            <div className="flex gap-2">
+              <Button onClick={calculate} className="flex-1 h-10 gradient-button" disabled={!age || !weight || !height}>Calculate Calories</Button>
+              <Button onClick={reset} variant="outline" size="icon" className="h-10 w-10 shrink-0" aria-label="Reset">
+                <RotateCcw className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </Card>
 
-        <Card className="glass-card p-8">
-          <h2 className="text-2xl font-bold mb-6">Results</h2>
+        <Card className="bg-white border border-neutral-200 p-4 sm:p-5">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-bold">Results</h2>
+            {result && (
+              <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+              </Button>
+            )}
+          </div>
           {result ? (
-            <div className="space-y-6">
-              <div className="text-center py-8">
-                <div className="text-sm text-muted-foreground mb-2">Target Calories for {result.goal === 'lose' ? 'Weight Loss' : result.goal === 'gain' ? 'Weight Gain' : 'Maintenance'}</div>
-                <div className="text-6xl font-bold gradient-text">{result.target}</div>
-                <div className="text-lg text-muted-foreground mt-2">calories/day</div>
+            <div className="space-y-4">
+              <div className="text-center py-4">
+                <div className="text-sm text-neutral-600 mb-2">Target Calories for {result.goal === 'lose' ? 'Weight Loss' : result.goal === 'gain' ? 'Weight Gain' : 'Maintenance'}</div>
+                <div className="text-6xl font-bold gradient-text">{result.target.toLocaleString()}</div>
+                <div className="text-lg text-neutral-600 mt-2">calories/day</div>
               </div>
-              <div className="p-4 rounded-lg glass-card border border-primary/20">
-                <div className="text-sm text-muted-foreground">Maintenance Calories</div>
-                <div className="text-2xl font-bold">{result.maintain} cal/day</div>
+              <div className="p-4 rounded-lg bg-white border border-neutral-200 border border-[#F2765E]/25">
+                <div className="text-sm text-neutral-600">Maintenance Calories</div>
+                <div className="text-2xl font-bold">{result.maintain.toLocaleString()} cal/day</div>
               </div>
             </div>
           ) : (
-            <div className="flex items-center justify-center h-64 text-muted-foreground">
-              <div className="text-center"><div className="text-6xl mb-4">🍎</div><p>Enter details to see results</p></div>
+            <div className="flex items-center justify-center h-40 text-neutral-600">
+              <div className="text-center"><div className="text-4xl mb-2">🍎</div><p>Enter details to see results</p></div>
             </div>
           )}
         </Card>

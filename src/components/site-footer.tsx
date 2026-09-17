@@ -36,61 +36,65 @@ export function SiteFooter() {
   };
   
   return (
-    <footer className="border-t border-primary/20 py-12 mt-20" role="contentinfo">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-5 gap-8 mb-8">
-            <div className="md:col-span-2">
-              <h4 className="font-bold text-lg mb-4">PrimeMetric</h4>
-              <p className="text-muted-foreground text-sm mb-4">
-                Your complete calculator and converter platform for all daily needs.
+    <footer className="border-t border-neutral-200 bg-white py-6 mt-8" role="contentinfo">
+        <div className="mx-auto max-w-6xl px-4">
+          <div className="grid grid-cols-2 gap-5 mb-5">
+            <div className="col-span-2 sm:col-span-1">
+              <h4 className="font-bold text-base mb-1.5 text-black">PrimeMetric</h4>
+              <p className="text-neutral-600 text-xs mb-3">
+                Free calculators for finance, health, math & daily needs. Fast, accurate, no sign-up.
               </p>
-              <form onSubmit={handleSubscription} className="space-y-2">
-                <p className="text-sm font-medium">Subscribe to our newsletter</p>
-                <div className="flex">
+              <form onSubmit={handleSubscription} className="space-y-1.5">
+                <p className="text-xs font-medium text-black">Subscribe for updates</p>
+                <div className="flex max-w-xs">
                   <Input 
                     type="email" 
-                    placeholder="Your email address" 
-                    className="rounded-r-none"
+                    placeholder="Your email" 
+                    className="rounded-r-none h-9 text-sm bg-white"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
                   />
-                  <Button type="submit" className="rounded-l-none">Subscribe</Button>
+                  <Button type="submit" className="rounded-l-none h-9 text-sm">Subscribe</Button>
                 </div>
               </form>
             </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-5 col-span-2 sm:col-span-1">
             <div>
-              <h4 className="font-bold text-lg mb-4">Calculators</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="/financial-calculators" className="hover:text-primary transition-colors">Financial</Link></li>
-                <li><Link href="/health-calculators" className="hover:text-primary transition-colors">Health</Link></li>
-                <li><Link href="/math-calculators" className="hover:text-primary transition-colors">Math</Link></li>
-                <li><Link href="/other-calculators" className="hover:text-primary transition-colors">Other</Link></li>
+              <h4 className="font-bold text-xs mb-2.5 text-black uppercase tracking-wide">Calculators</h4>
+              <ul className="space-y-1.5 text-[13px] text-neutral-600">
+                <li><Link href="/financial-calculators" className="hover:text-[#F2765E] transition-colors">Financial</Link></li>
+                <li><Link href="/health-calculators" className="hover:text-[#F2765E] transition-colors">Health</Link></li>
+                <li><Link href="/math-calculators" className="hover:text-[#F2765E] transition-colors">Math</Link></li>
+                <li><Link href="/other-calculators" className="hover:text-[#F2765E] transition-colors">Other</Link></li>
               </ul>
             </div>
             <div>
-              <h4 className="font-bold text-lg mb-4">Tools</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="/tool/color-picker" className="hover:text-primary transition-colors">Image Tools</Link></li>
-                <li><Link href="/all-calculators" className="hover:text-primary transition-colors">All Calculators</Link></li>
-                <li><Link href="/financial-calculators/currency-converter" className="hover:text-primary transition-colors">Currency Converter</Link></li>
-                <li><Link href="/health-calculators/bmi-calculator" className="hover:text-primary transition-colors">BMI Calculator</Link></li>
+              <h4 className="font-bold text-xs mb-2.5 text-black uppercase tracking-wide">Tools</h4>
+              <ul className="space-y-1.5 text-[13px] text-neutral-600">
+                <li><Link href="/tool/image-tools" className="hover:text-[#F2765E] transition-colors">Image Tools</Link></li>
+                <li><Link href="/all-calculators" className="hover:text-[#F2765E] transition-colors">All Calculators</Link></li>
+                <li><Link href="/saved" className="hover:text-[#F2765E] transition-colors">Saved</Link></li>
+                <li><Link href="/financial-calculators/currency-converter" className="hover:text-[#F2765E] transition-colors">Currency Converter</Link></li>
+                <li><Link href="/health-calculators/bmi-calculator" className="hover:text-[#F2765E] transition-colors">BMI Calculator</Link></li>
               </ul>
             </div>
             <div>
-              <h4 className="font-bold text-lg mb-4">Company</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="/about" className="hover:text-primary transition-colors">About Us</Link></li>
-                <li><Link href="/contact" className="hover:text-primary transition-colors">Contact</Link></li>
-                <li><Link href="/privacy-policy" className="hover:text-primary transition-colors">Privacy Policy</Link></li>
-                <li><Link href="/terms-of-service" className="hover:text-primary transition-colors">Terms of Service</Link></li>
-                 <li><Link href="/disclaimer" className="hover:text-primary transition-colors">Disclaimer</Link></li>
-                <li><Link href="/cookie-policy" className="hover:text-primary transition-colors">Cookie Policy</Link></li>
+              <h4 className="font-bold text-xs mb-2.5 text-black uppercase tracking-wide">Company</h4>
+              <ul className="space-y-1.5 text-[13px] text-neutral-600">
+                <li><Link href="/about" className="hover:text-[#F2765E] transition-colors">About Us</Link></li>
+                <li><Link href="/blog" className="hover:text-[#F2765E] transition-colors">Blog</Link></li>
+                <li><Link href="/contact" className="hover:text-[#F2765E] transition-colors">Contact</Link></li>
+                <li><Link href="/privacy-policy" className="hover:text-[#F2765E] transition-colors">Privacy Policy</Link></li>
+                <li><Link href="/terms-of-service" className="hover:text-[#F2765E] transition-colors">Terms of Service</Link></li>
+                 <li><Link href="/disclaimer" className="hover:text-[#F2765E] transition-colors">Disclaimer</Link></li>
+                <li><Link href="/cookie-policy" className="hover:text-[#F2765E] transition-colors">Cookie Policy</Link></li>
               </ul>
+            </div>
             </div>
           </div>
-          <div className="border-t border-primary/20 pt-8 text-center text-sm text-muted-foreground">
-            <p>© {currentYear} PrimeMetric. All rights reserved. Built with precision and care.</p>
+          <div className="border-t border-neutral-200 pt-4 text-center text-xs text-neutral-500">
+            <p>© {currentYear} PrimeMetric. All rights reserved.</p>
           </div>
         </div>
       </footer>

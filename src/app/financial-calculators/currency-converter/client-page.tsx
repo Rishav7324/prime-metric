@@ -10,6 +10,7 @@ import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
 import { currencies } from "@/components/CurrencySelector";
+import { Copy, RotateCcw } from "lucide-react";
 
 const CurrencyCalculator = () => {
   const [amount, setAmount] = useState("1");
@@ -17,7 +18,11 @@ const CurrencyCalculator = () => {
   const [toCurrency, setToCurrency] = useState("EUR");
   const [result, setResult] = useState<string | null>(null);
   const [rates, setRates] = useState<{ [key: string]: number } | null>(null);
+  const [isStale, setIsStale] = useState(false);
   const { toast } = useToast();
+
+  const fmt = (n: number) =>
+    n.toLocaleString("en-US", { maximumFractionDigits: 2, minimumFractionDigits: 2 });
 
   useEffect(() => {
     fetch('https://v6.exchangerate-api.com/v6/47d21e70f7f01c637fbd6d49/latest/USD')
@@ -25,6 +30,7 @@ const CurrencyCalculator = () => {
       .then(data => {
         if (data.result === 'success') {
           setRates(data.conversion_rates);
+          setIsStale(false);
         } else {
           throw new Error('Failed to fetch rates');
         }
@@ -41,25 +47,56 @@ const CurrencyCalculator = () => {
           USD: 1, EUR: 0.92, GBP: 0.79, INR: 83.12, JPY: 149.50, AUD: 1.52,
           CAD: 1.36, CHF: 0.88, CNY: 7.24,
         });
+        setIsStale(true);
       });
   }, [toast]);
 
   const calculate = () => {
     const amt = parseFloat(amount);
-    if (amt > 0 && rates) {
-      const usdAmount = amt / rates[fromCurrency];
-      const converted = usdAmount * rates[toCurrency];
-      setResult(converted.toFixed(2));
-       toast({
-        title: "Conversion Complete",
-        description: `${amount} ${fromCurrency} is equal to ${converted.toFixed(2)} ${toCurrency}.`,
-      });
-    } else {
+    if (isNaN(amt) || amt <= 0 || amt > 1e12) {
       toast({
         variant: "destructive",
         title: "Invalid Input",
-        description: "Please enter a valid amount to convert or wait for rates to load.",
+        description: "Enter a valid amount greater than 0 (up to 1,000,000,000,000).",
       });
+      return;
+    }
+    if (!rates) {
+      toast({
+        variant: "destructive",
+        title: "Rates not loaded",
+        description: "Please wait for exchange rates to load and try again.",
+      });
+      return;
+    }
+    if (!rates[fromCurrency] || !rates[toCurrency]) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Input",
+        description: "Selected currency is not available in the current rate table.",
+      });
+      return;
+    }
+    const usdAmount = amt / rates[fromCurrency];
+    const converted = usdAmount * rates[toCurrency];
+    setResult(converted.toFixed(2));
+    toast({
+      title: "Conversion Complete",
+      description: `${fmt(amt)} ${fromCurrency} is equal to ${fmt(converted)} ${toCurrency}.`,
+    });
+  };
+
+  const reset = () => { setAmount("1"); setFromCurrency("USD"); setToCurrency("EUR"); setResult(null); };
+
+  const copyResult = async () => {
+    if (!result || !rates) return;
+    const amt = parseFloat(amount);
+    const text = `${fmt(isNaN(amt) ? 0 : amt)} ${fromCurrency} = ${fmt(parseFloat(result))} ${toCurrency} (1 ${fromCurrency} = ${(rates[toCurrency] / rates[fromCurrency]).toFixed(4)} ${toCurrency}). — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
     }
   };
 
@@ -71,18 +108,18 @@ const CurrencyCalculator = () => {
       description="Convert between major world currencies"
       canonicalUrl="/financial-calculators/currency-converter"
     >
-      <div className="grid md:grid-cols-2 gap-8">
-        <Card className="glass-card p-8">
-          <h2 className="text-2xl font-bold mb-6 font-headline">Convert Currency</h2>
-          <div className="space-y-6">
+      <div className="grid sm:grid-cols-2 gap-4">
+        <Card className="bg-white border border-neutral-200 p-4 sm:p-5">
+          <h2 className="text-lg font-bold mb-4 font-headline">Convert Currency</h2>
+          <div className="space-y-4">
             <div>
               <Label>Amount</Label>
-              <Input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="100" className="mt-2 h-12 glass-card border-primary/30" />
+              <Input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="100" className="mt-2 h-10 bg-white border border-neutral-200" />
             </div>
             <div>
               <Label>From</Label>
               <Select value={fromCurrency} onValueChange={setFromCurrency}>
-                <SelectTrigger className="mt-2 h-12 glass-card border-primary/30">
+                <SelectTrigger className="mt-2 h-10 bg-white border border-neutral-200">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -93,7 +130,7 @@ const CurrencyCalculator = () => {
             <div>
               <Label>To</Label>
               <Select value={toCurrency} onValueChange={setToCurrency}>
-                <SelectTrigger className="mt-2 h-12 glass-card border-primary/30">
+                <SelectTrigger className="mt-2 h-10 bg-white border border-neutral-200">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -101,29 +138,44 @@ const CurrencyCalculator = () => {
                 </SelectContent>
               </Select>
             </div>
-            <Button onClick={calculate} className="w-full h-12 gradient-button" disabled={!rates}>
-              {rates ? 'Convert' : 'Loading Rates...'}
-            </Button>
+            <div className="flex gap-2">
+              <Button onClick={calculate} className="flex-1 h-10 gradient-button" disabled={!rates}>
+                {rates ? 'Convert' : 'Loading Rates...'}
+              </Button>
+              <Button onClick={reset} variant="outline" size="icon" className="h-10 w-10 shrink-0" aria-label="Reset">
+                <RotateCcw className="h-4 w-4" />
+              </Button>
+            </div>
+            {isStale && rates && (
+              <p className="text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded-md px-2.5 py-2">Live rates unavailable — showing cached fallback rates. Figures may be stale.</p>
+            )}
           </div>
         </Card>
 
-        <Card className="glass-card p-8">
-          <h2 className="text-2xl font-bold mb-6 font-headline">Result</h2>
+        <Card className="bg-white border border-neutral-200 p-4 sm:p-5">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-bold font-headline">Result</h2>
+            {result && rates && (
+              <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+              </Button>
+            )}
+          </div>
           {result && rates ? (
-            <div className="space-y-6">
-              <div className="text-center py-8">
-                <div className="text-sm text-muted-foreground mb-2">{amount} {fromCurrency} =</div>
-                <div className="text-5xl font-bold gradient-text">{result}</div>
-                <div className="text-2xl text-muted-foreground mt-2">{toCurrency}</div>
+            <div className="space-y-4">
+              <div className="text-center py-4">
+                <div className="text-sm text-neutral-600 mb-2">{fmt(parseFloat(amount) || 0)} {fromCurrency} =</div>
+                <div className="text-3xl font-bold gradient-text">{fmt(parseFloat(result))}</div>
+                <div className="text-2xl text-neutral-600 mt-2">{toCurrency}</div>
               </div>
-              <div className="p-4 rounded-lg glass-card border border-primary/20">
-                <div className="text-sm text-muted-foreground mb-2">Exchange Rate</div>
+              <div className="p-4 rounded-lg bg-white border border-neutral-200 border border-[#F2765E]/25">
+                <div className="text-sm text-neutral-600 mb-2">Exchange Rate</div>
                 <div className="text-xl font-bold">1 {fromCurrency} = {(rates[toCurrency] / rates[fromCurrency]).toFixed(4)} {toCurrency}</div>
               </div>
             </div>
           ) : (
-            <div className="flex items-center justify-center h-64 text-muted-foreground">
-              <div className="text-center"><div className="text-6xl mb-4">💱</div><p>Enter amount to convert</p></div>
+            <div className="flex items-center justify-center h-40 text-neutral-600">
+              <div className="text-center"><div className="text-4xl mb-2">💱</div><p>Enter amount to convert</p></div>
             </div>
           )}
         </Card>

@@ -19,7 +19,7 @@ const ContactPage = () => {
           <div className="flex items-start gap-4">
             <Mail className="w-8 h-8 text-primary mt-1 flex-shrink-0" />
             <div>
-              <h2 className="text-2xl font-semibold mb-2">Support Email</h2>
+              <h2 className="text-xl font-semibold mb-2">Support Email</h2>
               <p className="text-muted-foreground mb-4">
                 For all inquiries, support, and assistance, reach us at:
               </p>
@@ -34,7 +34,7 @@ const ContactPage = () => {
           </div>
         </Card>
         
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid sm:grid-cols-2 gap-4">
             <Card className="p-6 bg-card/80 backdrop-blur">
                 <h3 className="font-semibold text-lg mb-4 flex items-center"><Info className="w-5 h-5 mr-2 text-primary"/> When to Contact Us</h3>
                 <ul className="space-y-2 text-muted-foreground text-sm list-disc pl-5">
@@ -65,7 +65,7 @@ const ContactPage = () => {
           <div className="flex items-start gap-4">
             <Briefcase className="w-8 h-8 text-primary mt-1 flex-shrink-0" />
             <div>
-              <h2 className="text-2xl font-semibold mb-2">Business & Partnership Inquiry</h2>
+              <h2 className="text-xl font-semibold mb-2">Business & Partnership Inquiry</h2>
               <p className="text-muted-foreground mb-4">
                 We welcome collaboration and partnership opportunities that align with our mission. To propose business or partnership discussions, contact:
               </p>
@@ -81,7 +81,7 @@ const ContactPage = () => {
         </Card>
 
         <Card className="p-8 bg-card/80 backdrop-blur">
-            <h2 className="text-2xl font-semibold mb-4">Our Commitment to Users</h2>
+            <h2 className="text-xl font-semibold mb-4">Our Commitment to Users</h2>
              <ul className="space-y-3 text-muted-foreground">
                 <li className="flex items-start"><CheckCircle className="text-primary mr-3 mt-1 h-5 w-5 flex-shrink-0" /><span>Providing responsive support</span></li>
                 <li className="flex items-start"><CheckCircle className="text-primary mr-3 mt-1 h-5 w-5 flex-shrink-0" /><span>Maintaining platform accuracy</span></li>

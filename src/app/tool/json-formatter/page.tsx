@@ -6,47 +6,83 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
-import { Braces, Copy, CheckCircle, XCircle } from "lucide-react";
+import { Braces, Copy, CheckCircle, XCircle, RotateCcw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 
+const SAMPLE_JSON = `{
+  "name": "PrimeMetric",
+  "url": "https://primemetric.online",
+  "features": ["calculators", "tools", "guides"],
+  "stats": {
+    "users": 10000,
+    "tools": 50
+  },
+  "active": true
+}`;
+
 const JSONFormatter = () => {
-  const [input, setInput] = useState("");
-  const [output, setOutput] = useState("");
-  const [isValid, setIsValid] = useState<boolean | null>(null);
+  const [input, setInput] = useState<string>(SAMPLE_JSON);
+  const [output, setOutput] = useState<string>(SAMPLE_JSON);
+  const [isValid, setIsValid] = useState<boolean | null>(true);
   const { toast } = useToast();
 
   const format = () => {
+    if (!input.trim()) {
+      setOutput("");
+      setIsValid(false);
+      toast({ variant: "destructive", title: "Empty Input", description: "Paste JSON to format." });
+      return;
+    }
     try {
       const parsed = JSON.parse(input);
       const formatted = JSON.stringify(parsed, null, 2);
       setOutput(formatted);
       setIsValid(true);
-      toast({ title: "Success", description: "JSON formatted successfully!" });
+      toast({ title: "JSON Formatted", description: "Valid JSON, nicely formatted." });
     } catch (error) {
+      const message = error instanceof Error ? error.message : "Unknown error";
       setOutput("");
       setIsValid(false);
-      toast({ variant: "destructive", title: "Error", description: "Invalid JSON provided." });
+      toast({ variant: "destructive", title: "Invalid JSON", description: message });
     }
   };
 
   const minify = () => {
+    if (!input.trim()) {
+      setOutput("");
+      setIsValid(false);
+      toast({ variant: "destructive", title: "Empty Input", description: "Paste JSON to minify." });
+      return;
+    }
     try {
       const parsed = JSON.parse(input);
       const minified = JSON.stringify(parsed);
       setOutput(minified);
       setIsValid(true);
-      toast({ title: "Success", description: "JSON minified successfully!" });
+      toast({ title: "JSON Minified", description: "Whitespace removed successfully." });
     } catch (error) {
+      const message = error instanceof Error ? error.message : "Unknown error";
       setOutput("");
       setIsValid(false);
-      toast({ variant: "destructive", title: "Error", description: "Invalid JSON provided." });
+      toast({ variant: "destructive", title: "Invalid JSON", description: message });
     }
   };
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(output);
-    toast({ title: "Success", description: "Copied to clipboard!" });
+  const reset = () => {
+    setInput("");
+    setOutput("");
+    setIsValid(null);
+  };
+
+  const copyToClipboard = async () => {
+    if (!output) return;
+    try {
+      await navigator.clipboard.writeText(output);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
 
   return (
@@ -56,10 +92,10 @@ const JSONFormatter = () => {
         keywords="json formatter, json validator, format json, minify json, json beautifier, json parser"
         canonicalUrl="/tool/json-formatter"
       >
-        <div className="max-w-4xl mx-auto space-y-6">
+        <div className="max-w-4xl mx-auto space-y-4">
           <Card className="p-6 space-y-4">
             <div className="flex items-center justify-between">
-              <Label htmlFor="input">Input JSON</Label>
+              <Label className="text-sm font-medium" htmlFor="input">Input JSON</Label>
               {isValid !== null && (
                 <div className={`flex items-center gap-2 text-sm ${isValid ? 'text-green-500' : 'text-destructive'}`}>
                   {isValid ? <CheckCircle className="w-4 h-4" /> : <XCircle className="w-4 h-4" />}
@@ -71,8 +107,18 @@ const JSONFormatter = () => {
               id="input"
               value={input}
               onChange={(e) => {
-                setInput(e.target.value);
-                setIsValid(null);
+                const value = e.target.value;
+                setInput(value);
+                if (!value.trim()) {
+                  setIsValid(null);
+                } else {
+                  try {
+                    JSON.parse(value);
+                    setIsValid(true);
+                  } catch {
+                    setIsValid(false);
+                  }
+                }
               }}
               placeholder='{"name": "value", "array": [1, 2, 3]}'
               className="min-h-[200px] font-mono text-sm"
@@ -86,6 +132,9 @@ const JSONFormatter = () => {
               <Button onClick={minify} variant="outline" className="flex-1">
                 <Braces className="w-4 h-4 mr-2" />
                 Minify JSON
+              </Button>
+              <Button onClick={reset} variant="outline" size="icon" className="shrink-0" aria-label="Reset">
+                <RotateCcw className="h-4 w-4" />
               </Button>
             </div>
           </Card>

@@ -9,55 +9,104 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+import { Copy, RotateCcw } from "lucide-react";
+
+type TimeZoneResult = {
+  convertedTime: string;
+};
+
+function computeTimeZoneConversion(time: string, fromZone: string, toZone: string): TimeZoneResult | null {
+  if (!time || !fromZone || !toZone) return null;
+  const match = /^(\d{1,2}):(\d{2})$/.exec(time);
+  if (!match) return null;
+  const hours = parseInt(match[1], 10);
+  const minutes = parseInt(match[2], 10);
+  if (isNaN(hours) || isNaN(minutes) || hours < 0 || hours > 23 || minutes < 0 || minutes > 59) return null;
+  try {
+    const today = new Date();
+    // Create a date object anchored in the "from" timezone
+    const fromDate = new Date(today.toLocaleString("en-US", { timeZone: fromZone }));
+    fromDate.setHours(hours, minutes, 0, 0);
+    const options: Intl.DateTimeFormatOptions = {
+      timeZone: toZone,
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    };
+    const formatter = new Intl.DateTimeFormat([], options);
+    const convertedTime = formatter.format(fromDate);
+    if (!convertedTime) return null;
+    return { convertedTime };
+  } catch {
+    return null;
+  }
+}
 
 const TimeZoneConverter = () => {
-  const [time, setTime] = useState("");
+  const [time, setTime] = useState("12:00");
   const [fromZone, setFromZone] = useState("");
   const [toZone, setToZone] = useState("Europe/London");
-  const [result, setResult] = useState("");
+  const [result, setResult] = useState<TimeZoneResult | null>(null);
   const [timeZones, setTimeZones] = useState<string[]>([]);
   const { toast } = useToast();
 
   useEffect(() => {
     // Set client-side-only values here to avoid hydration mismatch
-    setFromZone(Intl.DateTimeFormat().resolvedOptions().timeZone);
-    setTimeZones(Intl.supportedValuesOf('timeZone'));
-    
+    // Pre-fill realistic defaults + instant result on mount (no toast on init)
+    const localZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const zones = Intl.supportedValuesOf('timeZone');
     const now = new Date();
     const hours = now.getHours().toString().padStart(2, '0');
     const minutes = now.getMinutes().toString().padStart(2, '0');
-    setTime(`${hours}:${minutes}`);
-
+    const currentTime = `${hours}:${minutes}`;
+    const defaultTo = "Europe/London";
+    setFromZone(localZone);
+    setTimeZones(zones);
+    setTime(currentTime);
+    setToZone(defaultTo);
+    const computed = computeTimeZoneConversion(currentTime, localZone, defaultTo);
+    if (computed) setResult(computed);
   }, []);
 
   const convert = () => {
     if (!time) {
-        toast({title: "Error", description: "Please enter a time.", variant: "destructive"});
-        return;
+      toast({ title: "Invalid Input", description: "Please enter a time.", variant: "destructive" });
+      return;
     }
-    
+    if (!/^(\d{1,2}):(\d{2})$/.test(time)) {
+      toast({ title: "Invalid Input", description: "Please enter a valid time in HH:MM format.", variant: "destructive" });
+      return;
+    }
+    const [hStr, mStr] = time.split(':');
+    const h = parseInt(hStr, 10);
+    const m = parseInt(mStr, 10);
+    if (isNaN(h) || isNaN(m) || h < 0 || h > 23 || m < 0 || m > 59) {
+      toast({ title: "Invalid Input", description: "Hours must be 0-23 and minutes 0-59.", variant: "destructive" });
+      return;
+    }
+    if (!fromZone || !toZone) {
+      toast({ title: "Invalid Input", description: "Please select valid from and to time zones.", variant: "destructive" });
+      return;
+    }
+    const computed = computeTimeZoneConversion(time, fromZone, toZone);
+    if (!computed) {
+      toast({ title: "Invalid Input", description: "Invalid date or time zone.", variant: "destructive" });
+      return;
+    }
+    setResult(computed);
+    toast({ title: "Success", description: `Time converted to ${toZone}.` });
+  };
+
+  const reset = () => setResult(null);
+
+  const copyResult = async () => {
+    if (!result) return;
+    const text = `${time} in ${fromZone} is ${result.convertedTime} in ${toZone} — via PrimeMetric`;
     try {
-        const today = new Date();
-        const [hours, minutes] = time.split(':');
-        
-        // Create a date object in the "from" timezone
-        const fromDate = new Date(today.toLocaleString("en-US", { timeZone: fromZone }));
-        fromDate.setHours(parseInt(hours), parseInt(minutes), 0, 0);
-
-        // Format the time in the "to" timezone
-        const options: Intl.DateTimeFormatOptions = {
-          timeZone: toZone,
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: false
-        };
-        const formatter = new Intl.DateTimeFormat([], options);
-        const convertedTime = formatter.format(fromDate);
-
-        setResult(convertedTime);
-        toast({title: "Success", description: `Time converted to ${toZone}.`});
-    } catch (e) {
-        toast({title: "Error", description: "Invalid date or time zone.", variant: "destructive"});
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
     }
   };
 
@@ -82,7 +131,7 @@ const TimeZoneConverter = () => {
                       {fromZone && <SelectItem value={fromZone}>{fromZone}</SelectItem>}
                     </SelectContent>
                     </Select>
-                    <p className="text-xs text-muted-foreground mt-1">Your current time zone is detected.</p>
+                    <p className="text-xs text-neutral-600 mt-1">Your current time zone is detected.</p>
                 </div>
                  <div className="col-span-1 md:col-span-2">
                     <Label>To Time Zone</Label>
@@ -94,11 +143,21 @@ const TimeZoneConverter = () => {
                     </Select>
                 </div>
             </div>
-          <Button onClick={convert} className="w-full gradient-button">Convert Time</Button>
+          <div className="flex gap-2">
+            <Button onClick={convert} className="flex-1 gradient-button">Convert Time</Button>
+            <Button onClick={reset} variant="outline" size="icon" className="h-10 w-10 shrink-0" aria-label="Reset">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
           {result && (
-            <div className="mt-6 p-4 bg-primary/10 rounded-lg text-center">
-              <p className="text-sm text-muted-foreground">Converted Time</p>
-              <p className="text-3xl font-bold text-primary">{result}</p>
+            <div className="mt-6 p-4 bg-[#FFF5F2] rounded-lg text-center">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-sm text-neutral-600">Converted Time</p>
+                <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                  <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                </Button>
+              </div>
+              <p className="text-3xl font-bold text-primary">{result.convertedTime}</p>
             </div>
           )}
         </div>

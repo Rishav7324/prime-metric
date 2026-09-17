@@ -9,6 +9,44 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+import { Copy, RotateCcw } from "lucide-react";
+
+type MacroResult = {
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+};
+
+function computeMacros(genderStr: string, ageStr: string, weightStr: string, heightStr: string, activityStr: string, goalStr: string): MacroResult | null {
+  const w = parseFloat(weightStr);
+  const h = parseFloat(heightStr);
+  const a = parseFloat(ageStr);
+  const activityMultiplier = parseFloat(activityStr);
+
+  if (!(w >= 1 && w <= 500) || !(h >= 50 && h <= 300) || !(a >= 10 && a <= 120)) return null;
+  if (!isFinite(activityMultiplier) || activityMultiplier <= 0) return null;
+
+  const bmr = genderStr === "male" ? 10 * w + 6.25 * h - 5 * a + 5 : 10 * w + 6.25 * h - 5 * a - 161;
+  if (!isFinite(bmr) || bmr <= 0) return null;
+  let tdee = bmr * activityMultiplier;
+
+  if (goalStr === "lose") tdee -= 500;
+  if (goalStr === "gain") tdee += 500;
+  if (!isFinite(tdee) || tdee <= 0) return null;
+
+  const protein = w * 1.6; // A common recommendation: 1.6g of protein per kg of body weight
+  const fat = (tdee * 0.25) / 9;
+  const carbs = (tdee - (protein * 4) - (fat * 9)) / 4;
+  if (!isFinite(carbs) || carbs <= 0 || !isFinite(fat) || fat <= 0) return null;
+
+  return {
+    calories: Math.round(tdee),
+    protein: Math.round(protein),
+    carbs: Math.round(carbs),
+    fat: Math.round(fat),
+  };
+}
 
 const MacroCalculator = () => {
   const [gender, setGender] = useState("male");
@@ -17,45 +55,42 @@ const MacroCalculator = () => {
   const [height, setHeight] = useState("175");
   const [activity, setActivity] = useState("1.55");
   const [goal, setGoal] = useState("maintain");
-  const [result, setResult] = useState<any>(null);
+  // Pre-filled so the result renders instantly (no empty state)
+  const [result, setResult] = useState<MacroResult | null>(() => computeMacros("male", "30", "70", "175", "1.55", "maintain"));
   const { toast } = useToast();
 
   const calculate = () => {
-    const w = parseFloat(weight);
-    const h = parseFloat(height);
-    const a = parseFloat(age);
-    const activityMultiplier = parseFloat(activity);
-
-    if (isNaN(w) || w <= 0 || isNaN(h) || h <= 0 || isNaN(a) || a <= 0) {
+    const computed = computeMacros(gender, age, weight, height, activity, goal);
+    if (!computed) {
       toast({
         variant: "destructive",
         title: "Invalid Input",
-        description: "Please enter valid numbers for age, weight, and height.",
+        description: "Enter weight (1-500 kg), height (50-300 cm), and age (10-120 years).",
       });
       return;
     }
 
-    const bmr = gender === "male" ? 10 * w + 6.25 * h - 5 * a + 5 : 10 * w + 6.25 * h - 5 * a - 161;
-    let tdee = bmr * activityMultiplier;
-
-    if (goal === "lose") tdee -= 500;
-    if (goal === "gain") tdee += 500;
-
-    const protein = w * 1.6; // A common recommendation: 1.6g of protein per kg of body weight
-    const fat = (tdee * 0.25) / 9;
-    const carbs = (tdee - (protein * 4) - (fat * 9)) / 4;
-
-    setResult({
-      calories: tdee.toFixed(0),
-      protein: protein.toFixed(0),
-      carbs: carbs.toFixed(0),
-      fat: fat.toFixed(0),
-    });
+    setResult(computed);
     
     toast({
         title: "Macros Calculated",
         description: `Your daily macronutrient targets have been estimated.`,
     });
+  };
+
+  const reset = () => {
+    setAge(""); setWeight(""); setHeight(""); setResult(null);
+  };
+
+  const copyResult = async () => {
+    if (!result) return;
+    const text = `My daily macros: ${result.calories.toLocaleString()} kcal — protein ${result.protein.toLocaleString()}g, carbs ${result.carbs.toLocaleString()}g, fat ${result.fat.toLocaleString()}g — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
 
   return (
@@ -79,15 +114,15 @@ const MacroCalculator = () => {
             </div>
             <div>
               <Label>Age</Label>
-              <Input type="number" value={age} onChange={(e) => setAge(e.target.value)} placeholder="e.g., 30" />
+              <Input type="number" min={10} max={120} value={age} onChange={(e) => setAge(e.target.value)} placeholder="e.g., 30" />
             </div>
             <div>
               <Label>Weight (kg)</Label>
-              <Input type="number" value={weight} onChange={(e) => setWeight(e.target.value)} placeholder="e.g., 70" />
+              <Input type="number" min={1} max={500} value={weight} onChange={(e) => setWeight(e.target.value)} placeholder="e.g., 70" />
             </div>
             <div>
               <Label>Height (cm)</Label>
-              <Input type="number" value={height} onChange={(e) => setHeight(e.target.value)} placeholder="e.g., 175" />
+              <Input type="number" min={50} max={300} value={height} onChange={(e) => setHeight(e.target.value)} placeholder="e.g., 175" />
             </div>
             <div>
               <Label>Activity Level</Label>
@@ -114,25 +149,35 @@ const MacroCalculator = () => {
               </Select>
             </div>
           </div>
-          <Button onClick={calculate} className="w-full gradient-button">Calculate Macros</Button>
+          <div className="flex gap-2">
+            <Button onClick={calculate} className="flex-1 gradient-button" disabled={!age || !weight || !height}>Calculate Macros</Button>
+            <Button onClick={reset} variant="outline" size="icon" className="shrink-0" aria-label="Reset">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
           {result && (
             <div className="mt-6 space-y-3">
-              <div className="p-4 bg-primary/10 rounded-lg text-center">
-                <p className="text-sm text-muted-foreground">Daily Calorie Target</p>
-                <p className="text-3xl font-bold text-primary">{result.calories} kcal</p>
+              <div className="p-4 bg-[#FFF5F2] rounded-lg text-center">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-sm text-neutral-600">Daily Calorie Target</p>
+                  <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                    <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                  </Button>
+                </div>
+                <p className="text-3xl font-bold text-primary">{result.calories.toLocaleString()} kcal</p>
               </div>
               <div className="grid grid-cols-3 gap-3">
                 <div className="p-3 bg-muted/50 rounded text-center">
-                  <p className="text-sm text-muted-foreground">Protein</p>
-                  <p className="text-lg font-bold">{result.protein}g</p>
+                  <p className="text-sm text-neutral-600">Protein</p>
+                  <p className="text-lg font-bold">{result.protein.toLocaleString()}g</p>
                 </div>
                 <div className="p-3 bg-muted/50 rounded text-center">
-                  <p className="text-sm text-muted-foreground">Carbs</p>
-                  <p className="text-lg font-bold">{result.carbs}g</p>
+                  <p className="text-sm text-neutral-600">Carbs</p>
+                  <p className="text-lg font-bold">{result.carbs.toLocaleString()}g</p>
                 </div>
                 <div className="p-3 bg-muted/50 rounded text-center">
-                  <p className="text-sm text-muted-foreground">Fat</p>
-                  <p className="text-lg font-bold">{result.fat}g</p>
+                  <p className="text-sm text-neutral-600">Fat</p>
+                  <p className="text-lg font-bold">{result.fat.toLocaleString()}g</p>
                 </div>
               </div>
             </div>

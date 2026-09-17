@@ -5,12 +5,39 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
+import { useToast } from "@/hooks/use-toast";
+import { Copy } from "lucide-react";
+
+function evaluateExpression(expr: string): number | null {
+  const trimmed = expr.trim();
+  if (!trimmed || trimmed === "Error") return null;
+  if (!/^[0-9+\-*/.()\s]+$/.test(trimmed)) return null;
+  if (/[+\-*/.(]\s*$/.test(trimmed)) return null;
+  if (/\(\)/.test(trimmed)) return null;
+  try {
+    // For safety, only evaluate math expressions. `eval` can be dangerous.
+    // This is a simplified approach. A production calculator would use a proper math expression parser.
+    const result = new Function('return ' + trimmed)();
+    if (typeof result !== "number" || !Number.isFinite(result)) return null;
+    return result;
+  } catch {
+    return null;
+  }
+}
+
+const fmtSci = (n: number) =>
+  n.toLocaleString(undefined, { maximumFractionDigits: 6 });
 
 const ScientificCalculator = () => {
   const [display, setDisplay] = useState("0");
   const [isRad, setIsRad] = useState(true);
+  const { toast } = useToast();
 
   const handleInput = (value: string) => {
+    if (display === "Error") {
+      setDisplay("0123456789.".includes(value) ? (value === "." ? "0." : value) : "0" + value);
+      return;
+    }
     if (display === "0" && "0123456789.".includes(value)) {
         setDisplay(value);
         return;
@@ -29,39 +56,99 @@ const ScientificCalculator = () => {
   };
 
   const calculate = () => {
-    try {
-      // For safety, only evaluate math expressions. `eval` can be dangerous.
-      // This is a simplified approach. A production calculator would use a proper math expression parser.
-      const result = new Function('return ' + display)();
-      setDisplay(String(result));
-    } catch (e) {
+    const computed = evaluateExpression(display);
+    if (computed === null) {
+      const trimmed = display.trim();
+      if (!trimmed || display === "Error") {
+        toast({ variant: "destructive", title: "Invalid Input", description: "Enter a valid expression before pressing =." });
+      } else if (!/^[0-9+\-*/.()\s]+$/.test(trimmed)) {
+        toast({ variant: "destructive", title: "Invalid Input", description: "Expression contains invalid characters. Use numbers and + - × ÷ only." });
+      } else if (/[+\-*/.(]\s*$/.test(trimmed)) {
+        toast({ variant: "destructive", title: "Invalid Input", description: "Expression cannot end with an operator. Add a number after it." });
+      } else {
+        toast({ variant: "destructive", title: "Invalid Expression", description: "Could not evaluate. Check for division by zero or malformed input." });
+      }
       setDisplay("Error");
+      return;
     }
+    setDisplay(String(computed));
+    toast({ title: "Calculation Complete", description: `Result is ${fmtSci(computed)}.` });
   };
 
   const handleFunction = (fn: string) => {
+    if (display === "Error") {
+      toast({ variant: "destructive", title: "Invalid Input", description: "Press C to clear the error first." });
+      return;
+    }
     try {
       const current = parseFloat(display);
-      let result;
+      if (!Number.isFinite(current)) {
+        toast({ variant: "destructive", title: "Invalid Input", description: "Enter a valid number first." });
+        setDisplay("Error");
+        return;
+      }
+      let result: number | string | undefined;
       switch(fn) {
-        case 'sqrt': result = Math.sqrt(current); break;
+        case 'sqrt':
+          if (current < 0) {
+            toast({ variant: "destructive", title: "Invalid Input", description: "Cannot take the square root of a negative number." });
+            setDisplay("Error");
+            return;
+          }
+          result = Math.sqrt(current); break;
         case 'sq': result = Math.pow(current, 2); break;
         case 'sin': result = isRad ? Math.sin(current) : Math.sin(current * Math.PI / 180); break;
         case 'cos': result = isRad ? Math.cos(current) : Math.cos(current * Math.PI / 180); break;
         case 'tan': result = isRad ? Math.tan(current) : Math.tan(current * Math.PI / 180); break;
-        case 'log': result = Math.log10(current); break;
-        case 'ln': result = Math.log(current); break;
+        case 'log':
+          if (current <= 0) {
+            toast({ variant: "destructive", title: "Invalid Input", description: "log requires a positive number." });
+            setDisplay("Error");
+            return;
+          }
+          result = Math.log10(current); break;
+        case 'ln':
+          if (current <= 0) {
+            toast({ variant: "destructive", title: "Invalid Input", description: "ln requires a positive number." });
+            setDisplay("Error");
+            return;
+          }
+          result = Math.log(current); break;
         case 'pi': setDisplay(display === "0" ? String(Math.PI) : display + String(Math.PI)); return;
         default: result = "Error";
       }
-      setDisplay(String(result));
-    } catch(e) {
+      if (typeof result === "number") {
+        if (!Number.isFinite(result)) {
+          toast({ variant: "destructive", title: "Invalid Result", description: "Result is undefined (e.g., division by zero)." });
+          setDisplay("Error");
+          return;
+        }
+        setDisplay(String(result));
+      } else {
+        toast({ variant: "destructive", title: "Invalid Input", description: "Unknown function." });
+        setDisplay("Error");
+      }
+    } catch {
+      toast({ variant: "destructive", title: "Invalid Input", description: "Could not apply function to current value." });
       setDisplay("Error");
     }
   }
 
   const clear = () => setDisplay("0");
-  const backspace = () => setDisplay(display.length > 1 ? display.slice(0, -1) : "0");
+  const backspace = () => setDisplay(display.length > 1 && display !== "Error" ? display.slice(0, -1) : "0");
+
+  const copyDisplay = async () => {
+    if (display === "Error") {
+      toast({ variant: "destructive", title: "Invalid Input", description: "Nothing valid to copy." });
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(display);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
+  };
 
   const buttons = [
     'sin', 'cos', 'tan', 'C',
@@ -92,6 +179,9 @@ const ScientificCalculator = () => {
           {display}
         </div>
          <div className="flex justify-end my-2">
+            <Button variant="ghost" size="sm" onClick={copyDisplay} aria-label="Copy result">
+              <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+            </Button>
             <Button variant="ghost" size="sm" onClick={() => setIsRad(!isRad)}>
               {isRad ? 'RAD' : 'DEG'}
             </Button>

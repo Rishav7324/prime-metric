@@ -9,36 +9,58 @@ import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
 import { CurrencySelector, getCurrencySymbol } from "@/components/CurrencySelector";
+import { Copy, RotateCcw } from "lucide-react";
+
+type SwpResult = { years: number | "Infinity"; months: number | "Infinity"; perpetual: boolean };
+
+function computeSwp(initialStr: string, withdrawalStr: string, returnStr: string): SwpResult | null {
+  const p = parseFloat(initialStr);
+  const w = parseFloat(withdrawalStr);
+  const annual = parseFloat(returnStr);
+  if (!(p > 0 && p <= 1e12) || !(w > 0 && w <= 1e9) || isNaN(annual) || annual < -50 || annual > 100) {
+    return null;
+  }
+  const r = annual / 100 / 12;
+  if (r === 0) {
+    const n = p / w;
+    if (!isFinite(n) || n < 0) return null;
+    return { years: Math.floor(n / 12), months: Math.floor(n % 12), perpetual: false };
+  }
+  if (r > 0 && p * r >= w) {
+    return { years: "Infinity", months: "Infinity", perpetual: true };
+  }
+  if (w - p * r <= 0) return null;
+  const n = Math.log(w / (w - p * r)) / Math.log(1 + r);
+  if (!isFinite(n) || isNaN(n) || n < 0) return null;
+  return { years: Math.floor(n / 12), months: Math.floor(n % 12), perpetual: false };
+}
 
 const SwpCalculator = () => {
   const [initialInvestment, setInitialInvestment] = useState("100000");
   const [monthlyWithdrawal, setMonthlyWithdrawal] = useState("500");
   const [returnRate, setReturnRate] = useState("7");
   const [currency, setCurrency] = useState("USD");
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<SwpResult | null>(() => computeSwp("100000", "500", "7"));
   const { toast } = useToast();
   const currencySymbol = getCurrencySymbol(currency);
 
-  const calculate = () => {
-    const p = parseFloat(initialInvestment);
-    const w = parseFloat(monthlyWithdrawal);
-    const r = parseFloat(returnRate) / 100 / 12;
+  const fmt = (n: number) =>
+    n.toLocaleString("en-US", { maximumFractionDigits: 2, minimumFractionDigits: 2 });
 
-    if (isNaN(p) || p <= 0 || isNaN(w) || w <= 0 || isNaN(r)) {
+  const calculate = () => {
+    const computed = computeSwp(initialInvestment, monthlyWithdrawal, returnRate);
+    if (!computed) {
       toast({
         variant: "destructive",
         title: "Invalid Input",
-        description: "Please enter valid, positive numbers for all fields.",
+        description: "Enter investment (1+), withdrawal (1+), return (-50 to 100%).",
       });
       return;
     }
 
-    if (p * r >= w) {
-        setResult({
-          years: "Infinity",
-          months: "Infinity",
-          finalValue: "Grows forever"
-        });
+    setResult(computed);
+
+    if (computed.perpetual) {
         toast({
             title: "Investment will not deplete",
             description: "Your withdrawals are less than or equal to your investment returns.",
@@ -46,20 +68,27 @@ const SwpCalculator = () => {
         return;
     }
 
-    const n = Math.log(w / (w - p * r)) / Math.log(1 + r);
-    const years = Math.floor(n / 12);
-    const months = Math.floor(n % 12);
-
-    setResult({
-      years: years,
-      months: months,
-      finalValue: `Your investment will last for ${years} years and ${months} months.`
-    });
-
     toast({
         title: "Calculation Complete",
-        description: `Your investment will last for ${years} years and ${months} months.`,
+        description: `Your investment will last for ${computed.years} years and ${computed.months} months.`,
     });
+  };
+
+  const reset = () => { setInitialInvestment(""); setMonthlyWithdrawal(""); setReturnRate(""); setResult(null); };
+
+  const copyResult = async () => {
+    if (!result) return;
+    const pNum = parseFloat(initialInvestment);
+    const wNum = parseFloat(monthlyWithdrawal);
+    const text = result.perpetual
+      ? `SWP: ${currencySymbol}${fmt(isNaN(pNum) ? 0 : pNum)} with ${currencySymbol}${fmt(isNaN(wNum) ? 0 : wNum)}/month at ${returnRate}% lasts forever (withdrawals covered by returns). — via PrimeMetric`
+      : `SWP: ${currencySymbol}${fmt(isNaN(pNum) ? 0 : pNum)} with ${currencySymbol}${fmt(isNaN(wNum) ? 0 : wNum)}/month at ${returnRate}% lasts ${result.years} years and ${result.months} months. — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
 
   return (
@@ -85,13 +114,25 @@ const SwpCalculator = () => {
               <Input type="number" value={returnRate} onChange={(e) => setReturnRate(e.target.value)} placeholder="e.g., 7" />
             </div>
           </div>
-          <Button onClick={calculate} className="w-full gradient-button">Calculate SWP</Button>
+          <div className="flex gap-2">
+            <Button onClick={calculate} className="flex-1 gradient-button">Calculate SWP</Button>
+            <Button onClick={reset} variant="outline" size="icon" className="h-10 w-10 shrink-0" aria-label="Reset">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
           {result && (
-            <div className="mt-6 p-4 bg-primary/10 rounded-lg text-center">
-              <p className="text-sm text-muted-foreground">Your investment will last for</p>
-              <p className="text-3xl font-bold text-primary">
-                {result.years === "Infinity" ? "an infinite time" : `${result.years} years and ${result.months} months`}
-              </p>
+            <div className="mt-6 space-y-3">
+              <div className="flex justify-end">
+                <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                  <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                </Button>
+              </div>
+              <div className="p-4 bg-[#FFF5F2] rounded-lg text-center">
+                <p className="text-sm text-neutral-600">Your investment will last for</p>
+                <p className="text-3xl font-bold text-primary">
+                  {result.years === "Infinity" ? "an infinite time" : `${result.years} years and ${result.months} months`}
+                </p>
+              </div>
             </div>
           )}
         </div>

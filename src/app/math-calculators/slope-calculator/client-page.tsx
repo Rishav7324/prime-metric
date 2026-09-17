@@ -8,48 +8,102 @@ import { Button } from "@/components/ui/button";
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+import { Copy, RotateCcw } from "lucide-react";
+
+type SlopeResult = {
+  slope: number | null;
+  intercept: number | null;
+  vertical: boolean;
+  equation: string;
+};
+
+const fmtSlope = (n: number) =>
+  n.toLocaleString(undefined, { maximumFractionDigits: 4 });
+
+function computeSlope(x1Str: string, y1Str: string, x2Str: string, y2Str: string): SlopeResult | null {
+  const p1x = parseFloat(x1Str);
+  const p1y = parseFloat(y1Str);
+  const p2x = parseFloat(x2Str);
+  const p2y = parseFloat(y2Str);
+  if (![p1x, p1y, p2x, p2y].every((v) => Number.isFinite(v))) return null;
+  if ([p1x, p1y, p2x, p2y].some((v) => Math.abs(v) > 1_000_000_000)) return null;
+  if (p2x - p1x === 0) {
+    if (p2y - p1y === 0) return null;
+    return { slope: null, intercept: null, vertical: true, equation: `x = ${fmtSlope(p1x)}` };
+  }
+  const slope = (p2y - p1y) / (p2x - p1x);
+  const yIntercept = p1y - slope * p1x;
+  if (!Number.isFinite(slope) || !Number.isFinite(yIntercept)) return null;
+  return {
+    slope,
+    intercept: yIntercept,
+    vertical: false,
+    equation: `y = ${fmtSlope(slope)}x + ${fmtSlope(yIntercept)}`,
+  };
+}
 
 const SlopeCalculator = () => {
-  const [x1, setX1] = useState("");
-  const [y1, setY1] = useState("");
-  const [x2, setX2] = useState("");
-  const [y2, setY2] = useState("");
-  const [result, setResult] = useState<any>(null);
+  const [x1, setX1] = useState("0");
+  const [y1, setY1] = useState("0");
+  const [x2, setX2] = useState("4");
+  const [y2, setY2] = useState("2");
+  // Pre-filled so the result renders instantly (no empty state)
+  const [result, setResult] = useState<SlopeResult | null>(() => computeSlope("0", "0", "4", "2"));
   const { toast } = useToast();
 
   const calculate = () => {
-    const p1x = parseFloat(x1);
-    const p1y = parseFloat(y1);
-    const p2x = parseFloat(x2);
-    const p2y = parseFloat(y2);
-
-    if (isNaN(p1x) || isNaN(p1y) || isNaN(p2x) || isNaN(p2y)) {
-      toast({
-        variant: "destructive",
-        title: "Invalid Input",
-        description: "Please enter valid numbers for all coordinates.",
-      });
+    const computed = computeSlope(x1, y1, x2, y2);
+    if (!computed) {
+      const vals = [parseFloat(x1), parseFloat(y1), parseFloat(x2), parseFloat(y2)];
+      if (vals.some((v) => !Number.isFinite(v))) {
+        toast({
+          variant: "destructive",
+          title: "Invalid Input",
+          description: "Please enter valid numbers for all coordinates.",
+        });
+      } else if (x1 === x2 && y1 === y2) {
+        toast({
+          variant: "destructive",
+          title: "Invalid Input",
+          description: "The two points must be different (identical points have no defined slope).",
+        });
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Invalid Input",
+          description: "Coordinate values must be within ±1,000,000,000.",
+        });
+      }
       return;
     }
-    
-    if(p2x - p1x === 0) {
-        setResult({ slope: "Undefined (vertical line)", equation: `x = ${p1x}` });
-        toast({ title: "Result", description: "The line is vertical."});
-        return;
+
+    if (computed.vertical) {
+      setResult(computed);
+      toast({ title: "Result", description: "The line is vertical (undefined slope)." });
+      return;
     }
 
-    const slope = (p2y - p1y) / (p2x - p1x);
-    const yIntercept = p1y - slope * p1x;
-    
-    setResult({
-      slope: slope.toFixed(4),
-      equation: `y = ${slope.toFixed(4)}x + ${yIntercept.toFixed(4)}`
-    });
-
+    setResult(computed);
     toast({
-        title: "Slope Calculated",
-        description: `The slope of the line is ${slope.toFixed(4)}.`,
+      title: "Slope Calculated",
+      description: `The slope of the line is ${fmtSlope(computed.slope as number)}.`,
     });
+  };
+
+  const reset = () => {
+    setX1(""); setY1(""); setX2(""); setY2(""); setResult(null);
+  };
+
+  const copyResult = async () => {
+    if (!result) return;
+    const slopeText = result.vertical ? "Undefined (vertical line)" : fmtSlope(result.slope as number);
+    const text = `Slope: ${slopeText}. Equation: ${result.equation} — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
 
   return (
@@ -77,15 +131,25 @@ const SlopeCalculator = () => {
               </div>
             </div>
           </div>
-          <Button onClick={calculate} className="w-full gradient-button">Calculate Slope</Button>
+          <div className="flex gap-2">
+            <Button onClick={calculate} className="flex-1 gradient-button">Calculate Slope</Button>
+            <Button onClick={reset} variant="outline" size="icon" className="shrink-0" aria-label="Reset">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
           {result && (
             <div className="mt-6 space-y-3">
-              <div className="p-4 bg-primary/10 rounded-lg text-center">
-                <p className="text-sm text-muted-foreground">Slope (m)</p>
-                <p className="text-3xl font-bold text-primary">{result.slope}</p>
+              <div className="p-4 bg-[#FFF5F2] rounded-lg">
+                <div className="flex items-center justify-between mb-1">
+                  <p className="text-sm text-neutral-600">Slope (m)</p>
+                  <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                    <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                  </Button>
+                </div>
+                <p className="text-3xl font-bold text-primary text-center">{result.vertical ? "Undefined (vertical line)" : fmtSlope(result.slope as number)}</p>
               </div>
               <div className="p-3 bg-muted/50 rounded text-center">
-                <p className="text-sm text-muted-foreground">Equation of the Line</p>
+                <p className="text-sm text-neutral-600">Equation of the Line</p>
                 <p className="text-lg font-bold">{result.equation}</p>
               </div>
             </div>

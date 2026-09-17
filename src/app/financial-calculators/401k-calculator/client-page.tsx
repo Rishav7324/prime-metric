@@ -9,6 +9,54 @@ import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
 import { CurrencySelector, getCurrencySymbol } from "@/components/CurrencySelector";
+import { Copy, RotateCcw } from "lucide-react";
+
+type K401Result = { total: number };
+
+function computeK401(
+  ageStr: string,
+  retAgeStr: string,
+  balanceStr: string,
+  salaryStr: string,
+  contribStr: string,
+  matchStr: string,
+  returnStr: string
+): K401Result | null {
+  const age = parseInt(ageStr);
+  const retAge = parseInt(retAgeStr);
+  const principal = parseFloat(balanceStr);
+  const salary = parseFloat(salaryStr);
+  const userContrib = parseFloat(contribStr);
+  const employerMatch = parseFloat(matchStr);
+  const annualReturn = parseFloat(returnStr);
+
+  if (isNaN(age) || age < 18 || age > 100) return null;
+  if (isNaN(retAge) || retAge < 18 || retAge > 100 || retAge <= age) return null;
+  if (isNaN(principal) || principal < 0 || principal > 1e12) return null;
+  if (!(salary > 0 && salary <= 1e9)) return null;
+  if (isNaN(userContrib) || userContrib < 0 || userContrib > 100) return null;
+  if (isNaN(employerMatch) || employerMatch < 0 || employerMatch > 100) return null;
+  if (isNaN(annualReturn) || annualReturn < 0 || annualReturn > 100) return null;
+
+  const userContribPercent = userContrib / 100;
+  const employerMatchPercent = employerMatch / 100;
+  const rate = annualReturn / 100;
+
+  let futureValue = principal;
+  let currentSalary = salary;
+  const yearsToRetirement = retAge - age;
+
+  for (let i = 0; i < yearsToRetirement; i++) {
+    const userContribution = currentSalary * userContribPercent;
+    const employerContribution = currentSalary * employerMatchPercent;
+    const totalContribution = userContribution + employerContribution;
+
+    futureValue = (futureValue + totalContribution) * (1 + rate);
+    currentSalary *= 1.02; // Assuming 2% annual salary increase
+  }
+
+  return { total: futureValue };
+}
 
 const K401Calculator = () => {
   const [currentAge, setCurrentAge] = useState("30");
@@ -19,47 +67,44 @@ const K401Calculator = () => {
   const [employerMatch, setEmployerMatch] = useState("5");
   const [returnRate, setReturnRate] = useState("7");
   const [currency, setCurrency] = useState("USD");
-  const [result, setResult] = useState<any>(null);
+  // Pre-filled so the result renders instantly (no empty state)
+  const [result, setResult] = useState<K401Result | null>(() => computeK401("30", "65", "50000", "80000", "10", "5", "7"));
   const { toast } = useToast();
   
   const currencySymbol = getCurrencySymbol(currency);
 
-  const calculate = () => {
-    const age = parseInt(currentAge);
-    const retAge = parseInt(retirementAge);
-    const principal = parseFloat(currentBalance);
-    const salary = parseFloat(annualSalary);
-    const userContribPercent = parseFloat(contribution) / 100;
-    const employerMatchPercent = parseFloat(employerMatch) / 100;
-    const rate = parseFloat(returnRate) / 100;
+  const fmt = (n: number) =>
+    n.toLocaleString("en-US", { maximumFractionDigits: 2, minimumFractionDigits: 2 });
 
-    if (isNaN(age) || isNaN(retAge) || retAge <= age || isNaN(principal) || isNaN(salary) || isNaN(userContribPercent) || isNaN(employerMatchPercent) || isNaN(rate)) {
+  const calculate = () => {
+    const computed = computeK401(currentAge, retirementAge, currentBalance, annualSalary, contribution, employerMatch, returnRate);
+    if (!computed) {
       toast({
         variant: "destructive",
         title: "Invalid Input",
-        description: "Please enter valid numbers for all fields.",
+        description: "Enter ages 18-100 (retirement > current), salary (1+), balance (0+), contributions 0-100%, return 0-100%.",
       });
       return;
     }
 
-    let futureValue = principal;
-    let currentSalary = salary;
-    const yearsToRetirement = retAge - age;
-
-    for (let i = 0; i < yearsToRetirement; i++) {
-        const userContribution = currentSalary * userContribPercent;
-        const employerContribution = currentSalary * employerMatchPercent;
-        const totalContribution = userContribution + employerContribution;
-        
-        futureValue = (futureValue + totalContribution) * (1 + rate);
-        currentSalary *= 1.02; // Assuming 2% annual salary increase
-    }
-
-    setResult({ total: futureValue });
+    setResult(computed);
     toast({
         title: "Calculation Complete",
-        description: `Your estimated 401(k) balance at retirement is ${currencySymbol}${futureValue.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0})}.`,
+        description: `Your estimated 401(k) balance at retirement is ${currencySymbol}${fmt(computed.total)}.`,
     });
+  };
+
+  const reset = () => { setCurrentAge(""); setRetirementAge(""); setCurrentBalance(""); setAnnualSalary(""); setContribution(""); setEmployerMatch(""); setReturnRate(""); setResult(null); };
+
+  const copyResult = async () => {
+    if (!result) return;
+    const text = `401(k) at retirement: ${currencySymbol}${fmt(result.total)} (age ${currentAge}→${retirementAge}, salary ${currencySymbol}${fmt(parseFloat(annualSalary) || 0)}). — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
 
   return (
@@ -101,11 +146,21 @@ const K401Calculator = () => {
               <Input type="number" value={returnRate} onChange={(e) => setReturnRate(e.target.value)} placeholder="e.g., 7" />
             </div>
           </div>
-          <Button onClick={calculate} className="w-full gradient-button">Calculate</Button>
+          <div className="flex gap-2">
+            <Button onClick={calculate} className="flex-1 gradient-button">Calculate</Button>
+            <Button onClick={reset} variant="outline" size="icon" className="h-10 w-10 shrink-0" aria-label="Reset">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
           {result && (
-            <div className="mt-6 p-4 bg-primary/10 rounded-lg text-center">
-              <p className="text-sm text-muted-foreground">Estimated 401(k) at Retirement</p>
-              <p className="text-3xl font-bold text-primary">{currencySymbol}{result.total.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0})}</p>
+            <div className="mt-6 p-4 bg-[#FFF5F2] rounded-lg text-center">
+              <div className="flex items-center justify-end mb-2">
+                <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                  <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                </Button>
+              </div>
+              <p className="text-sm text-neutral-600">Estimated 401(k) at Retirement</p>
+              <p className="text-3xl font-bold text-primary">{currencySymbol}{fmt(result.total)}</p>
             </div>
           )}
         </div>

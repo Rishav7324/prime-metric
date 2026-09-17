@@ -8,52 +8,147 @@ import { Button } from "@/components/ui/button";
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+import { Copy, RotateCcw } from "lucide-react";
+
+type ProportionResult = {
+  x: number;
+  formattedX: string;
+  label: string;
+};
+
+type SimplifiedResult = {
+  simplifiedA: number;
+  simplifiedB: number;
+  divisor: number;
+  label: string;
+};
+
+function gcd(x: number, y: number): number {
+  const ax = Math.abs(Math.trunc(x));
+  const ay = Math.abs(Math.trunc(y));
+  return ay === 0 ? ax : gcd(ay, ax % ay);
+}
+
+function formatDecimal(n: number, fractionDigits = 4): string {
+  return n.toLocaleString(undefined, {
+    minimumFractionDigits: fractionDigits,
+    maximumFractionDigits: fractionDigits,
+  });
+}
+
+function computeProportion(aStr: string, bStr: string, cStr: string): ProportionResult | null {
+  if (aStr.trim() === "" || bStr.trim() === "" || cStr.trim() === "") return null;
+  const valA = parseFloat(aStr);
+  const valB = parseFloat(bStr);
+  const valC = parseFloat(cStr);
+  if (!Number.isFinite(valA) || !Number.isFinite(valB) || !Number.isFinite(valC)) return null;
+  if (valA === 0) return null;
+  const x = (valB * valC) / valA;
+  if (!Number.isFinite(x)) return null;
+  const formattedX = formatDecimal(x);
+  return { x, formattedX, label: `${aStr.trim()}:${bStr.trim()} = ${cStr.trim()}:${formattedX}` };
+}
+
+function computeSimplifiedRatio(aStr: string, bStr: string): SimplifiedResult | null {
+  if (aStr.trim() === "" || bStr.trim() === "") return null;
+  const valA = Number(aStr);
+  const valB = Number(bStr);
+  if (!Number.isFinite(valA) || !Number.isFinite(valB)) return null;
+  if (!Number.isInteger(valA) || !Number.isInteger(valB)) return null;
+  if (valA <= 0 || valB <= 0) return null;
+  const divisor = gcd(valA, valB);
+  if (!Number.isFinite(divisor) || divisor <= 0) return null;
+  const simplifiedA = valA / divisor;
+  const simplifiedB = valB / divisor;
+  return {
+    simplifiedA,
+    simplifiedB,
+    divisor,
+    label: `Simplified ratio is ${simplifiedA.toLocaleString()}:${simplifiedB.toLocaleString()}`,
+  };
+}
+
+const DEFAULT_A = "10";
+const DEFAULT_B = "15";
+const DEFAULT_C = "20";
+const DEFAULT_PROPORTION = computeProportion(DEFAULT_A, DEFAULT_B, DEFAULT_C);
 
 const RatioCalculator = () => {
-  const [a, setA] = useState("");
-  const [b, setB] = useState("");
-  const [c, setC] = useState("");
-  const [d, setD] = useState("");
-  const [result, setResult] = useState("");
+  const [a, setA] = useState(DEFAULT_A);
+  const [b, setB] = useState(DEFAULT_B);
+  const [c, setC] = useState(DEFAULT_C);
+  // Pre-filled so the result renders instantly (no empty state, no toast on init)
+  const [d, setD] = useState(DEFAULT_PROPORTION ? DEFAULT_PROPORTION.formattedX : "");
+  const [result, setResult] = useState<string | null>(() => (DEFAULT_PROPORTION ? DEFAULT_PROPORTION.label : null));
   const { toast } = useToast();
   
-  const gcd = (x: number, y: number): number => {
-    return y === 0 ? x : gcd(y, x % y);
-  };
-  
   const solveForX = () => {
+    if (a.trim() === "" || b.trim() === "" || c.trim() === "") {
+      toast({title: "Invalid Input", description: "Please enter numbers for A, B, and C.", variant: "destructive"});
+      return;
+    }
     const valA = parseFloat(a);
     const valB = parseFloat(b);
     const valC = parseFloat(c);
-    
-    if(!isNaN(valA) && !isNaN(valB) && !isNaN(valC)) {
-      if (valA === 0) {
-        toast({title: "Error", description: "Value A cannot be zero in a proportion.", variant: "destructive"});
-        return;
-      }
-      const x = (valB * valC) / valA;
-      setD(x.toFixed(4));
-      setResult(`${a}:${b} = ${c}:${x.toFixed(4)}`);
-      toast({title: "Success", description: `Calculated missing value: ${x.toFixed(4)}`});
-    } else {
-      toast({title: "Error", description: "Please enter numbers for A, B, and C.", variant: "destructive"});
+    if (!Number.isFinite(valA) || !Number.isFinite(valB) || !Number.isFinite(valC)) {
+      toast({title: "Invalid Input", description: "A, B, and C must be valid numbers.", variant: "destructive"});
+      return;
     }
+    if (valA === 0) {
+      toast({title: "Cannot Divide by Zero", description: "Value A cannot be zero in a proportion (x = B × C / A).", variant: "destructive"});
+      return;
+    }
+    const computed = computeProportion(a, b, c);
+    if (!computed || !Number.isFinite(computed.x)) {
+      toast({title: "Invalid Input", description: "Could not solve the proportion with these values.", variant: "destructive"});
+      return;
+    }
+    setD(computed.formattedX);
+    setResult(computed.label);
+    toast({title: "Proportion Solved", description: `Calculated missing value: ${computed.formattedX}`});
   }
   
   const simplifyRatio = () => {
-      const valA = parseInt(a);
-      const valB = parseInt(b);
-      
-      if(!isNaN(valA) && !isNaN(valB) && valA > 0 && valB > 0) {
-          const divisor = gcd(valA, valB);
-          const simplifiedA = valA / divisor;
-          const simplifiedB = valB / divisor;
-          setResult(`Simplified ratio is ${simplifiedA}:${simplifiedB}`);
-          toast({title: "Success", description: "Ratio simplified."});
-      } else {
-          toast({title: "Error", description: "Please enter positive integers for A and B to simplify.", variant: "destructive"});
+      if (a.trim() === "" || b.trim() === "") {
+        toast({title: "Invalid Input", description: "Please enter positive integers for A and B to simplify.", variant: "destructive"});
+        return;
       }
+      const valA = Number(a);
+      const valB = Number(b);
+      if (!Number.isFinite(valA) || !Number.isFinite(valB) || isNaN(valA) || isNaN(valB)) {
+        toast({title: "Invalid Input", description: "A and B must be valid numbers.", variant: "destructive"});
+        return;
+      }
+      if (!Number.isInteger(valA) || !Number.isInteger(valB) || valA <= 0 || valB <= 0) {
+        toast({title: "Invalid Input", description: "Please enter positive integers for A and B to simplify.", variant: "destructive"});
+        return;
+      }
+      const computed = computeSimplifiedRatio(a, b);
+      if (!computed) {
+        toast({title: "Invalid Input", description: "Please enter positive integers for A and B to simplify.", variant: "destructive"});
+        return;
+      }
+      setResult(computed.label);
+      toast({title: "Ratio Simplified", description: computed.label});
   }
+
+  const reset = () => {
+    setA("");
+    setB("");
+    setC("");
+    setD("");
+    setResult(null);
+  };
+
+  const copyResult = async () => {
+    if (!result) return;
+    try {
+      await navigator.clipboard.writeText(result);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
+  };
 
   return (
     <CalculatorLayout
@@ -70,6 +165,9 @@ const RatioCalculator = () => {
             <div className="flex-1"><Label>C</Label><Input value={c} onChange={e=>setC(e.target.value)} placeholder="C" /></div>
             <div className="flex-1"><Label>X (Result)</Label><Input value={d} readOnly placeholder="X" /></div>
             <Button onClick={solveForX}>Solve</Button>
+            <Button onClick={reset} variant="outline" size="icon" className="h-10 w-10 shrink-0" aria-label="Reset">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
           </div>
         </Card>
         
@@ -79,10 +177,23 @@ const RatioCalculator = () => {
             <div className="flex-1"><Label>A</Label><Input value={a} onChange={e=>setA(e.target.value)} placeholder="e.g., 10" /></div>
             <div className="flex-1"><Label>B</Label><Input value={b} onChange={e=>setB(e.target.value)} placeholder="e.g., 20" /></div>
             <Button onClick={simplifyRatio}>Simplify</Button>
+            <Button onClick={reset} variant="outline" size="icon" className="h-10 w-10 shrink-0" aria-label="Reset">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
           </div>
         </Card>
         
-        {result && <div className="mt-4 p-4 bg-muted rounded-lg text-center font-bold text-xl">{result}</div>}
+        {result && (
+          <div className="mt-4 p-4 bg-muted rounded-lg">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-medium text-neutral-600">Your Result</span>
+              <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+              </Button>
+            </div>
+            <div className="text-center font-bold text-xl">{result}</div>
+          </div>
+        )}
       </div>
       
        <CalculatorContentSection

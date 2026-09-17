@@ -1,9 +1,13 @@
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
+import { useToast } from "@/hooks/use-toast";
+import { Copy, RotateCcw, Search } from "lucide-react";
 
 const majorCities = [
     { name: "New York", timeZone: "America/New_York" },
@@ -74,18 +78,27 @@ interface CityTime {
 const WorldClockClient = () => {
   const [times, setTimes] = useState<CityTime[]>([]);
   const [localTime, setLocalTime] = useState<string>("--:--:--");
+  const [query, setQuery] = useState<string>("");
+  const [showSeconds, setShowSeconds] = useState<boolean>(true);
+  const { toast } = useToast();
 
   useEffect(() => {
-    const updateClocks = () => {
+    const updateClocks = (): void => {
       const now = new Date();
-      setLocalTime(now.toLocaleTimeString());
+      setLocalTime(
+        now.toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+          ...(showSeconds ? { second: "2-digit" as const } : {}),
+        })
+      );
       
-      const cityTimes = majorCities.map(city => {
+      const cityTimes: CityTime[] = majorCities.map(city => {
         const options: Intl.DateTimeFormatOptions = {
           timeZone: city.timeZone,
           hour: '2-digit',
           minute: '2-digit',
-          second: '2-digit',
+          ...(showSeconds ? { second: '2-digit' as const } : {}),
           hour12: false,
         };
         const timeFormatter = new Intl.DateTimeFormat('en-US', options);
@@ -118,7 +131,36 @@ const WorldClockClient = () => {
     const intervalId = setInterval(updateClocks, 1000); // Update every second
 
     return () => clearInterval(intervalId); // Cleanup on unmount
-  }, []);
+  }, [showSeconds]);
+
+  const filteredTimes: CityTime[] = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return times;
+    return times.filter(city => city.name.toLowerCase().includes(q) || city.offset.toLowerCase().includes(q));
+  }, [times, query]);
+
+  const handleReset = (): void => {
+    setQuery("");
+    toast({ title: "Filter Cleared", description: "Showing all cities." });
+  };
+
+  const copyResult = async (): Promise<void> => {
+    if (filteredTimes.length === 0) {
+      toast({ variant: "destructive", title: "Nothing to copy", description: "No cities match the current filter." });
+      return;
+    }
+    const lines: string[] = [
+      `Local time: ${localTime}`,
+      ...filteredTimes.map(city => `${city.name}: ${city.time} (${city.date}, ${city.offset})`),
+    ];
+    const text = `${lines.join("\n")} — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
+  };
 
   return (
     <CalculatorLayout
@@ -127,22 +169,45 @@ const WorldClockClient = () => {
       canonicalUrl="/other-calculators/world-clock"
     >
       <div className="max-w-6xl mx-auto">
-        <Card className="p-6 mb-8 text-center max-w-sm mx-auto">
-            <p className="text-muted-foreground">Your Local Time</p>
-            <p className="text-4xl font-bold">{localTime}</p>
+        <Card className="p-6 mb-8 text-center max-w-sm mx-auto border-primary shadow-md">
+            <p className="text-neutral-600">Your Local Time</p>
+            <p className="text-2xl font-bold">{localTime}</p>
         </Card>
+        <div className="flex flex-col sm:flex-row gap-2 mb-4 max-w-2xl mx-auto">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-500" />
+            <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search cities..." className="pl-9" aria-label="Search cities" />
+          </div>
+          <div className="flex gap-2 justify-center">
+            <Button onClick={() => setShowSeconds(prev => !prev)} variant="outline" size="sm" className="h-10 text-xs">
+              {showSeconds ? "Hide seconds" : "Show seconds"}
+            </Button>
+            <Button onClick={copyResult} variant="outline" size="sm" className="h-10 text-xs">
+              <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+            </Button>
+            <Button onClick={handleReset} variant="outline" size="icon" className="h-10 w-10 shrink-0" aria-label="Reset filter">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+        <p className="text-center text-sm text-neutral-600 mb-4">
+          Showing {filteredTimes.length.toLocaleString()} of {times.length.toLocaleString()} cities
+        </p>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {times.map((city, index) => (
-            <Card key={index} className="p-4 flex justify-between items-center">
+          {filteredTimes.map((city, index) => (
+            <Card key={`${city.name}-${index}`} className="p-4 flex justify-between items-center">
                 <div>
                     <p className="text-xl font-semibold">{city.name}</p>
-                    <p className="text-sm text-muted-foreground">{city.date}</p>
-                    <p className="text-xs text-muted-foreground">{city.offset}</p>
+                    <p className="text-sm text-neutral-600">{city.date}</p>
+                    <p className="text-xs text-neutral-600">{city.offset}</p>
                 </div>
                 <p className="font-mono text-3xl font-bold text-primary">{city.time}</p>
             </Card>
           ))}
         </div>
+        {filteredTimes.length === 0 && times.length > 0 && (
+          <p className="text-center text-sm text-neutral-600 mt-4">No cities match &quot;{query}&quot;. Clear the search to see all clocks.</p>
+        )}
       </div>
       
       <CalculatorContentSection

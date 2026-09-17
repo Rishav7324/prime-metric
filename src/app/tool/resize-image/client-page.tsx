@@ -5,49 +5,85 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useState, useRef } from "react";
-import { Upload, Download, Maximize } from "lucide-react";
+import { Upload, Download, Maximize, RotateCcw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
+
+const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB
+const MAX_DIMENSION = 8000; // px
 
 const ResizeImage = () => {
   const [image, setImage] = useState<string | null>(null);
   const [originalImage, setOriginalImage] = useState<HTMLImageElement | null>(null);
   const [resizedImageUrl, setResizedImageUrl] = useState<string | null>(null);
-  const [width, setWidth] = useState(0);
-  const [height, setHeight] = useState(0);
+  const [width, setWidth] = useState<number>(0);
+  const [height, setHeight] = useState<number>(0);
+  const [isResizing, setIsResizing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const img = new Image();
-        img.onload = () => {
-            setOriginalImage(img);
-            setWidth(img.width);
-            setHeight(img.height);
-        };
-        img.src = event.target?.result as string;
-        setImage(event.target?.result as string);
-        setResizedImageUrl(null);
-        toast({ title: "Success", description: "Image uploaded successfully!" });
-      };
-      reader.readAsDataURL(file);
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      toast({ variant: "destructive", title: "Invalid File Type", description: "Please upload a valid image file." });
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
     }
+    if (file.size > MAX_FILE_SIZE) {
+      toast({ variant: "destructive", title: "File Too Large", description: "Please upload an image under 20MB." });
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const result = event.target?.result as string;
+      const img = new Image();
+      img.onload = () => {
+          setOriginalImage(img);
+          setWidth(img.width);
+          setHeight(img.height);
+      };
+      img.onerror = () => {
+        toast({ variant: "destructive", title: "Invalid Image", description: "Could not load image. Please try another file." });
+      };
+      img.src = result;
+      setImage(result);
+      setResizedImageUrl(null);
+      toast({ title: "Success", description: "Image uploaded successfully!" });
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleReset = () => {
+    setImage(null);
+    setOriginalImage(null);
+    setResizedImageUrl(null);
+    setWidth(0);
+    setHeight(0);
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   const handleResize = () => {
     if (!originalImage) {
-      toast({ variant: "destructive", title: "Error", description: "Please upload an image first." });
+      toast({ variant: "destructive", title: "No Image", description: "Please upload an image first." });
       return;
     }
     
+    if (!Number.isInteger(width) || !Number.isInteger(height)) {
+      toast({ variant: "destructive", title: "Invalid Dimensions", description: "Width and height must be whole numbers (integers)." });
+      return;
+    }
     if (width <= 0 || height <= 0) {
-        toast({ variant: "destructive", title: "Error", description: "Width and height must be positive numbers." });
+        toast({ variant: "destructive", title: "Invalid Dimensions", description: "Width and height must be positive integers." });
         return;
     }
+    if (width > MAX_DIMENSION || height > MAX_DIMENSION) {
+        toast({ variant: "destructive", title: "Dimensions Too Large", description: `Width and height must be ${MAX_DIMENSION}px or less.` });
+        return;
+    }
+
+    setIsResizing(true);
 
     const canvas = document.createElement('canvas');
     canvas.width = width;
@@ -55,13 +91,15 @@ const ResizeImage = () => {
     const ctx = canvas.getContext("2d");
     if (!ctx) {
         toast({ variant: "destructive", title: "Error", description: "Could not process image." });
+        setIsResizing(false);
         return;
     };
     
     ctx.drawImage(originalImage, 0, 0, width, height);
 
     setResizedImageUrl(canvas.toDataURL());
-    toast({ title: "Success", description: "Image resized successfully! You can now download it." });
+    setIsResizing(false);
+    toast({ title: "Success", description: `Image resized to ${width}×${height}px! You can now download it.` });
   };
 
   const handleDownload = () => {
@@ -83,17 +121,17 @@ const ResizeImage = () => {
       canonicalUrl="/tool/resize-image"
     >
       <div className="max-w-4xl mx-auto">
-        <Card className="p-6 space-y-6">
+        <Card className="p-6 space-y-4">
           {!image ? (
             <div className="space-y-4">
                <Label>Upload Image</Label>
                <div 
-                  className="border-2 border-dashed border-primary/30 rounded-lg p-12 text-center hover:border-primary/50 transition-colors cursor-pointer bg-muted/20"
+                  className="border-2 border-dashed border-neutral-200 rounded-lg p-12 text-center hover:border-[#F2765E]/50 transition-colors cursor-pointer bg-muted/20"
                   onClick={() => fileInputRef.current?.click()}
                 >
-                  <Upload className="w-12 h-12 mx-auto mb-4 text-primary" />
+                  <Upload className="w-12 h-10 mx-auto mb-4 text-primary" />
                   <p className="text-lg font-medium mb-2">Click to upload an image</p>
-                  <p className="text-sm text-muted-foreground">or drag and drop</p>
+                  <p className="text-sm text-neutral-600">or drag and drop</p>
                 </div>
               <input
                 ref={fileInputRef}
@@ -106,15 +144,18 @@ const ResizeImage = () => {
           ) : (
              <>
               <div className="space-y-2">
-                <Button variant="outline" size="sm" onClick={() => setImage(null)}>Upload New Image</Button>
+                <Button variant="outline" size="sm" onClick={handleReset}>
+                  <RotateCcw className="h-3.5 w-3.5 mr-1" />
+                  Upload New Image
+                </Button>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="width">New Width (px)</Label>
+                  <Label className="text-sm font-medium" htmlFor="width">New Width (px)</Label>
                   <Input id="width" type="number" value={width} onChange={(e) => setWidth(Number(e.target.value))} />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="height">New Height (px)</Label>
+                  <Label className="text-sm font-medium" htmlFor="height">New Height (px)</Label>
                   <Input id="height" type="number" value={height} onChange={(e) => setHeight(Number(e.target.value))} />
                 </div>
               </div>
@@ -132,16 +173,16 @@ const ResizeImage = () => {
                     {resizedImageUrl ? (
                       <img src={resizedImageUrl} alt="Resized Preview" className="max-w-full h-auto max-h-[300px]" />
                     ): (
-                      <div className="text-muted-foreground text-sm">Resize the image to see a preview</div>
+                      <div className="text-neutral-600 text-sm">Resize the image to see a preview</div>
                     )}
                   </div>
                 </div>
               </div>
 
               <div className="flex gap-2">
-                <Button onClick={handleResize} className="flex-1 gradient-button">
+                <Button onClick={handleResize} className="flex-1 gradient-button" disabled={isResizing}>
                   <Maximize className="w-4 h-4 mr-2" />
-                  Resize Image
+                  {isResizing ? "Resizing..." : "Resize Image"}
                 </Button>
                 <Button onClick={handleDownload} variant="outline" className="flex-1" disabled={!resizedImageUrl}>
                   <Download className="w-4 h-4 mr-2" />

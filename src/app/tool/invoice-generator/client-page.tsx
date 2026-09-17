@@ -10,7 +10,7 @@ import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
 import { CurrencySelector, getCurrencySymbol } from "@/components/CurrencySelector";
-import { Trash2, Plus, Download } from "lucide-react";
+import { Trash2, Plus, Download, Copy, RotateCcw } from "lucide-react";
 
 interface LineItem {
   description: string;
@@ -21,16 +21,25 @@ interface LineItem {
 const InvoiceGenerator = () => {
   const [from, setFrom] = useState("Your Company\n123 Street\nCity, State, 12345");
   const [to, setTo] = useState("Client Company\n456 Avenue\nCity, State, 67890");
-  const [invoiceNumber, setInvoiceNumber] = useState("1");
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  const [invoiceNumber, setInvoiceNumber] = useState("INV-001");
+  const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]);
   const [items, setItems] = useState<LineItem[]>([{ description: "", quantity: 1, rate: 0 }]);
   const [currency, setCurrency] = useState("USD");
+  const [isPrinting, setIsPrinting] = useState(false);
   const { toast } = useToast();
   const currencySymbol = getCurrencySymbol(currency);
+
+  const fmt = (n: number) =>
+    n.toLocaleString("en-US", { maximumFractionDigits: 2, minimumFractionDigits: 2 });
   
-  const handleItemChange = (index: number, field: keyof LineItem, value: any) => {
+  const handleItemChange = (index: number, field: keyof LineItem, value: string) => {
     const newItems = [...items];
-    newItems[index] = { ...newItems[index], [field]: value };
+    if (field === "description") {
+      newItems[index] = { ...newItems[index], [field]: value };
+    } else {
+      const num = parseFloat(value);
+      newItems[index] = { ...newItems[index], [field]: isNaN(num) ? 0 : num };
+    }
     setItems(newItems);
   };
 
@@ -39,13 +48,55 @@ const InvoiceGenerator = () => {
   };
 
   const removeItem = (index: number) => {
+    if (items.length <= 1) {
+      toast({ variant: "destructive", title: "Cannot Remove", description: "An invoice needs at least one line item." });
+      return;
+    }
     const newItems = items.filter((_, i) => i !== index);
     setItems(newItems);
+  };
+
+  const reset = () => {
+    setFrom("Your Company\n123 Street\nCity, State, 12345");
+    setTo("Client Company\n456 Avenue\nCity, State, 67890");
+    setInvoiceNumber("INV-001");
+    setDate(new Date().toISOString().split('T')[0]);
+    setItems([{ description: "", quantity: 1, rate: 0 }]);
+    setCurrency("USD");
+  };
+
+  const copySummary = async () => {
+    const text = `Invoice ${invoiceNumber} (${date}): Total ${currencySymbol}${fmt(subtotal)} across ${items.length} item(s). — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Invoice summary copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
   
   const subtotal = items.reduce((acc, item) => acc + item.quantity * item.rate, 0);
 
+  const validateInvoice = (): string | null => {
+    if (!invoiceNumber.trim()) return "Enter an invoice number.";
+    if (!date) return "Select an invoice date.";
+    if (items.length === 0) return "Add at least one line item.";
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      if (!item.description.trim()) return `Item ${i + 1}: enter a description.`;
+      if (!(item.quantity > 0)) return `Item ${i + 1}: quantity must be greater than 0.`;
+      if (!(item.rate >= 0) || isNaN(item.rate)) return `Item ${i + 1}: rate must be 0 or greater.`;
+    }
+    return null;
+  };
+
   const printInvoice = () => {
+    const error = validateInvoice();
+    if (error) {
+      toast({ variant: "destructive", title: "Invalid Invoice", description: error });
+      return;
+    }
+    setIsPrinting(true);
     const printContent = `
         <style>
             body { font-family: sans-serif; margin: 2rem; }
@@ -77,15 +128,15 @@ const InvoiceGenerator = () => {
                     <tr>
                         <td>${item.description}</td>
                         <td>${item.quantity}</td>
-                        <td>${currencySymbol}${item.rate.toFixed(2)}</td>
-                        <td>${currencySymbol}${(item.quantity * item.rate).toFixed(2)}</td>
+                        <td>${currencySymbol}${fmt(item.rate)}</td>
+                        <td>${currencySymbol}${fmt(item.quantity * item.rate)}</td>
                     </tr>
                 `).join('')}
             </tbody>
         </table>
         <div class="totals">
-            <h3>Subtotal: ${currencySymbol}${subtotal.toFixed(2)}</h3>
-            <h3>Total: ${currencySymbol}${subtotal.toFixed(2)}</h3>
+            <h3>Subtotal: ${currencySymbol}${fmt(subtotal)}</h3>
+            <h3>Total: ${currencySymbol}${fmt(subtotal)}</h3>
         </div>
     `;
     const printWindow = window.open('', '', 'height=600,width=800');
@@ -94,9 +145,11 @@ const InvoiceGenerator = () => {
       printWindow.document.close();
       printWindow.focus();
       printWindow.print();
+      toast({ title: "Invoice Ready", description: "Use the print dialog to save as PDF." });
     } else {
         toast({ title: "Error", description: "Could not open print window. Please disable your pop-up blocker.", variant: "destructive" });
     }
+    setIsPrinting(false);
   };
 
   return (
@@ -106,7 +159,7 @@ const InvoiceGenerator = () => {
       canonicalUrl="/tool/invoice-generator"
     >
       <Card className="p-6">
-        <div className="space-y-6">
+        <div className="space-y-4">
           <div className="grid md:grid-cols-2 gap-4">
             <div><Label>From</Label><Textarea value={from} onChange={e => setFrom(e.target.value)} /></div>
             <div><Label>To</Label><Textarea value={to} onChange={e => setTo(e.target.value)} /></div>
@@ -123,20 +176,30 @@ const InvoiceGenerator = () => {
               {items.map((item, index) => (
                 <div key={index} className="grid grid-cols-[1fr,80px,120px,auto] gap-2 items-center">
                   <Input placeholder="Description" value={item.description} onChange={e => handleItemChange(index, 'description', e.target.value)} />
-                  <Input type="number" placeholder="Qty" value={item.quantity} onChange={e => handleItemChange(index, 'quantity', parseFloat(e.target.value))} />
-                  <Input type="number" placeholder="Rate" value={item.rate} onChange={e => handleItemChange(index, 'rate', parseFloat(e.target.value))} />
-                  <Button variant="ghost" size="icon" onClick={() => removeItem(index)}><Trash2 className="text-destructive"/></Button>
+                  <Input type="number" min={1} placeholder="Qty" value={item.quantity} onChange={e => handleItemChange(index, 'quantity', e.target.value)} />
+                  <Input type="number" min={0} placeholder="Rate" value={item.rate} onChange={e => handleItemChange(index, 'rate', e.target.value)} />
+                  <Button variant="ghost" size="icon" onClick={() => removeItem(index)} aria-label="Remove item"><Trash2 className="text-destructive"/></Button>
                 </div>
               ))}
               <Button variant="outline" onClick={addItem}><Plus className="mr-2" /> Add Item</Button>
             </CardContent>
           </Card>
 
-          <div className="text-right font-bold text-xl">
-              Total: {currencySymbol}{subtotal.toFixed(2)}
+          <div className="flex items-center justify-between">
+              <div className="flex gap-2">
+                <Button onClick={copySummary} variant="outline" size="sm" className="h-8 text-xs">
+                  <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                </Button>
+                <Button onClick={reset} variant="outline" size="icon" className="h-8 w-8 shrink-0" aria-label="Reset">
+                  <RotateCcw className="h-4 w-4" />
+                </Button>
+              </div>
+              <div className="text-right font-bold text-xl">
+                  Total: {currencySymbol}{fmt(subtotal)}
+              </div>
           </div>
           
-          <Button onClick={printInvoice} className="w-full gradient-button"><Download className="mr-2"/> Print / Download PDF</Button>
+          <Button onClick={printInvoice} className="w-full gradient-button" disabled={isPrinting}><Download className="mr-2"/> {isPrinting ? "Preparing..." : "Print / Download PDF"}</Button>
         </div>
       </Card>
        <CalculatorContentSection

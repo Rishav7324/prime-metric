@@ -1,5 +1,5 @@
 
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { cn } from '@/lib/utils';
 import { SpeedInsights } from "@vercel/speed-insights/next"
@@ -11,6 +11,7 @@ import CookieConsentBanner from '@/components/CookieConsentBanner';
 import { Analytics } from '@vercel/analytics/react';
 import { Inter, Montserrat } from 'next/font/google';
 import AdBanner from '@/components/AdBanner';
+import { VisitTracker } from '@/components/VisitTracker';
 import Script from 'next/script';
 
 const inter = Inter({
@@ -27,28 +28,60 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: 'Prime Metric - Free Online Calculators & Tools',
-  description: '100+ premium calculators and educational tools for financial clarity.',
+  metadataBase: new URL('https://primemetric.online'),
+  title: {
+    default: 'Prime Metric - Free Online Calculators & Tools',
+    template: '%s | Prime Metric',
+  },
+  description: '100+ free online calculators for finance, health, math & everyday use. Fast, accurate, mobile-friendly. No sign-up needed.',
+  keywords: ['online calculator', 'free calculator', 'BMI calculator', 'loan calculator', 'mortgage calculator', 'percentage calculator', 'financial calculator', 'health calculator'],
+  authors: [{ name: 'Prime Metric' }],
+  creator: 'Prime Metric',
+  publisher: 'Prime Metric',
+  alternates: {
+    canonical: 'https://primemetric.online',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
   openGraph: {
     title: 'Prime Metric - Free Online Calculators & Tools',
-    description: '100+ premium calculators and educational tools for financial clarity.',
+    description: '100+ free online calculators for finance, health, math & everyday use. Fast, accurate, mobile-friendly.',
     url: 'https://primemetric.online',
+    siteName: 'Prime Metric',
+    locale: 'en_US',
     type: 'website',
     images: [
       {
         url: 'https://res.cloudinary.com/dkyozgldj/image/upload/v1763651495/IMG_20251120_202321_mpq2or.jpg',
         width: 1200,
         height: 630,
-        alt: 'Prime Metric - Financial and Educational Tools',
+        alt: 'Prime Metric - Free Online Calculators & Tools',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Prime Metric - Free Online Calculators & Tools',
-    description: '100+ premium calculators and educational tools for financial clarity.',
+    description: '100+ free online calculators for finance, health, math & everyday use.',
     images: ['https://res.cloudinary.com/dkyozgldj/image/upload/v1763651495/IMG_20251120_202321_mpq2or.jpg']
   },
+  verification: {
+    google: 'google1e431e5ecb53acb7',
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: '#F2765E',
+  width: 'device-width',
+  initialScale: 1,
 };
 
 export default function RootLayout({
@@ -65,15 +98,10 @@ export default function RootLayout({
           crossOrigin="anonymous"
           strategy="lazyOnload"
         />
-        <Script 
-          src="https://quge5.com/88/tag.min.js" 
-          data-zone="215163" 
-          async 
-          data-cfasync="false"
-        />
       </head>
-      <body className={cn("font-body antialiased min-h-screen bg-background", inter.variable, montserrat.variable)}>
+      <body className={cn("font-body antialiased min-h-screen bg-white text-black", inter.variable, montserrat.variable)}>
         <FirebaseClientProvider>
+          <VisitTracker />
           <div className="relative flex min-h-dvh flex-col">
             <SiteHeader />
             <div className="flex-1">{children}</div>

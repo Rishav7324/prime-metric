@@ -26,7 +26,7 @@ const PrivacyPolicyPage = () => {
           </p>
           
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">1. Information We Collect</h2>
+            <h2 className="text-xl font-semibold mb-3 text-foreground">1. Information We Collect</h2>
             <p className="mb-3">
               We collect information to improve functionality, personalize user experience, and enhance the quality of our tools. The types of information collected include:
             </p>
@@ -78,7 +78,7 @@ const PrivacyPolicyPage = () => {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">2. How We Use Your Information</h2>
+            <h2 className="text-xl font-semibold mb-3 text-foreground">2. How We Use Your Information</h2>
             <p className="mb-3">We use your information solely for enhancing the Services. Usage includes:</p>
             <h3 className="text-xl font-semibold mt-4 mb-2 text-foreground">2.1 Improving Website Features</h3>
             <ul className="list-disc pl-6 mt-2 space-y-1">
@@ -119,7 +119,7 @@ const PrivacyPolicyPage = () => {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">3. How We Store and Protect Information</h2>
+            <h2 className="text-xl font-semibold mb-3 text-foreground">3. How We Store and Protect Information</h2>
             <p className="mb-3">We take data protection seriously and use the following safeguards:</p>
             <ul className="list-disc pl-6 mt-2 space-y-1">
                 <li>Encrypted connections through HTTPS</li>
@@ -133,7 +133,7 @@ const PrivacyPolicyPage = () => {
           </section>
 
            <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">4. Sharing and Disclosure</h2>
+            <h2 className="text-xl font-semibold mb-3 text-foreground">4. Sharing and Disclosure</h2>
             <p className="mb-3">We do not sell user data. We may share limited information with:</p>
             <h3 className="text-xl font-semibold mt-4 mb-2 text-foreground">4.1 Service Providers</h3>
             <p>Trusted partners who help us run the website, such as:</p>
@@ -156,7 +156,7 @@ const PrivacyPolicyPage = () => {
           </section>
 
            <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">5. Your Rights</h2>
+            <h2 className="text-xl font-semibold mb-3 text-foreground">5. Your Rights</h2>
             <p className="mb-3">Depending on your location, you may have rights such as:</p>
             <ul className="list-disc pl-6 mt-2 space-y-1">
                 <li>Access personal data</li>
@@ -170,7 +170,7 @@ const PrivacyPolicyPage = () => {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">6. Children’s Privacy</h2>
+            <h2 className="text-xl font-semibold mb-3 text-foreground">6. Children’s Privacy</h2>
             <ul className="list-disc pl-6 mt-2 space-y-1">
               <li>Prime Metric is not intended for children under 13.</li>
               <li>We do not knowingly collect personal information from children.</li>
@@ -179,7 +179,7 @@ const PrivacyPolicyPage = () => {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">7. Third-Party Links</h2>
+            <h2 className="text-xl font-semibold mb-3 text-foreground">7. Third-Party Links</h2>
             <p>Our website may contain links to external websites. We are not responsible for:</p>
              <ul className="list-disc pl-6 mt-2 space-y-1">
                 <li>Privacy practices</li>
@@ -191,12 +191,12 @@ const PrivacyPolicyPage = () => {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">8. International Users</h2>
+            <h2 className="text-xl font-semibold mb-3 text-foreground">8. International Users</h2>
             <p>By using PrimeMetric, you acknowledge that your data may be processed in servers located outside your country. We ensure all data processing meets global standards.</p>
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">9. Updates to This Privacy Policy</h2>
+            <h2 className="text-xl font-semibold mb-3 text-foreground">9. Updates to This Privacy Policy</h2>
             <p>We may update the Privacy Policy periodically to reflect improved practices or legal requirements. You will be informed through:</p>
              <ul className="list-disc pl-6 mt-2 space-y-1">
                 <li>Notice on the website</li>
@@ -205,7 +205,7 @@ const PrivacyPolicyPage = () => {
           </section>
           
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">10. Contact Us</h2>
+            <h2 className="text-xl font-semibold mb-3 text-foreground">10. Contact Us</h2>
             <p>
               For privacy-related questions:
               <br/>

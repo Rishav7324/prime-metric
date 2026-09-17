@@ -9,44 +9,109 @@ import { Button } from "@/components/ui/button";
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+import { Copy, RotateCcw } from "lucide-react";
+
+type AverageResult = {
+  mean: number;
+  median: number;
+  mode: number[];
+  range: number;
+  count: number;
+  sum: number;
+};
+
+function computeAverage(input: string): AverageResult | null {
+  const tokens = input.split(",").map((t) => t.trim()).filter((t) => t !== "");
+  if (tokens.length === 0) return null;
+  const numArray: number[] = [];
+  for (const token of tokens) {
+    const n = Number(token);
+    if (!Number.isFinite(n)) return null;
+    numArray.push(n);
+  }
+  if (numArray.length === 0) return null;
+
+  const sum = numArray.reduce((a, b) => a + b, 0);
+  const mean = sum / numArray.length;
+
+  const sorted = [...numArray].sort((a, b) => a - b);
+  const median = sorted.length % 2 === 0
+    ? (sorted[sorted.length / 2 - 1] + sorted[sorted.length / 2]) / 2
+    : sorted[Math.floor(sorted.length / 2)];
+
+  const frequency = new Map<number, number>();
+  numArray.forEach((n) => frequency.set(n, (frequency.get(n) ?? 0) + 1));
+  const maxFreq = Math.max(...frequency.values());
+  const mode = [...frequency.entries()].filter(([, f]) => f === maxFreq).map(([k]) => k);
+
+  const range = Math.max(...numArray) - Math.min(...numArray);
+
+  return { mean, median, mode, range, count: numArray.length, sum };
+}
+
+function formatStat(n: number): string {
+  return n.toLocaleString(undefined, { maximumFractionDigits: 2 });
+}
+
+const DEFAULT_NUMBERS = "12, 15, 18, 22, 22, 30";
 
 const AverageCalculator = () => {
-  const [numbers, setNumbers] = useState("");
-  const [result, setResult] = useState<any>(null);
+  const [numbers, setNumbers] = useState(DEFAULT_NUMBERS);
+  const [result, setResult] = useState<AverageResult | null>(() => computeAverage(DEFAULT_NUMBERS));
   const { toast } = useToast();
 
   const calculate = () => {
-    const numArray = numbers.split(",").map(n => parseFloat(n.trim())).filter(n => !isNaN(n));
-    
-    if (numArray.length === 0) {
+    if (numbers.trim() === "") {
         toast({
             variant: "destructive",
             title: "Invalid Input",
-            description: "Please enter at least one valid number.",
+            description: "Please enter at least one number (e.g., 1, 2, 3, 4, 5).",
         });
         return;
     }
+    const computed = computeAverage(numbers);
+    if (!computed) {
+        const tokens = numbers.split(",").map((t) => t.trim()).filter((t) => t !== "");
+        const invalid = tokens.filter((t) => !Number.isFinite(Number(t)));
+        if (tokens.length === 0) {
+          toast({
+              variant: "destructive",
+              title: "Invalid Input",
+              description: "Please enter at least one valid number.",
+          });
+        } else {
+          toast({
+              variant: "destructive",
+              title: "Invalid Input",
+              description: invalid.length > 0
+                ? `These are not valid numbers: ${invalid.slice(0, 5).join(", ")}. Use comma-separated numbers only.`
+                : "Please enter at least one valid number.",
+          });
+        }
+        return;
+    }
 
-    const sum = numArray.reduce((a, b) => a + b, 0);
-    const mean = sum / numArray.length;
-    
-    const sorted = [...numArray].sort((a, b) => a - b);
-    const median = sorted.length % 2 === 0
-      ? (sorted[sorted.length / 2 - 1] + sorted[sorted.length / 2]) / 2
-      : sorted[Math.floor(sorted.length / 2)];
-
-    const frequency: { [key: number]: number } = {};
-    numArray.forEach(n => frequency[n] = (frequency[n] || 0) + 1);
-    const maxFreq = Math.max(...Object.values(frequency));
-    const mode = Object.keys(frequency).filter(k => frequency[Number(k)] === maxFreq).map(Number);
-
-    const range = Math.max(...numArray) - Math.min(...numArray);
-
-    setResult({ mean, median, mode, range, count: numArray.length, sum });
+    setResult(computed);
     toast({
         title: "Calculation Complete",
         description: "Statistical measures have been calculated.",
     });
+  };
+
+  const reset = () => {
+    setNumbers("");
+    setResult(null);
+  };
+
+  const copyResult = async () => {
+    if (!result) return;
+    const text = `Mean: ${formatStat(result.mean)}, Median: ${formatStat(result.median)}, Mode: ${result.mode.map(formatStat).join(", ")}, Range: ${formatStat(result.range)}, Count: ${result.count.toLocaleString()}, Sum: ${formatStat(result.sum)} — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
 
   return (
@@ -59,7 +124,7 @@ const AverageCalculator = () => {
       <Card className="p-6">
         <div className="space-y-4">
           <div>
-            <Label htmlFor="numbers-input">Enter Numbers (comma-separated)</Label>
+            <Label className="text-sm font-medium" htmlFor="numbers-input">Enter Numbers (comma-separated)</Label>
             <Input
               id="numbers-input"
               value={numbers}
@@ -68,35 +133,46 @@ const AverageCalculator = () => {
               className="mt-2"
             />
           </div>
-          <Button onClick={calculate} className="w-full gradient-button">
-            Calculate Statistics
-          </Button>
+          <div className="flex gap-2">
+            <Button onClick={calculate} className="flex-1 gradient-button" disabled={!numbers.trim()}>
+              Calculate Statistics
+            </Button>
+            <Button onClick={reset} variant="outline" size="icon" className="h-10 w-10 shrink-0" aria-label="Reset">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
           {result && (
             <div className="mt-6 space-y-4">
-              <div className="p-4 bg-primary/10 rounded-lg text-center">
-                <p className="text-sm text-muted-foreground">Mean (Average)</p>
-                <p className="text-3xl font-bold text-primary">{result.mean.toFixed(2)}</p>
+              <div className="flex items-center justify-between">
+                <h2 className="text-lg font-bold text-black">Your Result</h2>
+                <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                  <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                </Button>
+              </div>
+              <div className="p-4 bg-[#FFF5F2] rounded-lg text-center">
+                <p className="text-sm text-neutral-600">Mean (Average)</p>
+                <p className="text-3xl font-bold text-primary">{formatStat(result.mean)}</p>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 <div className="p-4 bg-muted/50 rounded-lg text-center">
-                  <p className="text-sm text-muted-foreground">Median</p>
-                  <p className="text-xl font-bold">{result.median.toFixed(2)}</p>
+                  <p className="text-sm text-neutral-600">Median</p>
+                  <p className="text-xl font-bold">{formatStat(result.median)}</p>
                 </div>
                 <div className="p-4 bg-muted/50 rounded-lg text-center">
-                  <p className="text-sm text-muted-foreground">Mode</p>
-                  <p className="text-xl font-bold">{result.mode.join(", ")}</p>
+                  <p className="text-sm text-neutral-600">Mode</p>
+                  <p className="text-xl font-bold">{result.mode.map(formatStat).join(", ")}</p>
                 </div>
                 <div className="p-4 bg-muted/50 rounded-lg text-center">
-                  <p className="text-sm text-muted-foreground">Range</p>
-                  <p className="text-xl font-bold">{result.range.toFixed(2)}</p>
+                  <p className="text-sm text-neutral-600">Range</p>
+                  <p className="text-xl font-bold">{formatStat(result.range)}</p>
                 </div>
                 <div className="p-4 bg-muted/50 rounded-lg text-center">
-                  <p className="text-sm text-muted-foreground">Count</p>
-                  <p className="text-xl font-bold">{result.count}</p>
+                  <p className="text-sm text-neutral-600">Count</p>
+                  <p className="text-xl font-bold">{result.count.toLocaleString()}</p>
                 </div>
                 <div className="p-4 bg-muted/50 rounded-lg text-center col-span-2 md:col-span-2">
-                  <p className="text-sm text-muted-foreground">Sum</p>
-                  <p className="text-xl font-bold">{result.sum.toFixed(2)}</p>
+                  <p className="text-sm text-neutral-600">Sum</p>
+                  <p className="text-xl font-bold">{formatStat(result.sum)}</p>
                 </div>
               </div>
             </div>

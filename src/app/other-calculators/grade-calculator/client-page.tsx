@@ -1,5 +1,5 @@
 'use client';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,47 +7,113 @@ import { Button } from "@/components/ui/button";
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+import { Copy, RotateCcw } from "lucide-react";
+
+type GradeResult = {
+  percentage: number;
+  grade: string;
+  gradeColor: string;
+};
+
+function computeGrade(scoredStr: string, totalStr: string): GradeResult | null {
+  const score = parseFloat(scoredStr);
+  const max = parseFloat(totalStr);
+  if (isNaN(score) || isNaN(max) || max <= 0 || score < 0 || score > max) return null;
+  const percentage = (score / max) * 100;
+  let grade = "F";
+  let gradeColor = "text-red-600";
+  if (percentage >= 90) {
+    grade = "A";
+    gradeColor = "text-green-600";
+  }
+  else if (percentage >= 80) {
+    grade = "B";
+    gradeColor = "text-blue-600";
+  }
+  else if (percentage >= 70) {
+    grade = "C";
+    gradeColor = "text-yellow-600";
+  }
+  else if (percentage >= 60) {
+    grade = "D";
+    gradeColor = "text-orange-400";
+  }
+  return { percentage, grade, gradeColor };
+}
 
 const GradeCalculatorClient = () => {
-  const [scored, setScored] = useState("");
-  const [total, setTotal] = useState("");
-  const [result, setResult] = useState<any>(null);
+  const [scored, setScored] = useState("85");
+  const [total, setTotal] = useState("100");
+  // Auto-calculates on mount with default marks so result renders instantly
+  const [result, setResult] = useState<GradeResult | null>(null);
   const { toast } = useToast();
+
+  useEffect(() => {
+    const computed = computeGrade("85", "100");
+    if (computed) setResult(computed);
+  }, []);
 
   const calculate = () => {
     const score = parseFloat(scored);
     const max = parseFloat(total);
-    if (!isNaN(score) && !isNaN(max) && max > 0 && score >= 0) {
-      const percentage = (score / max) * 100;
-      let grade = "F";
-      let gradeColor = "text-red-400";
-      if (percentage >= 90) {
-        grade = "A";
-        gradeColor = "text-green-400";
-      }
-      else if (percentage >= 80) {
-        grade = "B";
-        gradeColor = "text-blue-400";
-      }
-      else if (percentage >= 70) {
-        grade = "C";
-        gradeColor = "text-yellow-400";
-      }
-      else if (percentage >= 60) {
-        grade = "D";
-        gradeColor = "text-orange-400";
-      }
-      setResult({ percentage: percentage.toFixed(2), grade, gradeColor });
+    if (scored.trim() === "" || isNaN(score)) {
       toast({
-        title: "Grade Calculated",
-        description: `Your grade is ${grade} with ${percentage.toFixed(2)}%.`
+        variant: "destructive",
+        title: "Invalid Input",
+        description: "Please enter your scored marks as a number zero or greater.",
       });
-    } else {
+      return;
+    }
+    if (total.trim() === "" || isNaN(max) || max <= 0) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Input",
+        description: "Total marks must be a number greater than zero.",
+      });
+      return;
+    }
+    if (score < 0) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Input",
+        description: "Scored marks can't be negative.",
+      });
+      return;
+    }
+    if (score > max) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Input",
+        description: "Scored marks can't exceed total marks.",
+      });
+      return;
+    }
+    const computed = computeGrade(scored, total);
+    if (!computed) {
         toast({
             variant: "destructive",
             title: "Invalid Input",
-            description: "Please enter a valid score and a positive total."
+            description: "Please enter a valid score and a positive total.",
         });
+        return;
+    }
+    setResult(computed);
+    toast({
+      title: "Grade Calculated",
+      description: `Your grade is ${computed.grade} with ${computed.percentage.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%.`
+    });
+  };
+
+  const reset = () => setResult(null);
+
+  const copyResult = async () => {
+    if (!result) return;
+    const text = `I scored grade ${result.grade} (${result.percentage.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%) — ${scored.toLocaleString()} out of ${total.toLocaleString()}. — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
     }
   };
 
@@ -60,7 +126,7 @@ const GradeCalculatorClient = () => {
       formula="Percentage = (Scored Marks ÷ Total Marks) × 100"
       explanation="This calculator converts your scored marks into a percentage and assigns a letter grade based on standard grading scales."
     >
-      <div className="grid md:grid-cols-2 gap-8">
+      <div className="grid sm:grid-cols-2 gap-4">
         <Card className="p-6">
           <div className="space-y-4">
             <div>
@@ -83,21 +149,33 @@ const GradeCalculatorClient = () => {
                 className="h-12 text-lg"
               />
             </div>
-            <Button onClick={calculate} className="w-full gradient-button h-12">
-              Calculate Grade
-            </Button>
+            <div className="flex gap-2">
+              <Button onClick={calculate} className="flex-1 gradient-button h-10">
+                Calculate Grade
+              </Button>
+              <Button onClick={reset} variant="outline" size="icon" className="h-10 w-10 shrink-0" aria-label="Reset">
+                <RotateCcw className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </Card>
 
         <Card className="p-8">
-            <h3 className="text-xl font-bold mb-4">Result</h3>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xl font-bold">Result</h3>
+              {result && (
+                <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                  <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                </Button>
+              )}
+            </div>
             {result ? (
                 <div className="text-center">
                     <div className={`text-7xl font-bold ${result.gradeColor}`}>{result.grade}</div>
-                    <div className="text-2xl mt-2 font-semibold">{result.percentage}%</div>
+                    <div className="text-2xl mt-2 font-semibold">{result.percentage.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%</div>
                 </div>
             ) : (
-                <div className="flex items-center justify-center h-40 text-muted-foreground">
+                <div className="flex items-center justify-center h-40 text-neutral-600">
                     <p>Enter score to see grade.</p>
                 </div>
             )}

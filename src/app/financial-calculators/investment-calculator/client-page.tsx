@@ -9,43 +9,84 @@ import { Button } from "@/components/ui/button";
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+import { CurrencySelector, getCurrencySymbol } from "@/components/CurrencySelector";
+import { Copy, RotateCcw } from "lucide-react";
+
+type InvestmentResult = {
+  totalValue: number; totalInvested: number; totalReturns: number;
+};
+
+function computeInvestment(
+  principalStr: string,
+  monthlyStr: string,
+  yearsStr: string,
+  rateStr: string
+): InvestmentResult | null {
+  const p = parseFloat(principalStr);
+  const monthly = parseFloat(monthlyStr);
+  const y = parseInt(yearsStr);
+  const annual = parseFloat(rateStr);
+
+  if (isNaN(p) || p < 0 || p > 1e12) return null;
+  if (isNaN(monthly) || monthly < 0 || monthly > 1e9) return null;
+  if (!(y >= 1 && y <= 50)) return null;
+  if (isNaN(annual) || annual < -50 || annual > 100) return null;
+  if (p === 0 && monthly === 0) return null;
+
+  const rate = annual / 100 / 12;
+  const n = y * 12;
+
+  const principalFV = p * Math.pow(1 + rate, n);
+  const investmentFV = rate === 0 ? monthly * n : monthly * ((Math.pow(1 + rate, n) - 1) / rate);
+  const totalInvested = p + monthly * n;
+  const totalValue = principalFV + investmentFV;
+
+  return { totalValue, totalInvested, totalReturns: totalValue - totalInvested };
+}
 
 const InvestmentCalculator = () => {
-  const [principal, setPrincipal] = useState("");
-  const [monthlyInvestment, setMonthlyInvestment] = useState("");
-  const [years, setYears] = useState("");
-  const [returnRate, setReturnRate] = useState("");
-  const [result, setResult] = useState<any>(null);
+  const [principal, setPrincipal] = useState("10000");
+  const [monthlyInvestment, setMonthlyInvestment] = useState("500");
+  const [years, setYears] = useState("10");
+  const [returnRate, setReturnRate] = useState("8");
+  // Pre-filled so the result renders instantly (no empty state)
+  const [result, setResult] = useState<InvestmentResult | null>(() => computeInvestment("10000", "500", "10", "8"));
+  const [currency, setCurrency] = useState("USD");
   const { toast } = useToast();
+  const currencySymbol = getCurrencySymbol(currency);
+
+  const fmt = (n: number) =>
+    n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
   const calculate = () => {
-    const p = parseFloat(principal) || 0;
-    const monthly = parseFloat(monthlyInvestment) || 0;
-    const y = parseInt(years);
-    const rate = parseFloat(returnRate) / 100 / 12;
-
-    if (isNaN(y) || y <= 0 || isNaN(rate) || rate < 0) {
+    const computed = computeInvestment(principal, monthlyInvestment, years, returnRate);
+    if (!computed) {
       toast({
         variant: "destructive",
         title: "Invalid Input",
-        description: "Please enter valid numbers for all fields, with positive years and a non-negative return rate.",
+        description: "Enter initial (0+), monthly (0+, one must be > 0), years (1-50), return (-50 to 100%).",
       });
       return;
     }
-    
-    const n = y * 12;
-    
-    const principalFV = p * Math.pow(1 + rate, n);
-    const investmentFV = monthly * ((Math.pow(1 + rate, n) - 1) / rate);
-    const totalValue = principalFV + investmentFV;
-    const totalInvested = p + monthly * n;
-    const totalReturns = totalValue - totalInvested;
-    
-    setResult({ totalValue, totalInvested, totalReturns });
+
+    setResult(computed);
     toast({
         title: "Calculation Complete",
-        description: `Your investment is projected to grow to $${totalValue.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}.`,
+        description: `Your investment is projected to grow to ${currencySymbol}${fmt(computed.totalValue)}.`,
     });
+  };
+
+  const reset = () => { setPrincipal(""); setMonthlyInvestment(""); setYears(""); setReturnRate(""); setResult(null); };
+
+  const copyResult = async () => {
+    if (!result) return;
+    const text = `Investment projection: future value ${currencySymbol}${fmt(result.totalValue)} (invested ${currencySymbol}${fmt(result.totalInvested)}, returns ${currencySymbol}${fmt(result.totalReturns)}). — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
 
   return (
@@ -58,8 +99,9 @@ const InvestmentCalculator = () => {
     >
       <Card className="p-6">
         <div className="space-y-4">
+          <CurrencySelector value={currency} onChange={setCurrency} />
           <div>
-            <Label>Initial Investment ($)</Label>
+            <Label>Initial Investment ({currencySymbol})</Label>
             <Input
               type="number"
               value={principal}
@@ -68,7 +110,7 @@ const InvestmentCalculator = () => {
             />
           </div>
           <div>
-            <Label>Monthly Investment ($)</Label>
+            <Label>Monthly Investment ({currencySymbol})</Label>
             <Input
               type="number"
               value={monthlyInvestment}
@@ -95,23 +137,33 @@ const InvestmentCalculator = () => {
               step="0.1"
             />
           </div>
-          <Button onClick={calculate} className="w-full gradient-button">Calculate Investment</Button>
+          <div className="flex gap-2">
+            <Button onClick={calculate} className="flex-1 gradient-button">Calculate Investment</Button>
+            <Button onClick={reset} variant="outline" size="icon" className="shrink-0" aria-label="Reset">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
           {result && (
             <div className="mt-6 space-y-3">
-              <div className="p-4 bg-primary/10 rounded-lg text-center">
-                <p className="text-sm text-muted-foreground">Projected Future Value</p>
+              <div className="flex items-center justify-end">
+                <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                  <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                </Button>
+              </div>
+              <div className="p-4 bg-[#FFF5F2] rounded-lg text-center">
+                <p className="text-sm text-neutral-600">Projected Future Value</p>
                 <p className="text-3xl font-bold text-primary">
-                  ${result.totalValue.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                  {currencySymbol}{fmt(result.totalValue)}
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div className="p-3 bg-muted/50 rounded text-center">
-                  <p className="text-sm text-muted-foreground">Total Invested</p>
-                  <p className="text-lg font-bold">${result.totalInvested.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
+                  <p className="text-sm text-neutral-600">Total Invested</p>
+                  <p className="text-lg font-bold">{currencySymbol}{fmt(result.totalInvested)}</p>
                 </div>
                 <div className="p-3 bg-muted/50 rounded text-center">
-                  <p className="text-sm text-muted-foreground">Total Returns</p>
-                  <p className="text-lg font-bold text-green-500">${result.totalReturns.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
+                  <p className="text-sm text-neutral-600">Total Returns</p>
+                  <p className="text-lg font-bold text-green-500">{currencySymbol}{fmt(result.totalReturns)}</p>
                 </div>
               </div>
             </div>

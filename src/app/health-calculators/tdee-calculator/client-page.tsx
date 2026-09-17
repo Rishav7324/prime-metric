@@ -9,6 +9,29 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+import { Copy, RotateCcw } from "lucide-react";
+
+type TdeeResult = {
+  bmr: number;
+  tdee: number;
+};
+
+function computeTdee(genderStr: string, ageStr: string, weightStr: string, heightStr: string, activityStr: string): TdeeResult | null {
+  const w = parseFloat(weightStr);
+  const h = parseFloat(heightStr);
+  const a = parseFloat(ageStr);
+  const activityMultiplier = parseFloat(activityStr);
+
+  if (!(w >= 1 && w <= 500) || !(h >= 50 && h <= 300) || !(a >= 10 && a <= 120)) return null;
+  if (!isFinite(activityMultiplier) || activityMultiplier <= 0) return null;
+
+  const bmr = genderStr === "male" ? 10 * w + 6.25 * h - 5 * a + 5 : 10 * w + 6.25 * h - 5 * a - 161;
+  if (!isFinite(bmr) || bmr <= 0) return null;
+  const tdee = bmr * activityMultiplier;
+  if (!isFinite(tdee) || tdee <= 0) return null;
+
+  return { bmr: Math.round(bmr), tdee: Math.round(tdee) };
+}
 
 const TdeeCalculator = () => {
   const [gender, setGender] = useState("male");
@@ -16,35 +39,42 @@ const TdeeCalculator = () => {
   const [weight, setWeight] = useState("70");
   const [height, setHeight] = useState("175");
   const [activity, setActivity] = useState("1.55");
-  const [result, setResult] = useState<any>(null);
+  // Pre-filled so the result renders instantly (no empty state)
+  const [result, setResult] = useState<TdeeResult | null>(() => computeTdee("male", "30", "70", "175", "1.55"));
   const { toast } = useToast();
 
   const calculate = () => {
-    const w = parseFloat(weight);
-    const h = parseFloat(height);
-    const a = parseFloat(age);
-    const activityMultiplier = parseFloat(activity);
-
-    if (isNaN(w) || w <= 0 || isNaN(h) || h <= 0 || isNaN(a) || a <= 0) {
+    const computed = computeTdee(gender, age, weight, height, activity);
+    if (!computed) {
       toast({
         variant: "destructive",
         title: "Invalid Input",
-        description: "Please enter valid numbers for all fields.",
+        description: "Enter weight (1-500 kg), height (50-300 cm), and age (10-120 years).",
       });
       return;
     }
 
-    const bmr = gender === "male" ? 10 * w + 6.25 * h - 5 * a + 5 : 10 * w + 6.25 * h - 5 * a - 161;
-    const tdee = bmr * activityMultiplier;
-
-    setResult({
-      tdee: tdee.toFixed(0),
-    });
+    setResult(computed);
     
     toast({
         title: "TDEE Calculated",
-        description: `Your maintenance calories are approximately ${tdee.toFixed(0)} kcal/day.`,
+        description: `Your maintenance calories are approximately ${computed.tdee.toLocaleString()} kcal/day.`,
     });
+  };
+
+  const reset = () => {
+    setAge(""); setWeight(""); setHeight(""); setResult(null);
+  };
+
+  const copyResult = async () => {
+    if (!result) return;
+    const text = `My TDEE: ${result.tdee.toLocaleString()} kcal/day (BMR ${result.bmr.toLocaleString()} kcal/day) — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
 
   return (
@@ -68,15 +98,15 @@ const TdeeCalculator = () => {
             </div>
             <div>
               <Label>Age</Label>
-              <Input type="number" value={age} onChange={(e) => setAge(e.target.value)} placeholder="e.g., 30" />
+              <Input type="number" min={10} max={120} value={age} onChange={(e) => setAge(e.target.value)} placeholder="e.g., 30" />
             </div>
             <div>
               <Label>Weight (kg)</Label>
-              <Input type="number" value={weight} onChange={(e) => setWeight(e.target.value)} placeholder="e.g., 70" />
+              <Input type="number" min={1} max={500} value={weight} onChange={(e) => setWeight(e.target.value)} placeholder="e.g., 70" />
             </div>
             <div>
               <Label>Height (cm)</Label>
-              <Input type="number" value={height} onChange={(e) => setHeight(e.target.value)} placeholder="e.g., 175" />
+              <Input type="number" min={50} max={300} value={height} onChange={(e) => setHeight(e.target.value)} placeholder="e.g., 175" />
             </div>
             <div className="col-span-1 md:col-span-2">
               <Label>Activity Level</Label>
@@ -92,11 +122,21 @@ const TdeeCalculator = () => {
               </Select>
             </div>
           </div>
-          <Button onClick={calculate} className="w-full gradient-button">Calculate TDEE</Button>
+          <div className="flex gap-2">
+            <Button onClick={calculate} className="flex-1 gradient-button" disabled={!age || !weight || !height}>Calculate TDEE</Button>
+            <Button onClick={reset} variant="outline" size="icon" className="shrink-0" aria-label="Reset">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
           {result && (
-            <div className="mt-6 p-4 bg-primary/10 rounded-lg text-center">
-              <p className="text-sm text-muted-foreground">Your TDEE (Maintenance Calories)</p>
-              <p className="text-3xl font-bold text-primary">{result.tdee} kcal / day</p>
+            <div className="mt-6 p-4 bg-[#FFF5F2] rounded-lg text-center">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-sm text-neutral-600">Your TDEE (Maintenance Calories)</p>
+                <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                  <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                </Button>
+              </div>
+              <p className="text-3xl font-bold text-primary">{result.tdee.toLocaleString()} kcal / day</p>
             </div>
           )}
         </div>

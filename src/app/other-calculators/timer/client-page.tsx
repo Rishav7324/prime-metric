@@ -6,74 +6,134 @@ import { Button } from "@/components/ui/button";
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
-import { Play, Pause, RotateCcw } from "lucide-react";
+import { Play, Pause, RotateCcw, Copy } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-const TimerClient = () => {
-  const [initialTime, setInitialTime] = useState(300); // 5 minutes in seconds
-  const [time, setTime] = useState(initialTime);
-  const [isRunning, setIsRunning] = useState(false);
-  const [isFinished, setIsFinished] = useState(false);
-  
-  const [hours, setHours] = useState('0');
-  const [minutes, setMinutes] = useState('5');
-  const [seconds, setSeconds] = useState('0');
+const MAX_SECONDS = 24 * 3600;
 
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+const formatTime = (totalSeconds: number): string => {
+  const safe = Math.max(0, Math.floor(totalSeconds));
+  const h = Math.floor(safe / 3600).toString().padStart(2, '0');
+  const m = Math.floor((safe % 3600) / 60).toString().padStart(2, '0');
+  const s = (safe % 60).toString().padStart(2, '0');
+  return `${h}:${m}:${s}`;
+};
+
+const parseParts = (hStr: string, mStr: string, sStr: string): { h: number; m: number; s: number; total: number } => {
+  const h = parseInt(hStr, 10) || 0;
+  const m = parseInt(mStr, 10) || 0;
+  const s = parseInt(sStr, 10) || 0;
+  return { h, m, s, total: h * 3600 + m * 60 + s };
+};
+
+const TimerClient = () => {
+  const [initialTime, setInitialTime] = useState<number>(300); // 5 minutes in seconds
+  const [time, setTime] = useState<number>(initialTime);
+  const [isRunning, setIsRunning] = useState<boolean>(false);
+  const [isFinished, setIsFinished] = useState<boolean>(false);
+  
+  const [hours, setHours] = useState<string>('0');
+  const [minutes, setMinutes] = useState<string>('5');
+  const [seconds, setSeconds] = useState<string>('0');
+
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const { toast } = useToast();
   
+  // Sync inputs -> duration. Deps are inputs only so pausing (isRunning toggle)
+  // never resets the remaining time. Inputs are disabled while running.
   useEffect(() => {
-    const h = parseInt(hours) || 0;
-    const m = parseInt(minutes) || 0;
-    const s = parseInt(seconds) || 0;
-    const totalSeconds = h * 3600 + m * 60 + s;
-    setInitialTime(totalSeconds);
-    if (!isRunning) {
-      setTime(totalSeconds);
-    }
-  }, [hours, minutes, seconds, isRunning]);
+    const { total } = parseParts(hours, minutes, seconds);
+    const clamped = Math.max(0, total);
+    setInitialTime(clamped);
+    setTime(clamped);
+    setIsFinished(false);
+  }, [hours, minutes, seconds]);
 
 
+  // Tick while running. Single interval per run; cleanup nulls the ref.
   useEffect(() => {
-    if (isRunning && time > 0) {
-      timerRef.current = setInterval(() => {
-        setTime(prevTime => prevTime - 1);
-      }, 1000);
-    } else if (time === 0 && isRunning) {
+    if (!isRunning) return;
+    timerRef.current = setInterval(() => {
+      setTime(prevTime => (prevTime > 0 ? prevTime - 1 : 0));
+    }, 1000);
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+    };
+  }, [isRunning]);
+
+  // Completion handling — runs once when the countdown reaches zero.
+  useEffect(() => {
+    if (time === 0 && isRunning) {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
       setIsRunning(false);
       setIsFinished(true);
-      toast({ title: "Time's up!", duration: 10000 });
+      toast({ title: "Time's up!", description: "Your countdown has finished.", duration: 10000 });
       // Play a sound
       try {
         const audio = new Audio('/alert.mp3'); // Assuming you will add an alert sound file
-        audio.play();
+        audio.play().catch(() => undefined);
       } catch (e) {
         console.error("Failed to play sound", e);
       }
     }
-    
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, [isRunning, time, toast]);
+  }, [time, isRunning, toast]);
 
-  const handleStartStop = () => {
+  // Safety cleanup on unmount.
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+    };
+  }, []);
+
+  const handleStartStop = (): void => {
     if (isFinished) return;
-    setIsRunning(!isRunning);
+    if (!isRunning) {
+      const { h, m, s, total } = parseParts(hours, minutes, seconds);
+      if (h < 0 || m < 0 || s < 0 || m > 59 || s > 59 || h > 24) {
+        toast({ variant: "destructive", title: "Invalid Input", description: "Hours 0–24, minutes and seconds 0–59." });
+        return;
+      }
+      if (total <= 0) {
+        toast({ variant: "destructive", title: "Invalid Input", description: "Please set a duration greater than zero." });
+        return;
+      }
+      if (total > MAX_SECONDS) {
+        toast({ variant: "destructive", title: "Invalid Input", description: `Maximum duration is 24 hours (${MAX_SECONDS.toLocaleString()} seconds).` });
+        return;
+      }
+    }
+    setIsRunning(prev => !prev);
   };
 
-  const handleReset = () => {
+  const handleReset = (): void => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
     setIsRunning(false);
     setIsFinished(false);
     setTime(initialTime);
+    toast({ title: "Timer Reset", description: `Reset to ${formatTime(initialTime)} (${initialTime.toLocaleString()} seconds).` });
   };
 
-  const formatTime = (totalSeconds: number) => {
-    const h = Math.floor(totalSeconds / 3600).toString().padStart(2, '0');
-    const m = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, '0');
-    const s = (totalSeconds % 60).toString().padStart(2, '0');
-    return `${h}:${m}:${s}`;
+  const copyResult = async (): Promise<void> => {
+    const text = `Timer: ${formatTime(time)} remaining (${time.toLocaleString()} seconds) of ${formatTime(initialTime)} — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
 
   return (
@@ -86,16 +146,16 @@ const TimerClient = () => {
         <div className="space-y-4">
             <div className="grid grid-cols-3 gap-4">
                 <div>
-                    <Label htmlFor="hours">Hours</Label>
-                    <Input id="hours" type="number" value={hours} onChange={e => setHours(e.target.value)} placeholder="0" disabled={isRunning} />
+                    <Label className="text-sm font-medium" htmlFor="hours">Hours</Label>
+                    <Input id="hours" type="number" min="0" max="24" value={hours} onChange={e => setHours(e.target.value)} placeholder="0" disabled={isRunning} />
                 </div>
                  <div>
-                    <Label htmlFor="minutes">Minutes</Label>
-                    <Input id="minutes" type="number" value={minutes} onChange={e => setMinutes(e.target.value)} placeholder="5" disabled={isRunning} />
+                    <Label className="text-sm font-medium" htmlFor="minutes">Minutes</Label>
+                    <Input id="minutes" type="number" min="0" max="59" value={minutes} onChange={e => setMinutes(e.target.value)} placeholder="5" disabled={isRunning} />
                 </div>
                  <div>
-                    <Label htmlFor="seconds">Seconds</Label>
-                    <Input id="seconds" type="number" value={seconds} onChange={e => setSeconds(e.target.value)} placeholder="0" disabled={isRunning} />
+                    <Label className="text-sm font-medium" htmlFor="seconds">Seconds</Label>
+                    <Input id="seconds" type="number" min="0" max="59" value={seconds} onChange={e => setSeconds(e.target.value)} placeholder="0" disabled={isRunning} />
                 </div>
             </div>
 
@@ -109,6 +169,9 @@ const TimerClient = () => {
               </Button>
               <Button onClick={handleReset} variant="outline" size="lg">
                 <RotateCcw className="mr-2" /> Reset
+              </Button>
+              <Button onClick={copyResult} variant="outline" size="lg" aria-label="Copy result">
+                <Copy className="mr-2" /> Copy
               </Button>
             </div>
         </div>

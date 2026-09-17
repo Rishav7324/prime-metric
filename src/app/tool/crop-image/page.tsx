@@ -104,17 +104,17 @@ const CropImage = () => {
       canonicalUrl="/tool/crop-image"
     >
       <div className="max-w-4xl mx-auto">
-        <Card className="p-6 space-y-6">
+        <Card className="p-6 space-y-4">
           {!image ? (
             <div className="space-y-4">
                <Label>Upload Image</Label>
                <div 
-                  className="border-2 border-dashed border-primary/30 rounded-lg p-12 text-center hover:border-primary/50 transition-colors cursor-pointer bg-muted/20"
+                  className="border-2 border-dashed border-neutral-200 rounded-lg p-12 text-center hover:border-[#F2765E]/50 transition-colors cursor-pointer bg-muted/20"
                   onClick={() => fileInputRef.current?.click()}
                 >
-                  <Upload className="w-12 h-12 mx-auto mb-4 text-primary" />
+                  <Upload className="w-12 h-10 mx-auto mb-4 text-primary" />
                   <p className="text-lg font-medium mb-2">Click to upload an image</p>
-                  <p className="text-sm text-muted-foreground">or drag and drop</p>
+                  <p className="text-sm text-neutral-600">or drag and drop</p>
                 </div>
               <input
                 ref={fileInputRef}
@@ -131,7 +131,7 @@ const CropImage = () => {
               </div>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="x-pos">X Position</Label>
+                  <Label className="text-sm font-medium" htmlFor="x-pos">X Position</Label>
                   <Input
                     id="x-pos"
                     type="number"
@@ -140,7 +140,7 @@ const CropImage = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="y-pos">Y Position</Label>
+                  <Label className="text-sm font-medium" htmlFor="y-pos">Y Position</Label>
                   <Input
                     id="y-pos"
                     type="number"
@@ -149,7 +149,7 @@ const CropImage = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="width">Width</Label>
+                  <Label className="text-sm font-medium" htmlFor="width">Width</Label>
                   <Input
                     id="width"
                     type="number"
@@ -158,7 +158,7 @@ const CropImage = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="height">Height</Label>
+                  <Label className="text-sm font-medium" htmlFor="height">Height</Label>
                   <Input
                     id="height"
                     type="number"
@@ -181,7 +181,7 @@ const CropImage = () => {
                     {croppedImageUrl ? (
                       <img src={croppedImageUrl} alt="Cropped Preview" className="max-w-full h-auto max-h-[300px]" />
                     ): (
-                      <div className="text-muted-foreground text-sm">Crop the image to see a preview</div>
+                      <div className="text-neutral-600 text-sm">Crop the image to see a preview</div>
                     )}
                   </div>
                 </div>

@@ -1,15 +1,29 @@
 'use client';
 import CalculatorLayout from "@/components/CalculatorLayout";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useState, useEffect } from "react";
-import { FileText } from "lucide-react";
+import { FileText, Copy, RotateCcw } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 
+const SAMPLE_TEXT = "The quick brown fox jumps over the lazy dog. Pack my box with five dozen liquor jugs! How vexingly quick daft zebras jump. PrimeMetric helps you count words, characters, and sentences instantly as you type.";
+
+type WordStats = {
+  characters: number;
+  charactersNoSpaces: number;
+  words: number;
+  sentences: number;
+  paragraphs: number;
+  readingTime: number;
+};
+
 const WordCounter = () => {
-  const [text, setText] = useState("");
-  const [stats, setStats] = useState({
+  // Pre-filled so live stats show instantly
+  const [text, setText] = useState<string>(SAMPLE_TEXT);
+  const [stats, setStats] = useState<WordStats>({
     characters: 0,
     charactersNoSpaces: 0,
     words: 0,
@@ -17,6 +31,7 @@ const WordCounter = () => {
     paragraphs: 0,
     readingTime: 0,
   });
+  const { toast } = useToast();
 
   useEffect(() => {
     const characters = text.length;
@@ -36,6 +51,23 @@ const WordCounter = () => {
     });
   }, [text]);
 
+  const copyToClipboard = async () => {
+    if (!text.trim()) {
+      toast({ variant: "destructive", title: "Empty Input", description: "Enter some text to copy." });
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
+  };
+
+  const clear = () => {
+    setText("");
+  };
+
   return (
     <CalculatorLayout
       title="Word Counter"
@@ -43,9 +75,20 @@ const WordCounter = () => {
       keywords="word counter, character counter, text counter, word count, sentence counter, reading time calculator"
       canonicalUrl="/tool/word-counter"
     >
-        <div className="max-w-4xl mx-auto space-y-6">
+        <div className="max-w-4xl mx-auto space-y-4">
           <Card className="p-6">
-            <Label htmlFor="text">Enter or paste your text</Label>
+            <div className="flex justify-between items-center">
+              <Label className="text-sm font-medium" htmlFor="text">Enter or paste your text</Label>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm" onClick={copyToClipboard}>
+                  <Copy className="w-4 h-4 mr-2" />
+                  Copy
+                </Button>
+                <Button variant="outline" size="icon" onClick={clear} aria-label="Clear">
+                  <RotateCcw className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
             <Textarea
               id="text"
               value={text}

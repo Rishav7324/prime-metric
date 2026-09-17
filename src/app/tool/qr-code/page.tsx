@@ -6,34 +6,59 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState } from "react";
-import { QrCode, Download } from "lucide-react";
+import { QrCode, Download, Copy, RotateCcw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 
+const DEFAULT_QR_TEXT = "https://primemetric.online";
+
+const buildQrUrl = (value: string, qrSize: string): string =>
+  `https://api.qrserver.com/v1/create-qr-code/?size=${qrSize}x${qrSize}&data=${encodeURIComponent(value)}`;
+
 const QRCodeGenerator = () => {
-  const [text, setText] = useState("");
-  const [size, setSize] = useState("256");
-  const [qrCode, setQrCode] = useState("");
+  const [text, setText] = useState<string>(DEFAULT_QR_TEXT);
+  const [size, setSize] = useState<string>("256");
+  // Pre-filled so a code renders instantly
+  const [qrCode, setQrCode] = useState<string>(() => buildQrUrl(DEFAULT_QR_TEXT, "256"));
   const { toast } = useToast();
 
   const generateQR = () => {
     if (!text.trim()) {
       toast({
         variant: "destructive",
-        title: "Error",
+        title: "Empty Input",
         description: "Please enter text or URL",
       });
       return;
     }
 
     // Simple QR code generation using a public API
-    const apiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(text)}`;
+    const apiUrl = buildQrUrl(text.trim(), size);
     setQrCode(apiUrl);
-    toast({ title: "Success", description: "QR code generated!" });
+    toast({ title: "Generated", description: "QR code generated!" });
+  };
+
+  const reset = () => {
+    setText(DEFAULT_QR_TEXT);
+    setSize("256");
+    setQrCode(buildQrUrl(DEFAULT_QR_TEXT, "256"));
+  };
+
+  const copyToClipboard = async () => {
+    if (!text.trim()) return;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
 
   const downloadQR = () => {
-    if (!qrCode) return;
+    if (!qrCode) {
+      toast({ variant: "destructive", title: "Nothing to Download", description: "Generate a QR code first." });
+      return;
+    }
     
     const link = document.createElement("a");
     link.download = "qrcode.png";
@@ -42,7 +67,7 @@ const QRCodeGenerator = () => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    toast({ title: "Success", description: "QR code downloaded!" });
+    toast({ title: "Downloaded", description: "QR code downloaded!" });
   };
 
   return (
@@ -52,16 +77,16 @@ const QRCodeGenerator = () => {
         keywords="qr code generator, create qr code, qr code maker, generate qr code, free qr code, qr code creator"
         canonicalUrl="/tool/qr-code"
       >
-        <div className="max-w-4xl mx-auto space-y-6">
+        <div className="max-w-4xl mx-auto space-y-4">
           <Card className="p-6 space-y-4">
             <div>
-              <Label htmlFor="text">Text or URL</Label>
+              <Label className="text-sm font-medium" htmlFor="text">Text or URL</Label>
               <Textarea
                 id="text"
                 value={text}
                 onChange={(e) => setText(e.target.value)}
                 placeholder="Enter text, URL, or any data..."
-                className="min-h-[100px]"
+                className="min-h-[90px]"
               />
             </div>
 
@@ -80,16 +105,27 @@ const QRCodeGenerator = () => {
               </Select>
             </div>
 
-            <Button onClick={generateQR} className="w-full gradient-button">
-              <QrCode className="w-4 h-4 mr-2" />
-              Generate QR Code
-            </Button>
+            <div className="flex gap-2">
+              <Button onClick={generateQR} className="flex-1 gradient-button">
+                <QrCode className="w-4 h-4 mr-2" />
+                Generate QR Code
+              </Button>
+              <Button onClick={reset} variant="outline" size="icon" className="shrink-0" aria-label="Reset">
+                <RotateCcw className="h-4 w-4" />
+              </Button>
+            </div>
           </Card>
 
           {qrCode && (
             <Card className="p-6 space-y-4">
-              <Label>Generated QR Code</Label>
-              <div className="flex justify-center p-8 bg-white rounded-lg">
+              <div className="flex justify-between items-center">
+                <Label>Generated QR Code</Label>
+                <Button variant="outline" size="sm" onClick={copyToClipboard}>
+                  <Copy className="w-4 h-4 mr-2" />
+                  Copy
+                </Button>
+              </div>
+              <div className="flex justify-center p-4 sm:p-5 bg-white rounded-lg">
                 <img src={qrCode} alt="QR Code" className="max-w-full" />
               </div>
               <Button onClick={downloadQR} variant="outline" className="w-full">

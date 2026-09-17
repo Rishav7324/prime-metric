@@ -120,18 +120,18 @@ const CompressImage = () => {
     >
       <div className="max-w-4xl mx-auto">
 
-        <Card className="p-6 space-y-6">
+        <Card className="p-6 space-y-4">
           {!image && (
             <div className="space-y-4">
               <Label>Upload Image</Label>
                <div 
-                  className="border-2 border-dashed border-primary/30 rounded-lg p-12 text-center hover:border-primary/50 transition-colors cursor-pointer bg-muted/20"
+                  className="border-2 border-dashed border-neutral-200 rounded-lg p-12 text-center hover:border-[#F2765E]/50 transition-colors cursor-pointer bg-muted/20"
                   onClick={() => fileInputRef.current?.click()}
                 >
-                  <Upload className="w-12 h-12 mx-auto mb-4 text-primary" />
+                  <Upload className="w-12 h-10 mx-auto mb-4 text-primary" />
                   <p className="text-lg font-medium mb-2">Click to upload an image</p>
-                  <p className="text-sm text-muted-foreground">or drag and drop</p>
-                  <p className="text-xs text-muted-foreground mt-2">Supports: JPG, PNG, WebP</p>
+                  <p className="text-sm text-neutral-600">or drag and drop</p>
+                  <p className="text-xs text-neutral-600 mt-2">Supports: JPG, PNG, WebP</p>
                 </div>
               <input
                 ref={fileInputRef}
@@ -179,15 +179,15 @@ const CompressImage = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-muted/20 rounded-lg">
                     <div className="text-center">
-                      <div className="text-sm text-muted-foreground mb-1">Original</div>
+                      <div className="text-sm text-neutral-600 mb-1">Original</div>
                       <div className="font-bold">{formatFileSize(originalSize)}</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-sm text-muted-foreground mb-1">Compressed</div>
+                      <div className="text-sm text-neutral-600 mb-1">Compressed</div>
                       <div className="font-bold text-primary">{formatFileSize(compressedSize)}</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-sm text-muted-foreground mb-1">Saved</div>
+                      <div className="text-sm text-neutral-600 mb-1">Saved</div>
                       <div className="font-bold text-green-500">{compressionRatio}%</div>
                     </div>
                   </div>

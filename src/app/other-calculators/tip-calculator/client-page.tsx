@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,37 +9,85 @@ import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
 import { CurrencySelector, getCurrencySymbol } from "@/components/CurrencySelector";
+import { Copy, RotateCcw } from "lucide-react";
+
+type TipResult = {
+  tipAmount: number;
+  totalAmount: number;
+  perPerson: number;
+};
+
+function computeTip(billStr: string, tipPercentStr: string, peopleStr: string): TipResult | null {
+  const billAmount = parseFloat(billStr);
+  const tipRate = parseFloat(tipPercentStr) / 100;
+  const numPeople = Number(peopleStr);
+  if (isNaN(billAmount) || billAmount <= 0) return null;
+  if (isNaN(tipRate) || tipRate < 0) return null;
+  if (!Number.isFinite(numPeople) || !Number.isInteger(numPeople) || numPeople <= 0) return null;
+  const tipAmount = billAmount * tipRate;
+  const totalAmount = billAmount + tipAmount;
+  const perPerson = totalAmount / numPeople;
+  return { tipAmount, totalAmount, perPerson };
+}
+
+const formatMoney = (n: number) =>
+  n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 const TipCalculator = () => {
-  const [bill, setBill] = useState("");
+  const [bill, setBill] = useState("55.25");
   const [tipPercent, setTipPercent] = useState("18");
-  const [people, setPeople] = useState("1");
+  const [people, setPeople] = useState("2");
   const [currency, setCurrency] = useState("USD");
-  const [result, setResult] = useState<any>(null);
+  // Auto-calculates on mount with default bill so result renders instantly
+  const [result, setResult] = useState<TipResult | null>(null);
   const { toast } = useToast();
   const currencySymbol = getCurrencySymbol(currency);
+
+  useEffect(() => {
+    const computed = computeTip("55.25", "18", "2");
+    if (computed) setResult(computed);
+  }, []);
 
   const calculate = () => {
     const billAmount = parseFloat(bill);
     const tip = parseFloat(tipPercent) / 100;
-    const numPeople = parseInt(people);
+    const numPeople = Number(people);
 
-    if (isNaN(billAmount) || billAmount <= 0 || isNaN(tip) || tip < 0 || isNaN(numPeople) || numPeople <= 0) {
-      toast({ title: "Error", description: "Please enter a valid bill amount, tip percentage, and number of people.", variant: "destructive" });
+    if (isNaN(billAmount) || billAmount <= 0) {
+      toast({ title: "Invalid Input", description: "Please enter a bill amount greater than zero.", variant: "destructive" });
+      return;
+    }
+    if (isNaN(tip) || tip < 0) {
+      toast({ title: "Invalid Input", description: "Tip percentage must be zero or greater.", variant: "destructive" });
+      return;
+    }
+    if (!Number.isFinite(numPeople) || !Number.isInteger(numPeople) || numPeople <= 0) {
+      toast({ title: "Invalid Input", description: "Number of people must be a whole number of at least 1.", variant: "destructive" });
       return;
     }
 
-    const tipAmount = billAmount * tip;
-    const totalAmount = billAmount + tipAmount;
-    const perPerson = totalAmount / numPeople;
+    const computed = computeTip(bill, tipPercent, people);
+    if (!computed) {
+      toast({ title: "Invalid Input", description: "Please enter a valid bill amount, tip percentage, and number of people.", variant: "destructive" });
+      return;
+    }
 
-    setResult({
-      tipAmount: tipAmount.toFixed(2),
-      totalAmount: totalAmount.toFixed(2),
-      perPerson: perPerson.toFixed(2),
-    });
+    setResult(computed);
     
-    toast({title: "Tip Calculated!", description: `The total per person is ${currencySymbol}${perPerson.toFixed(2)}.`});
+    toast({title: "Tip Calculated!", description: `The total per person is ${currencySymbol}${formatMoney(computed.perPerson)}.`});
+  };
+
+  const reset = () => setResult(null);
+
+  const copyResult = async () => {
+    if (!result) return;
+    const text = `Bill split: ${currencySymbol}${formatMoney(result.perPerson)} per person (${currencySymbol}${formatMoney(result.totalAmount)} total including ${currencySymbol}${formatMoney(result.tipAmount)} tip). — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
 
   return (
@@ -65,21 +113,31 @@ const TipCalculator = () => {
                     <Input type="number" value={people} onChange={(e) => setPeople(e.target.value)} placeholder="e.g., 2" />
                 </div>
             </div>
-          <Button onClick={calculate} className="w-full gradient-button">Calculate Tip</Button>
+          <div className="flex gap-2">
+            <Button onClick={calculate} className="flex-1 gradient-button">Calculate Tip</Button>
+            <Button onClick={reset} variant="outline" size="icon" className="shrink-0" aria-label="Reset">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
           {result && (
             <div className="mt-6 space-y-3">
-              <div className="p-4 bg-primary/10 rounded-lg text-center">
-                <p className="text-sm text-muted-foreground">Total Per Person</p>
-                <p className="text-3xl font-bold text-primary">{currencySymbol}{result.perPerson}</p>
+              <div className="p-4 bg-[#FFF5F2] rounded-lg text-center">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-sm text-neutral-600">Total Per Person</p>
+                  <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                    <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                  </Button>
+                </div>
+                <p className="text-3xl font-bold text-primary">{currencySymbol}{formatMoney(result.perPerson)}</p>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div className="p-3 bg-muted/50 rounded text-center">
-                  <p className="text-sm text-muted-foreground">Total Tip</p>
-                  <p className="text-lg font-bold">{currencySymbol}{result.tipAmount}</p>
+                  <p className="text-sm text-neutral-600">Total Tip</p>
+                  <p className="text-lg font-bold">{currencySymbol}{formatMoney(result.tipAmount)}</p>
                 </div>
                 <div className="p-3 bg-muted/50 rounded text-center">
-                  <p className="text-sm text-muted-foreground">Total Bill</p>
-                  <p className="text-lg font-bold">{currencySymbol}{result.totalAmount}</p>
+                  <p className="text-sm text-neutral-600">Total Bill</p>
+                  <p className="text-lg font-bold">{currencySymbol}{formatMoney(result.totalAmount)}</p>
                 </div>
               </div>
             </div>

@@ -10,47 +10,112 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+import { Copy, RotateCcw } from "lucide-react";
+
+type AreaResult = { area: number };
+
+function computeArea(shape: string, dim1Str: string, dim2Str: string): AreaResult | null {
+  const d1 = parseFloat(dim1Str);
+  const d2 = parseFloat(dim2Str);
+  const valid = (n: number) => Number.isFinite(n) && n > 0 && n <= 1_000_000;
+  let out = 0;
+  switch (shape) {
+    case "rectangle":
+      if (!valid(d1) || !valid(d2)) return null;
+      out = d1 * d2;
+      break;
+    case "circle":
+      if (!valid(d1)) return null;
+      out = Math.PI * d1 * d1;
+      break;
+    case "triangle":
+      if (!valid(d1) || !valid(d2)) return null;
+      out = (d1 * d2) / 2;
+      break;
+    case "square":
+      if (!valid(d1)) return null;
+      out = d1 * d1;
+      break;
+    default:
+      return null;
+  }
+  return Number.isFinite(out) ? { area: out } : null;
+}
+
+function defaultDimsForShape(shape: string): [string, string] {
+  switch (shape) {
+    case "rectangle": return ["10", "5"];
+    case "circle": return ["5", ""];
+    case "triangle": return ["10", "6"];
+    case "square": return ["5", ""];
+    default: return ["10", "5"];
+  }
+}
 
 const AreaCalculator = () => {
   const [shape, setShape] = useState("rectangle");
-  const [dim1, setDim1] = useState("");
-  const [dim2, setDim2] = useState("");
-  const [area, setArea] = useState<number | null>(null);
+  const [dim1, setDim1] = useState("10");
+  const [dim2, setDim2] = useState("5");
+  // Pre-filled so the result renders instantly (no empty state)
+  const [area, setArea] = useState<AreaResult | null>(() => computeArea("rectangle", "10", "5"));
   const { toast } = useToast();
 
   const calculate = () => {
-    const d1 = parseFloat(dim1);
-    const d2 = parseFloat(dim2);
-
-    if (isNaN(d1) || (labels.label2 && isNaN(d2))) {
+    const computed = computeArea(shape, dim1, dim2);
+    if (!computed) {
+      const d1 = parseFloat(dim1);
+      const d2 = parseFloat(dim2);
+      const needsTwo = shape === "rectangle" || shape === "triangle";
+      const vals = needsTwo ? [d1, d2] : [d1];
+      if (vals.some((v) => !Number.isFinite(v) || isNaN(v))) {
         toast({
-            variant: "destructive",
-            title: "Invalid Input",
-            description: "Please enter valid numbers for all dimensions.",
+          variant: "destructive",
+          title: "Invalid Input",
+          description: "Please enter valid numbers for all dimensions.",
         });
-        return;
+      } else if (vals.some((v) => v <= 0)) {
+        toast({
+          variant: "destructive",
+          title: "Invalid Input",
+          description: "Dimensions must be positive numbers greater than zero.",
+        });
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Invalid Input",
+          description: "Dimensions must be no larger than 1,000,000.",
+        });
+      }
+      return;
     }
-    
-    let result = 0;
-    switch (shape) {
-      case "rectangle":
-        result = d1 * d2;
-        break;
-      case "circle":
-        result = Math.PI * d1 * d1;
-        break;
-      case "triangle":
-        result = (d1 * d2) / 2;
-        break;
-      case "square":
-        result = d1 * d1;
-        break;
-    }
-    setArea(result);
+    setArea(computed);
     toast({
-        title: "Area Calculated",
-        description: `The area of the ${shape} has been calculated.`,
+      title: "Area Calculated",
+      description: `The area of the ${shape} is ${computed.area.toLocaleString(undefined, { maximumFractionDigits: 2 })}.`,
     });
+  };
+
+  const reset = () => {
+    setDim1(""); setDim2(""); setArea(null);
+  };
+
+  const copyResult = async () => {
+    if (!area) return;
+    const text = `Area of ${shape}: ${area.area.toLocaleString(undefined, { maximumFractionDigits: 2 })} sq units — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
+  };
+
+  const handleShapeChange = (value: string) => {
+    setShape(value);
+    const [nd1, nd2] = defaultDimsForShape(value);
+    setDim1(nd1);
+    setDim2(nd2);
+    setArea(computeArea(value, nd1, nd2));
   };
 
   const getLabels = () => {
@@ -82,12 +147,7 @@ const AreaCalculator = () => {
         <div className="space-y-4">
           <div>
             <Label>Shape</Label>
-            <Select value={shape} onValueChange={(value) => {
-              setShape(value);
-              setDim1("");
-              setDim2("");
-              setArea(null);
-            }}>
+            <Select value={shape} onValueChange={handleShapeChange}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
@@ -119,14 +179,24 @@ const AreaCalculator = () => {
               />
             </div>
           )}
-          <Button onClick={calculate} className="w-full gradient-button">
-            Calculate Area
-          </Button>
-          {area !== null && !isNaN(area) && (
-            <div className="mt-6 p-4 bg-primary/10 rounded-lg text-center">
-              <p className="text-sm text-muted-foreground">Calculated Area</p>
-              <p className="text-3xl font-bold text-primary">
-                {area.toFixed(2)} sq units
+          <div className="flex gap-2">
+            <Button onClick={calculate} className="flex-1 gradient-button">
+              Calculate Area
+            </Button>
+            <Button onClick={reset} variant="outline" size="icon" className="shrink-0" aria-label="Reset">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
+          {area !== null && (
+            <div className="mt-6 p-4 bg-[#FFF5F2] rounded-lg">
+              <div className="flex items-center justify-between mb-1">
+                <p className="text-sm text-neutral-600">Calculated Area</p>
+                <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                  <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                </Button>
+              </div>
+              <p className="text-3xl font-bold text-primary text-center">
+                {area.area.toLocaleString(undefined, { maximumFractionDigits: 2 })} sq units
               </p>
             </div>
           )}

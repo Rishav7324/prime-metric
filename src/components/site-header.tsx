@@ -3,48 +3,36 @@ import React from 'react';
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { Search, Menu, ChevronDown } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { Menu } from 'lucide-react';
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from '@/components/ui/navigation-menu';
 import { cn } from '@/lib/utils';
-import { financialCalculators, healthCalculators, mathCalculators, otherCalculators } from '@/lib/data';
 
 const navLinks = [
   { href: "/all-calculators", label: "All Calculators" },
   { href: "/all-tools", label: "All Tools" },
+  { href: "/blog", label: "Blog" },
 ];
 
 export function SiteHeader() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const router = useRouter();
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchTerm.trim()) {
-      router.push(`/all-calculators?q=${encodeURIComponent(searchTerm.trim())}`);
-    }
-  };
-
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-md">
-      <div className="container flex h-16 max-w-screen-2xl items-center">
+    <div className="sticky top-2 z-50 w-full px-3 sm:px-4">
+    <header className="mx-auto max-w-6xl rounded-2xl border border-neutral-200/80 bg-white/80 shadow-lg shadow-black/5 backdrop-blur-xl supports-[backdrop-filter]:bg-white/70">
+      <div className="flex h-13 max-w-6xl items-center px-3 sm:px-4 py-2">
         <div className="mr-4 flex">
-          <Link href="/" className="mr-6 flex items-center space-x-2">
-            <img src="/logo.png" alt="PrimeMetric Logo" className="h-8 w-8" />
-            <span className="font-bold sm:inline-block text-lg">
+          <Link href="/" className="mr-5 flex items-center space-x-2">
+            <img src="/logo.png" alt="PrimeMetric Logo" className="h-7 w-7" />
+            <span className="font-bold sm:inline-block text-base text-black">
               PrimeMetric
             </span>
           </Link>
-          <nav className="hidden items-center gap-6 text-sm md:flex">
+          <nav className="hidden items-center gap-5 text-sm md:flex">
             <NavigationMenu>
               <NavigationMenuList>
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger className="text-foreground/60 font-medium">Calculators</NavigationMenuTrigger>
+                  <NavigationMenuTrigger className="text-black font-medium h-9 text-sm">Calculators</NavigationMenuTrigger>
                   <NavigationMenuContent>
-                    <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
+                    <ul className="grid w-[400px] gap-2 p-3 md:w-[500px] md:grid-cols-2 lg:w-[560px] bg-white">
                       <ListItem href="/financial-calculators" title="Financial Calculators">
                         Mortgage, loan, and investment calculators.
                       </ListItem>
@@ -62,11 +50,11 @@ export function SiteHeader() {
                 </NavigationMenuItem>
                 {navLinks.map((link) => (
                   <NavigationMenuItem key={link.href}>
-                    <Link href={link.href} legacyBehavior passHref>
-                      <NavigationMenuLink className="text-foreground/60 font-medium">
+                    <NavigationMenuLink asChild>
+                      <Link href={link.href} className="text-black/70 hover:text-[#F2765E] font-medium text-sm px-2">
                         {link.label}
-                      </NavigationMenuLink>
-                    </Link>
+                      </Link>
+                    </NavigationMenuLink>
                   </NavigationMenuItem>
                 ))}
               </NavigationMenuList>
@@ -74,21 +62,7 @@ export function SiteHeader() {
           </nav>
         </div>
 
-        <div className="flex flex-1 items-center justify-end space-x-2">
-          <div className="w-full flex-1 md:w-auto md:flex-none">
-            <form onSubmit={handleSearch}>
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  type="search"
-                  placeholder="Search calculators..."
-                  className="h-9 pl-10 w-full"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
-            </form>
-          </div>
+        <div className="flex flex-1 items-center justify-end">
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden">
@@ -96,31 +70,34 @@ export function SiteHeader() {
                 <span className="sr-only">Toggle Menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right">
+            <SheetContent side="right" className="bg-white">
                 <SheetHeader>
                     <SheetTitle>
                         <Link href="/" className="mr-6 flex items-center space-x-2">
-                            <img src="/logo.png" alt="PrimeMetric Logo" className="h-8 w-8" />
-                            <span className="font-bold sm:inline-block text-lg">
+                            <img src="/logo.png" alt="PrimeMetric Logo" className="h-7 w-7" />
+                            <span className="font-bold sm:inline-block text-base text-black">
                             PrimeMetric
                             </span>
                         </Link>
                     </SheetTitle>
-                    <SheetDescription>
-                        From financial planning to health metrics, unit conversions to daily utilities - 
-                        powerful calculators with instant results and detailed explanations.
+                    <SheetDescription className="text-sm text-neutral-600">
+                        From financial planning to health metrics - fast calculators with instant results.
                     </SheetDescription>
                 </SheetHeader>
-              <nav className="grid gap-6 text-lg font-medium mt-8">
-                 {navLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
+              <nav className="grid gap-4 text-base font-medium mt-6">
+                 <Link href="/financial-calculators" className="px-2.5 text-black/70 hover:text-[#F2765E]">Financial</Link>
+                 <Link href="/health-calculators" className="px-2.5 text-black/70 hover:text-[#F2765E]">Health</Link>
+                 <Link href="/math-calculators" className="px-2.5 text-black/70 hover:text-[#F2765E]">Math</Link>
+                 <Link href="/other-calculators" className="px-2.5 text-black/70 hover:text-[#F2765E]">Daily Utilities</Link>
+                  {navLinks.map((link) => (
+                   <Link
+                     key={link.href}
+                     href={link.href}
+                     className="flex items-center gap-4 px-2.5 text-black/70 hover:text-[#F2765E]"
+                   >
+                     {link.label}
+                   </Link>
+                 ))}
               </nav>
             </SheetContent>
           </Sheet>
@@ -128,6 +105,7 @@ export function SiteHeader() {
         
       </div>
     </header>
+    </div>
   );
 }
 
@@ -138,13 +116,13 @@ const ListItem = React.forwardRef<React.ElementRef<"a">, React.ComponentPropsWit
         <a
           ref={ref}
           className={cn(
-            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+            "block select-none space-y-1 rounded-lg p-3 leading-none no-underline outline-none transition-colors hover:bg-[#FFF5F2] focus:bg-[#FFF5F2]",
             className
           )}
           {...props}
         >
-          <div className="text-sm font-medium leading-none">{title}</div>
-          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+          <div className="text-sm font-semibold leading-none text-black">{title}</div>
+          <p className="line-clamp-2 text-sm leading-snug text-neutral-600">
             {children}
           </p>
         </a>

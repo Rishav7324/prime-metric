@@ -8,11 +8,16 @@ import { Upload, Copy, Pipette, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+const DEFAULT_COLOR = "#F2765E";
+const DEFAULT_RGB = { r: 242, g: 118, b: 94 };
+const DEFAULT_HSL = { h: 10, s: 85, l: 66 };
+
 const ColorPicker = () => {
   const [image, setImage] = useState<string | null>(null);
-  const [selectedColor, setSelectedColor] = useState("#000000");
-  const [rgbColor, setRgbColor] = useState({ r: 0, g: 0, b: 0 });
-  const [hslColor, setHslColor] = useState({ h: 0, s: 0, l: 0 });
+  const [selectedColor, setSelectedColor] = useState(DEFAULT_COLOR);
+  const [rgbColor, setRgbColor] = useState(DEFAULT_RGB);
+  const [hslColor, setHslColor] = useState(DEFAULT_HSL);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
@@ -20,33 +25,44 @@ const ColorPicker = () => {
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      if (!file.type.startsWith('image/')) {
-        toast({ variant: "destructive", title: "Error", description: "Please upload a valid image file" });
-        return;
-      }
-      
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setImage(event.target?.result as string);
-        toast({ title: "Success", description: "Image uploaded successfully!"});
-      };
-      reader.onerror = () => {
-        toast({ variant: "destructive", title: "Error", description: "Failed to read image file" });
-      };
-      reader.readAsDataURL(file);
+    if (!file) {
+      return;
     }
+    if (!file.type.startsWith('image/')) {
+      toast({ variant: "destructive", title: "Invalid File Type", description: "Please upload a valid image file (JPG, PNG, GIF, WebP)." });
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+      return;
+    }
+    if (file.size > MAX_FILE_SIZE) {
+      toast({ variant: "destructive", title: "File Too Large", description: "Image must be 10MB or smaller." });
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setImage(event.target?.result as string);
+      toast({ title: "Uploaded", description: "Image uploaded successfully." });
+    };
+    reader.onerror = () => {
+      toast({ variant: "destructive", title: "Upload failed", description: "Failed to read image file." });
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleClearImage = () => {
     setImage(null);
-    setSelectedColor("#000000");
-    setRgbColor({ r: 0, g: 0, b: 0 });
-    setHslColor({ h: 0, s: 0, l: 0 });
+    setSelectedColor(DEFAULT_COLOR);
+    setRgbColor(DEFAULT_RGB);
+    setHslColor(DEFAULT_HSL);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
-    toast({ title: "Success", description: "Image cleared"});
+    toast({ title: "Cleared", description: "Image cleared." });
   };
 
   useEffect(() => {
@@ -151,16 +167,23 @@ const ColorPicker = () => {
       
       setSelectedColor(hex);
       setHslColor(rgbToHsl(r, g, b));
-      toast({ title: "Success", description: "Color picked!"});
-    } catch (error) {
-      console.error("Error picking color:", error);
-      toast({ variant: "destructive", title: "Error", description: "Failed to pick color" });
+      toast({ title: "Color Picked", description: `${hex.toUpperCase()} copied to preview.` });
+    } catch {
+      toast({ variant: "destructive", title: "Pick failed", description: "Failed to pick color from image." });
     }
   };
 
-  const copyToClipboard = (text: string, label: string) => {
-    navigator.clipboard.writeText(text);
-    toast({ title: "Success", description: `${label} copied to clipboard!`});
+  const copyToClipboard = async (text: string, label: string) => {
+    if (!text) {
+      toast({ variant: "destructive", title: "Nothing to copy", description: "Pick a color first." });
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: `${label} copied to clipboard.` });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
 
   return (
@@ -171,18 +194,18 @@ const ColorPicker = () => {
       canonicalUrl="/tool/color-picker"
     >
         <div className="max-w-4xl mx-auto">
-          <Card className="p-6 space-y-6">
+          <Card className="p-6 space-y-4">
             {!image ? (
               <div className="space-y-4">
-                <Label htmlFor="image-upload">Upload Image</Label>
+                <Label className="text-sm font-medium" htmlFor="image-upload">Upload Image</Label>
                 <div 
-                  className="border-2 border-dashed border-primary/30 rounded-lg p-12 text-center hover:border-primary/50 transition-colors cursor-pointer bg-muted/20"
+                  className="border-2 border-dashed border-neutral-200 rounded-lg p-12 text-center hover:border-[#F2765E]/50 transition-colors cursor-pointer bg-muted/20"
                   onClick={() => fileInputRef.current?.click()}
                 >
-                  <Upload className="w-12 h-12 mx-auto mb-4 text-primary" />
+                  <Upload className="w-12 h-10 mx-auto mb-4 text-primary" />
                   <p className="text-lg font-medium mb-2">Click to upload an image</p>
-                  <p className="text-sm text-muted-foreground">or drag and drop</p>
-                  <p className="text-xs text-muted-foreground mt-2">Supports: JPG, PNG, GIF, WebP</p>
+                  <p className="text-sm text-neutral-600">or drag and drop</p>
+                  <p className="text-xs text-neutral-600 mt-2">Supports: JPG, PNG, GIF, WebP</p>
                 </div>
                 <input
                   id="image-upload"
@@ -205,7 +228,7 @@ const ColorPicker = () => {
           {image && (
             <>
               <div className="space-y-4">
-                <div className="flex items-center gap-2 p-3 bg-primary/10 border border-primary/20 rounded-lg">
+                <div className="flex items-center gap-2 p-3 bg-[#FFF5F2] border border-[#F2765E]/25 rounded-lg">
                   <Pipette className="w-4 h-4 text-primary flex-shrink-0" />
                   <span className="text-sm font-medium">Click anywhere on the image to pick a color</span>
                 </div>
@@ -231,7 +254,7 @@ const ColorPicker = () => {
 
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold">Picked Color</h3>
-                <div className="glass-card p-6 rounded-lg space-y-4">
+                <div className="bg-white border border-neutral-200 p-6 rounded-lg space-y-4">
                   <div className="flex items-center gap-6">
                     <div
                       className="w-32 h-32 rounded-lg border-4 border-border shadow-glow flex-shrink-0"
@@ -241,7 +264,7 @@ const ColorPicker = () => {
                     <div className="flex-1 grid gap-3">
                       <div className="flex items-center justify-between gap-2 p-3 bg-background/50 rounded-lg">
                         <div className="flex-1">
-                          <div className="text-xs text-muted-foreground mb-1">HEX</div>
+                          <div className="text-xs text-neutral-600 mb-1">HEX</div>
                           <div className="font-mono font-bold text-lg">{selectedColor.toUpperCase()}</div>
                         </div>
                         <Button
@@ -256,7 +279,7 @@ const ColorPicker = () => {
                       
                       <div className="flex items-center justify-between gap-2 p-3 bg-background/50 rounded-lg">
                         <div className="flex-1">
-                          <div className="text-xs text-muted-foreground mb-1">RGB</div>
+                          <div className="text-xs text-neutral-600 mb-1">RGB</div>
                           <div className="font-mono font-bold">
                             rgb({rgbColor.r}, {rgbColor.g}, {rgbColor.b})
                           </div>
@@ -273,7 +296,7 @@ const ColorPicker = () => {
                       
                       <div className="flex items-center justify-between gap-2 p-3 bg-background/50 rounded-lg">
                         <div className="flex-1">
-                          <div className="text-xs text-muted-foreground mb-1">HSL</div>
+                          <div className="text-xs text-neutral-600 mb-1">HSL</div>
                           <div className="font-mono font-bold">
                             hsl({hslColor.h}, {hslColor.s}%, {hslColor.l}%)
                           </div>

@@ -9,6 +9,30 @@ import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
 import { CurrencySelector, getCurrencySymbol } from "@/components/CurrencySelector";
+import { Copy, RotateCcw } from "lucide-react";
+
+type SavingsResult = { futureValue: number; totalInvested: number; totalInterest: number };
+
+function computeSavings(initialStr: string, monthlyStr: string, yearsStr: string, rateStr: string): SavingsResult | null {
+  const principal = parseFloat(initialStr);
+  const monthly = parseFloat(monthlyStr);
+  const numYears = parseInt(yearsStr);
+  const annual = parseFloat(rateStr);
+  if (!(principal >= 0 && principal <= 1e12) || !(monthly >= 0 && monthly <= 1e9) || !(numYears >= 1 && numYears <= 50) || isNaN(annual) || annual < -50 || annual > 100) {
+    return null;
+  }
+  const rate = annual / 100 / 12;
+  const n = numYears * 12;
+  let futureValue: number;
+  if (rate === 0) {
+    futureValue = principal + monthly * n;
+  } else {
+    futureValue = principal * Math.pow(1 + rate, n) + monthly * ((Math.pow(1 + rate, n) - 1) / rate);
+  }
+  const totalInvested = principal + monthly * n;
+  const totalInterest = futureValue - totalInvested;
+  return { futureValue, totalInvested, totalInterest };
+}
 
 const SavingsCalculator = () => {
   const [initialDeposit, setInitialDeposit] = useState("1000");
@@ -16,42 +40,43 @@ const SavingsCalculator = () => {
   const [years, setYears] = useState("10");
   const [interestRate, setInterestRate] = useState("5");
   const [currency, setCurrency] = useState("USD");
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<SavingsResult | null>(() => computeSavings("1000", "200", "10", "5"));
   const { toast } = useToast();
   const currencySymbol = getCurrencySymbol(currency);
 
-  const calculate = () => {
-    const principal = parseFloat(initialDeposit);
-    const monthly = parseFloat(monthlyContribution);
-    const numYears = parseInt(years);
-    const rate = parseFloat(interestRate) / 100 / 12;
+  const fmt = (n: number) =>
+    n.toLocaleString("en-US", { maximumFractionDigits: 2, minimumFractionDigits: 2 });
 
-    if (isNaN(principal) || isNaN(monthly) || isNaN(numYears) || numYears <= 0 || isNaN(rate)) {
+  const calculate = () => {
+    const computed = computeSavings(initialDeposit, monthlyContribution, years, interestRate);
+    if (!computed) {
       toast({
         variant: "destructive",
         title: "Invalid Input",
-        description: "Please enter valid numbers for all fields.",
+        description: "Enter deposit (0+), monthly (0+), years (1-50), rate (-50 to 100%).",
       });
       return;
     }
 
-    const n = numYears * 12;
-    let futureValue = principal * Math.pow(1 + rate, n);
-    futureValue += monthly * ((Math.pow(1 + rate, n) - 1) / rate);
-    
-    const totalInvested = principal + monthly * n;
-    const totalInterest = futureValue - totalInvested;
-
-    setResult({
-      futureValue: futureValue.toFixed(2),
-      totalInvested: totalInvested.toFixed(2),
-      totalInterest: totalInterest.toFixed(2),
-    });
+    setResult(computed);
 
     toast({
         title: "Calculation Complete",
-        description: `Your savings will grow to ${currencySymbol}${futureValue.toFixed(2)}.`,
+        description: `Your savings will grow to ${currencySymbol}${fmt(computed.futureValue)}.`,
     });
+  };
+
+  const reset = () => { setInitialDeposit(""); setMonthlyContribution(""); setYears(""); setInterestRate(""); setResult(null); };
+
+  const copyResult = async () => {
+    if (!result) return;
+    const text = `Savings: future value ${currencySymbol}${fmt(result.futureValue)} (invested ${currencySymbol}${fmt(result.totalInvested)}, interest ${currencySymbol}${fmt(result.totalInterest)}). — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
 
   return (
@@ -81,21 +106,31 @@ const SavingsCalculator = () => {
                 <Input type="number" value={interestRate} onChange={(e) => setInterestRate(e.target.value)} placeholder="e.g., 5" />
             </div>
           </div>
-          <Button onClick={calculate} className="w-full gradient-button">Calculate Savings</Button>
+          <div className="flex gap-2">
+            <Button onClick={calculate} className="flex-1 gradient-button">Calculate Savings</Button>
+            <Button onClick={reset} variant="outline" size="icon" className="h-10 w-10 shrink-0" aria-label="Reset">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
           {result && (
             <div className="mt-6 space-y-3">
-              <div className="p-4 bg-primary/10 rounded-lg text-center">
-                <p className="text-sm text-muted-foreground">Future Value of Savings</p>
-                <p className="text-3xl font-bold text-primary">{currencySymbol}{result.futureValue}</p>
+              <div className="flex justify-end">
+                <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                  <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                </Button>
+              </div>
+              <div className="p-4 bg-[#FFF5F2] rounded-lg text-center">
+                <p className="text-sm text-neutral-600">Future Value of Savings</p>
+                <p className="text-3xl font-bold text-primary">{currencySymbol}{fmt(result.futureValue)}</p>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div className="p-3 bg-muted/50 rounded text-center">
-                  <p className="text-sm text-muted-foreground">Total Invested</p>
-                  <p className="text-lg font-bold">{currencySymbol}{result.totalInvested}</p>
+                  <p className="text-sm text-neutral-600">Total Invested</p>
+                  <p className="text-lg font-bold">{currencySymbol}{fmt(result.totalInvested)}</p>
                 </div>
                 <div className="p-3 bg-muted/50 rounded text-center">
-                  <p className="text-sm text-muted-foreground">Total Interest Earned</p>
-                  <p className="text-lg font-bold">{currencySymbol}{result.totalInterest}</p>
+                  <p className="text-sm text-neutral-600">Total Interest Earned</p>
+                  <p className="text-lg font-bold">{currencySymbol}{fmt(result.totalInterest)}</p>
                 </div>
               </div>
             </div>

@@ -20,7 +20,7 @@ const AboutPage = () => {
     <LegalPageLayout title="About Us">
         
         <Card className="p-8 bg-card/80 backdrop-blur mb-8">
-          <h2 className="text-2xl font-semibold mb-4">Who We Are</h2>
+          <h2 className="text-xl font-semibold mb-4">Who We Are</h2>
           <p className="text-muted-foreground mb-4">
             Prime Metric is a modern digital platform built with a single purpose—making calculations, planning, and data-driven decisions easier, faster, and more reliable for everyone. Whether someone is analyzing a loan, checking taxes, managing time, improving health, calculating growth, or solving everyday math problems, our tools are designed to deliver accuracy with clarity.
           </p>
@@ -30,7 +30,7 @@ const AboutPage = () => {
         </Card>
 
         <Card className="p-8 bg-card/80 backdrop-blur mb-8">
-          <h2 className="text-2xl font-semibold mb-4">Our Mission</h2>
+          <h2 className="text-xl font-semibold mb-4">Our Mission</h2>
           <p className="text-muted-foreground mb-4">
             Our mission is straightforward: To provide fast, accurate, educational, and trustworthy calculators and tools that empower people with knowledge and clarity.
           </p>
@@ -43,7 +43,7 @@ const AboutPage = () => {
         </Card>
 
         <Card className="p-8 bg-card/80 backdrop-blur mb-8">
-          <h2 className="text-2xl font-semibold mb-4">Why Prime Metric Was Created</h2>
+          <h2 className="text-xl font-semibold mb-4">Why Prime Metric Was Created</h2>
           <p className="text-muted-foreground mb-4">
             Modern users face a unique problem: Too many websites show numbers, but very few help people understand their meaning. Most online calculators offer results, but not explanations. People are left wondering: “Is this result correct?” “How did this value come?” “What formula was used?” “What does this mean for me?” “Is this reliable?”
           </p>
@@ -64,7 +64,7 @@ const AboutPage = () => {
         </Card>
 
         <Card className="p-8 bg-card/80 backdrop-blur mb-8">
-          <h2 className="text-2xl font-semibold mb-4">What Makes Prime Metric Different</h2>
+          <h2 className="text-xl font-semibold mb-4">What Makes Prime Metric Different</h2>
           <p className="text-muted-foreground mb-4">
             There are thousands of calculators online, but Prime Metric stands apart in several important ways:
           </p>
@@ -97,7 +97,7 @@ const AboutPage = () => {
         </Card>
         
         <Card className="p-8 bg-card/80 backdrop-blur mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Our Vision for the Future</h2>
+            <h2 className="text-xl font-semibold mb-4">Our Vision for the Future</h2>
             <p className="text-muted-foreground mb-4">
                 Prime Metric is not just a calculator website — it is growing into a complete digital toolkit. We plan to expand into:
             </p>
@@ -116,7 +116,7 @@ const AboutPage = () => {
             </p>
         </Card>
 
-        <div className="grid md:grid-cols-2 gap-6 mb-8">
+        <div className="grid sm:grid-cols-2 gap-4 mb-8">
             <Card className="p-6 bg-card/80 backdrop-blur">
                 <h3 className="font-semibold text-lg mb-2">Our Commitment</h3>
                 <p className="text-muted-foreground">
@@ -132,7 +132,7 @@ const AboutPage = () => {
         </div>
 
         <Card className="p-8 bg-card/80 backdrop-blur">
-          <h2 className="text-2xl font-semibold mb-4">Our Values</h2>
+          <h2 className="text-xl font-semibold mb-4">Our Values</h2>
           <ul className="space-y-3 text-muted-foreground">
             <li className="flex items-start">
               <Check className="text-primary mr-3 mt-1 h-5 w-5 flex-shrink-0" />
@@ -158,7 +158,7 @@ const AboutPage = () => {
         </Card>
          
         <div className="text-center mt-12">
-            <h2 className="text-2xl font-semibold mb-4">Conclusion</h2>
+            <h2 className="text-xl font-semibold mb-4">Conclusion</h2>
             <p className="text-muted-foreground mb-6 max-w-3xl mx-auto">
                Prime Metric is more than a website — it is a digital companion for anyone who wants clarity, accuracy, and knowledge. Our mission is to simplify calculations and empower users with information they can rely on. As we continue to grow, we remain committed to accuracy, transparency, and user experience. With 100+ calculators and tools, Prime Metric aims to be the most trusted platform for educational calculations worldwide.
             </p>

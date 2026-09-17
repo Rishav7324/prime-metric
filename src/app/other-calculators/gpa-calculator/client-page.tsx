@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,24 +9,63 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Copy, RotateCcw } from "lucide-react";
 
 interface Course {
   grade: string;
   credits: string;
 }
 
+type GpaResult = {
+  gpa: number;
+  totalCredits: number;
+  totalPoints: number;
+  courseCount: number;
+};
+
+const GRADE_POINTS: { [key: string]: number } = {
+  "A+": 4.0, "A": 4.0, "A-": 3.7,
+  "B+": 3.3, "B": 3.0, "B-": 2.7,
+  "C+": 2.3, "C": 2.0, "C-": 1.7,
+  "D+": 1.3, "D": 1.0, "F": 0.0
+};
+
+function computeGPA(courses: Course[]): GpaResult | null {
+  let totalPoints = 0;
+  let totalCredits = 0;
+  let count = 0;
+  for (const course of courses) {
+    const points = GRADE_POINTS[course.grade];
+    const credits = parseFloat(course.credits);
+    if (points === undefined || isNaN(credits) || credits <= 0) return null;
+    totalPoints += points * credits;
+    totalCredits += credits;
+    count++;
+  }
+  if (totalCredits === 0 || count === 0) return null;
+  return { gpa: totalPoints / totalCredits, totalCredits, totalPoints, courseCount: count };
+}
+
 const GPACalculatorClient = () => {
-  const [courses, setCourses] = useState<Course[]>([{ grade: "", credits: "" }]);
-  const [gpa, setGpa] = useState<number | null>(null);
+  const [courses, setCourses] = useState<Course[]>([
+    { grade: "A", credits: "3" },
+    { grade: "B+", credits: "4" },
+    { grade: "A-", credits: "3" },
+  ]);
+  // Auto-calculates on mount with default courses so result renders instantly
+  const [gpa, setGpa] = useState<GpaResult | null>(null);
   const { toast } = useToast();
 
-  const gradePoints: { [key: string]: number } = {
-    "A+": 4.0, "A": 4.0, "A-": 3.7,
-    "B+": 3.3, "B": 3.0, "B-": 2.7,
-    "C+": 2.3, "C": 2.0, "C-": 1.7,
-    "D+": 1.3, "D": 1.0, "F": 0.0
-  };
+  const gradePoints = GRADE_POINTS;
+
+  useEffect(() => {
+    const computed = computeGPA([
+      { grade: "A", credits: "3" },
+      { grade: "B+", credits: "4" },
+      { grade: "A-", credits: "3" },
+    ]);
+    if (computed) setGpa(computed);
+  }, []);
 
   const addCourse = () => {
     if (courses.length < 20) {
@@ -61,18 +100,29 @@ const GPACalculatorClient = () => {
   };
 
   const calculate = () => {
-    let totalPoints = 0;
-    let totalCredits = 0;
-
-    for (const course of courses) {
+    for (let i = 0; i < courses.length; i++) {
+      const course = courses[i];
+      if (!course.grade || gradePoints[course.grade] === undefined) {
+        toast({
+          variant: "destructive",
+          title: "Invalid Input",
+          description: `Please select a grade (A+ to F, 0–4 scale) for course ${i + 1}.`,
+        });
+        return;
+      }
       const credits = parseFloat(course.credits);
-      if (course.grade && !isNaN(credits) && credits > 0) {
-        totalPoints += gradePoints[course.grade] * credits;
-        totalCredits += credits;
+      if (isNaN(credits) || credits <= 0) {
+        toast({
+          variant: "destructive",
+          title: "Invalid Input",
+          description: `Credits for course ${i + 1} must be a positive number.`,
+        });
+        return;
       }
     }
-    
-    if (totalCredits === 0) {
+
+    const computed = computeGPA(courses);
+    if (!computed) {
         toast({
             variant: "destructive",
             title: "Invalid Input",
@@ -82,12 +132,24 @@ const GPACalculatorClient = () => {
         return;
     }
 
-    const calculatedGpa = totalPoints / totalCredits;
-    setGpa(calculatedGpa);
+    setGpa(computed);
     toast({
         title: "GPA Calculated",
-        description: `Your GPA is ${calculatedGpa.toFixed(2)}.`,
+        description: `Your GPA is ${computed.gpa.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}.`,
     });
+  };
+
+  const reset = () => setGpa(null);
+
+  const copyResult = async () => {
+    if (!gpa) return;
+    const text = `My GPA is ${gpa.gpa.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} across ${gpa.courseCount.toLocaleString()} courses (${gpa.totalCredits.toLocaleString()} credits total). — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
 
   return (
@@ -104,7 +166,7 @@ const GPACalculatorClient = () => {
             {courses.map((course, index) => (
               <div key={index} className="grid grid-cols-1 sm:grid-cols-[1fr,1fr,auto] gap-4 p-4 bg-muted/50 rounded-lg items-end">
                 <div>
-                  <Label htmlFor={`grade-${index}`}>Grade</Label>
+                  <Label className="text-sm font-medium" htmlFor={`grade-${index}`}>Grade</Label>
                   <Select value={course.grade} onValueChange={(value) => updateCourse(index, "grade", value)}>
                     <SelectTrigger id={`grade-${index}`}>
                       <SelectValue placeholder="Select grade" />
@@ -117,7 +179,7 @@ const GPACalculatorClient = () => {
                   </Select>
                 </div>
                 <div>
-                  <Label htmlFor={`credits-${index}`}>Credits</Label>
+                  <Label className="text-sm font-medium" htmlFor={`credits-${index}`}>Credits</Label>
                   <Input
                     id={`credits-${index}`}
                     type="number"
@@ -139,14 +201,25 @@ const GPACalculatorClient = () => {
             <Plus className="w-4 h-4 mr-2" />
             Add Course
           </Button>
-          <Button onClick={calculate} className="w-full gradient-button">
-            Calculate GPA
-          </Button>
+          <div className="flex gap-2">
+            <Button onClick={calculate} className="flex-1 gradient-button">
+              Calculate GPA
+            </Button>
+            <Button onClick={reset} variant="outline" size="icon" className="shrink-0" aria-label="Reset">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
 
           {gpa !== null && (
-            <div className="mt-6 p-4 bg-primary/10 rounded-lg text-center">
-                <p className="text-sm text-muted-foreground">Your Grade Point Average</p>
-                <p className="text-4xl font-bold text-primary">{gpa.toFixed(2)}</p>
+            <div className="mt-6 p-4 bg-[#FFF5F2] rounded-lg text-center">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-sm text-neutral-600">Your Grade Point Average</p>
+                  <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                    <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                  </Button>
+                </div>
+                <p className="text-2xl font-bold text-primary">{gpa.gpa.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                <p className="text-xs text-neutral-500 mt-1">{gpa.courseCount.toLocaleString()} courses · {gpa.totalCredits.toLocaleString()} credits</p>
             </div>
           )}
         </div>

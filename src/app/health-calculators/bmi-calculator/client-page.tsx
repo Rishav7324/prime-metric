@@ -5,164 +5,216 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+import { Copy, RotateCcw } from "lucide-react";
+
+type BmiResult = {
+  bmi: number;
+  category: string;
+  color: string;
+  bg: string;
+  border: string;
+  healthyMin: number;
+  healthyMax: number;
+  bmr: number | null;
+  gaugePct: number;
+};
+
+function computeBmi(weightStr: string, heightStr: string, ageStr: string, genderStr: string): BmiResult | null {
+  const w = parseFloat(weightStr);
+  const hCm = parseFloat(heightStr);
+  const h = hCm / 100;
+
+  if (!(w > 0 && w < 500) || !(hCm > 50 && hCm < 300)) return null;
+
+  const bmi = w / (h * h);
+  let category = "", color = "", bg = "", border = "";
+
+  if (bmi < 18.5) {
+    category = "Underweight"; color = "text-blue-600"; bg = "bg-blue-50"; border = "border-blue-200";
+  } else if (bmi < 25) {
+    category = "Normal Weight"; color = "text-green-600"; bg = "bg-green-50"; border = "border-green-200";
+  } else if (bmi < 30) {
+    category = "Overweight"; color = "text-yellow-600"; bg = "bg-yellow-50"; border = "border-yellow-200";
+  } else {
+    category = "Obese"; color = "text-red-600"; bg = "bg-red-50"; border = "border-red-200";
+  }
+
+  const healthyMin = 18.5 * h * h;
+  const healthyMax = 24.9 * h * h;
+
+  const ageNum = parseInt(ageStr);
+  let bmr: number | null = null;
+  if (ageNum >= 10 && ageNum <= 120) {
+    bmr = genderStr === "male"
+      ? 10 * w + 6.25 * hCm - 5 * ageNum + 5
+      : 10 * w + 6.25 * hCm - 5 * ageNum - 161;
+  }
+
+  return {
+    bmi: parseFloat(bmi.toFixed(1)),
+    category, color, bg, border,
+    healthyMin: parseFloat(healthyMin.toFixed(1)),
+    healthyMax: parseFloat(healthyMax.toFixed(1)),
+    bmr: bmr ? Math.round(bmr) : null,
+    gaugePct: Math.min(100, Math.max(0, ((bmi - 12) / (40 - 12)) * 100)),
+  };
+}
 
 const BMICalculatorClient = () => {
-  const [weight, setWeight] = useState("");
-  const [height, setHeight] = useState("");
-  const [result, setResult] = useState<{
-    bmi: number;
-    category: string;
-    color: string;
-  } | null>(null);
+  const [weight, setWeight] = useState("70");
+  const [height, setHeight] = useState("175");
+  const [age, setAge] = useState("30");
+  const [gender, setGender] = useState("male");
+  // Pre-filled so the result renders instantly (no empty state)
+  const [result, setResult] = useState<BmiResult | null>(() => computeBmi("70", "175", "30", "male"));
   const { toast } = useToast();
 
   const calculateBMI = () => {
-    const w = parseFloat(weight);
-    const h = parseFloat(height) / 100; // Convert cm to m
-
-    if (w > 0 && h > 0) {
-      const bmi = w / (h * h);
-      let category = "";
-      let color = "";
-
-      if (bmi < 18.5) {
-        category = "Underweight";
-        color = "text-blue-400";
-      } else if (bmi >= 18.5 && bmi < 25) {
-        category = "Normal Weight";
-        color = "text-green-400";
-      } else if (bmi >= 25 && bmi < 30) {
-        category = "Overweight";
-        color = "text-yellow-400";
-      } else {
-        category = "Obese";
-        color = "text-red-400";
-      }
-
-      setResult({ bmi: parseFloat(bmi.toFixed(1)), category, color });
-      toast({
-        title: "BMI Calculated",
-        description: `Your BMI is ${bmi.toFixed(1)} which is considered ${category}.`
-      });
-    } else {
+    const computed = computeBmi(weight, height, age, gender);
+    if (!computed) {
       toast({
         variant: "destructive",
         title: "Invalid Input",
-        description: "Please enter a valid weight and height."
+        description: "Enter weight (1-500 kg) and height (50-300 cm).",
       });
+      return;
+    }
+    setResult(computed);
+    toast({ title: "BMI Calculated", description: `Your BMI is ${computed.bmi} (${computed.category}).` });
+  };
+
+  const reset = () => {
+    setWeight(""); setHeight(""); setAge(""); setResult(null);
+  };
+
+  const copyResult = async () => {
+    if (!result) return;
+    const text = `My BMI: ${result.bmi} (${result.category}). Healthy weight range: ${result.healthyMin}-${result.healthyMax} kg.${result.bmr ? ` BMR: ${result.bmr} kcal/day.` : ""} — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
     }
   };
 
-  const explanation = (
-    <div className="space-y-4 text-left">
-      <p>
-        <strong>Body Mass Index (BMI)</strong> is a measure of body fat based on height and weight 
-        that applies to adult men and women.
-      </p>
-      <div className="space-y-2">
-        <p className="font-semibold">BMI Categories:</p>
-        <ul className="space-y-1 ml-4" style={{ listStyleType: 'disc', paddingLeft: '20px' }}>
-          <li><span className="text-blue-400">Underweight:</span> BMI less than 18.5</li>
-          <li><span className="text-green-400">Normal weight:</span> BMI 18.5 to 24.9</li>
-          <li><span className="text-yellow-400">Overweight:</span> BMI 25 to 29.9</li>
-          <li><span className="text-red-400">Obese:</span> BMI 30 or greater</li>
-        </ul>
-      </div>
-      <p className="text-sm">
-        <strong>Note:</strong> BMI is a screening tool and does not diagnose body fatness or health. 
-        Consult with a healthcare provider for health assessments.
-      </p>
-    </div>
-  );
+  const ranges = [
+    { label: "Underweight", range: "< 18.5", cls: "bg-blue-50 border-blue-200 text-blue-600" },
+    { label: "Normal", range: "18.5 - 24.9", cls: "bg-green-50 border-green-200 text-green-600" },
+    { label: "Overweight", range: "25 - 29.9", cls: "bg-yellow-50 border-yellow-200 text-yellow-600" },
+    { label: "Obese", range: "≥ 30", cls: "bg-red-50 border-red-200 text-red-600" },
+  ];
 
   return (
     <CalculatorLayout
       title="BMI Calculator"
-      description="Calculate your Body Mass Index and understand your health category"
-      keywords="bmi calculator, body mass index, health calculator, weight calculator"
+      description="Calculate your Body Mass Index, healthy weight range and daily calorie burn (BMR)"
+      keywords="bmi calculator, body mass index, healthy weight range, bmr calculator, ideal weight"
       canonicalUrl="/health-calculators/bmi-calculator"
-      explanation={explanation}
     >
-      <div className="grid md:grid-cols-2 gap-8">
-        {/* Input Section */}
-        <Card className="glass-card p-8">
-          <h2 className="text-2xl font-bold mb-6">Enter Your Details</h2>
-          <div className="space-y-6">
+      <div className="grid sm:grid-cols-2 gap-4">
+        {/* Input */}
+        <Card className="bg-white border border-neutral-200 p-4 sm:p-5">
+          <h2 className="text-lg font-bold mb-4 text-black">Enter Your Details</h2>
+          <div className="space-y-4">
             <div>
-              <Label htmlFor="weight" className="text-lg">Weight (kg)</Label>
-              <Input
-                id="weight"
-                type="number"
-                placeholder="e.g., 70"
-                value={weight}
-                onChange={(e) => setWeight(e.target.value)}
-                className="mt-2 h-12 text-lg glass-card border-primary/30"
-              />
+              <Label htmlFor="weight" className="text-sm font-medium">Weight (kg)</Label>
+              <Input id="weight" type="number" min={1} max={500} placeholder="e.g., 70" value={weight}
+                onChange={(e) => setWeight(e.target.value)} className="mt-1.5 h-10 text-sm bg-white" />
             </div>
-
             <div>
-              <Label htmlFor="height" className="text-lg">Height (cm)</Label>
-              <Input
-                id="height"
-                type="number"
-                placeholder="e.g., 175"
-                value={height}
-                onChange={(e) => setHeight(e.target.value)}
-                className="mt-2 h-12 text-lg glass-card border-primary/30"
-              />
+              <Label htmlFor="height" className="text-sm font-medium">Height (cm)</Label>
+              <Input id="height" type="number" min={50} max={300} placeholder="e.g., 175" value={height}
+                onChange={(e) => setHeight(e.target.value)} className="mt-1.5 h-10 text-sm bg-white" />
             </div>
-
-            <Button 
-              onClick={calculateBMI}
-              className="w-full h-12 text-lg gradient-button"
-              disabled={!weight || !height}
-            >
-              Calculate BMI
-            </Button>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label htmlFor="age" className="text-sm font-medium">Age <span className="text-neutral-400 font-normal">(for BMR)</span></Label>
+                <Input id="age" type="number" min={10} max={120} placeholder="e.g., 30" value={age}
+                  onChange={(e) => setAge(e.target.value)} className="mt-1.5 h-10 text-sm bg-white" />
+              </div>
+              <div>
+                <Label className="text-sm font-medium">Gender</Label>
+                <Select value={gender} onValueChange={setGender}>
+                  <SelectTrigger className="mt-1.5 h-10 text-sm bg-white"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="male">Male</SelectItem>
+                    <SelectItem value="female">Female</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <Button onClick={calculateBMI} className="flex-1 h-10 text-sm gradient-button" disabled={!weight || !height}>
+                Calculate BMI
+              </Button>
+              <Button onClick={reset} variant="outline" size="icon" className="h-10 w-10 shrink-0" aria-label="Reset">
+                <RotateCcw className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </Card>
 
-        {/* Result Section */}
-        <Card className="glass-card p-8">
-          <h2 className="text-2xl font-bold mb-6">Your Result</h2>
+        {/* Result */}
+        <Card className="bg-white border border-neutral-200 p-4 sm:p-5">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-bold text-black">Your Result</h2>
+            {result && (
+              <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+              </Button>
+            )}
+          </div>
           {result ? (
-            <div className="space-y-6">
-              <div className="text-center py-8">
-                <div className={`text-6xl font-bold mb-4 ${result.color}`}>
-                  {result.bmi}
+            <div className="space-y-4">
+              <div className={`text-center py-4 rounded-xl border ${result.bg} ${result.border}`}>
+                <div className={`text-4xl font-bold ${result.color}`}>{result.bmi}</div>
+                <div className={`text-base font-semibold mt-1 ${result.color}`}>{result.category}</div>
+              </div>
+
+              {/* Gauge */}
+              <div>
+                <div className="relative h-2.5 rounded-full overflow-hidden flex">
+                  <div className="bg-blue-400" style={{ width: "23%" }} />
+                  <div className="bg-green-500" style={{ width: "23%" }} />
+                  <div className="bg-yellow-400" style={{ width: "18%" }} />
+                  <div className="bg-red-500" style={{ width: "36%" }} />
+                  <div className="absolute top-[-3px] w-1 h-4 bg-black rounded" style={{ left: `calc(${result.gaugePct}% - 2px)` }} />
                 </div>
-                <div className={`text-2xl font-semibold ${result.color}`}>
-                  {result.category}
+                <div className="flex justify-between text-[10px] text-neutral-500 mt-1">
+                  <span>12</span><span>18.5</span><span>25</span><span>30</span><span>40</span>
                 </div>
               </div>
 
-              <div className="space-y-3">
-                <div className="flex justify-between items-center p-3 rounded-lg bg-blue-500/10 border border-blue-500/20">
-                  <span>Underweight</span>
-                  <span className="text-blue-400">&lt; 18.5</span>
+              <div className="grid grid-cols-2 gap-2.5 text-center">
+                <div className="p-3 bg-neutral-50 border border-neutral-200 rounded-lg">
+                  <p className="text-xs text-neutral-500">Healthy weight</p>
+                  <p className="text-sm font-bold text-black">{result.healthyMin} - {result.healthyMax} kg</p>
                 </div>
-                <div className="flex justify-between items-center p-3 rounded-lg bg-green-500/10 border border-green-500/20">
-                  <span>Normal</span>
-                  <span className="text-green-400">18.5 - 24.9</span>
+                <div className="p-3 bg-neutral-50 border border-neutral-200 rounded-lg">
+                  <p className="text-xs text-neutral-500">Daily burn (BMR)</p>
+                  <p className="text-sm font-bold text-black">{result.bmr ? `${result.bmr.toLocaleString()} kcal` : "Add age"}</p>
                 </div>
-                <div className="flex justify-between items-center p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/20">
-                  <span>Overweight</span>
-                  <span className="text-yellow-400">25 - 29.9</span>
-                </div>
-                <div className="flex justify-between items-center p-3 rounded-lg bg-red-500/10 border border-red-500/20">
-                  <span>Obese</span>
-                  <span className="text-red-400">≥ 30</span>
-                </div>
+              </div>
+
+              <div className="space-y-2">
+                {ranges.map((r) => (
+                  <div key={r.label} className={`flex justify-between items-center px-3 py-1.5 rounded-lg border text-[13px] ${r.cls}`}>
+                    <span className="font-medium text-black">{r.label}</span>
+                    <span className="font-semibold">{r.range}</span>
+                  </div>
+                ))}
               </div>
             </div>
           ) : (
-            <div className="flex items-center justify-center h-64 text-muted-foreground">
+            <div className="flex items-center justify-center h-40 text-neutral-500">
               <div className="text-center">
-                <div className="text-6xl mb-4">🏃</div>
-                <p>Enter your details to calculate BMI</p>
+                <div className="text-4xl mb-2">🏃</div>
+                <p className="text-sm">Enter your details to see BMI + healthy range</p>
               </div>
             </div>
           )}
@@ -170,64 +222,23 @@ const BMICalculatorClient = () => {
       </div>
 
       <CalculatorContentSection
-        aboutContent="Body Mass Index (BMI) is a widely-used screening tool that helps assess whether a person has a healthy body weight relative to their height. While BMI doesn't directly measure body fat, it provides a quick and easy way to identify potential weight-related health risks. Healthcare professionals use BMI as one of several factors when evaluating overall health status. It's important to note that BMI is most accurate for adults aged 20 and older, and may not be appropriate for athletes, pregnant women, or individuals with certain medical conditions."
+        aboutContent="Body Mass Index (BMI) is a widely-used screening tool that estimates whether you have a healthy body weight for your height. This calculator also shows your healthy weight range and estimated Basal Metabolic Rate (BMR) — the calories your body burns at rest — using the Mifflin-St Jeor equation."
         useCases={[
-          {
-            title: "Health Screening",
-            description: "Healthcare providers use BMI as an initial screening tool to identify patients who may benefit from further health assessments and lifestyle counseling."
-          },
-          {
-            title: "Weight Management Goals",
-            description: "Track your progress when working toward weight loss or gain goals by monitoring BMI changes over time alongside other health metrics."
-          },
-          {
-            title: "Insurance Assessments",
-            description: "Many insurance companies use BMI as one factor in determining health insurance premiums and coverage eligibility."
-          },
-          {
-            title: "Fitness Planning",
-            description: "Establish baseline measurements before starting a new fitness or nutrition program to track effectiveness over time."
-          }
+          { title: "Health Screening", description: "A quick first check used by professionals to flag potential weight-related risks." },
+          { title: "Weight Goals", description: "See exactly how many kilos to gain or lose to reach the healthy range." },
+          { title: "Calorie Planning", description: "Use your BMR as the baseline for diet and fitness calorie targets." },
+          { title: "Track Progress", description: "Re-check monthly to follow trends rather than single readings." },
         ]}
         tips={[
-          {
-            title: "Measure Accurately",
-            description: "For the most accurate BMI calculation, measure your weight first thing in the morning after using the bathroom, and measure height without shoes against a flat wall."
-          },
-          {
-            title: "Consider Body Composition",
-            description: "BMI doesn't distinguish between muscle and fat. Athletes with high muscle mass may have elevated BMI despite low body fat percentage."
-          },
-          {
-            title: "Track Trends Over Time",
-            description: "Rather than focusing on a single BMI measurement, track changes over several months to identify meaningful patterns and trends."
-          },
-          {
-            title: "Consult Healthcare Professionals",
-            description: "Always discuss BMI results with your doctor, especially if you have concerns about your weight or overall health. BMI is just one tool among many."
-          }
+          { title: "Muscle vs Fat", description: "Athletes may show high BMI despite low body fat — BMI can't tell muscle from fat." },
+          { title: "Measure Right", description: "Weigh yourself in the morning, measure height barefoot against a wall." },
+          { title: "BMR Is a Baseline", description: "Total daily burn = BMR × activity level (1.2 sedentary up to 1.9 very active)." },
         ]}
         faqs={[
-          {
-            question: "Is BMI accurate for everyone?",
-            answer: "BMI is a useful screening tool for most adults, but it has limitations. It may not be accurate for athletes, bodybuilders, pregnant women, elderly individuals, or those with certain medical conditions. BMI doesn't account for muscle mass, bone density, or fat distribution, so it should be used alongside other health assessments."
-          },
-          {
-            question: "What BMI is considered healthy?",
-            answer: "For adults, a BMI between 18.5 and 24.9 is generally considered healthy. BMI under 18.5 is underweight, 25-29.9 is overweight, and 30 or above is obese. However, these ranges may vary slightly based on age, ethnicity, and individual health factors."
-          },
-          {
-            question: "How often should I calculate my BMI?",
-            answer: "For general health monitoring, calculating BMI once every few months is sufficient. If you're actively working on weight management goals, monthly calculations can help track progress. Avoid daily measurements as normal weight fluctuations can be misleading."
-          },
-          {
-            question: "Can BMI predict health problems?",
-            answer: "BMI can indicate increased risk for certain health conditions like heart disease, diabetes, and high blood pressure, but it's not a diagnostic tool. Many factors contribute to health risks, including diet, exercise, genetics, and lifestyle habits."
-          },
-          {
-            question: "Why is my BMI different from what I expected?",
-            answer: "BMI is based solely on height and weight ratios and doesn't consider individual variations in body composition, frame size, or muscle mass. If your BMI seems inconsistent with your fitness level or appearance, consult a healthcare provider for a comprehensive health assessment."
-          }
+          { question: "What is a healthy BMI?", answer: "For most adults, 18.5 to 24.9 is considered healthy. Below 18.5 is underweight, 25-29.9 overweight, and 30+ obese." },
+          { question: "How is BMR calculated?", answer: "We use the Mifflin-St Jeor equation, which factors in weight, height, age and gender. It estimates calories burned at complete rest." },
+          { question: "Is BMI accurate for athletes?", answer: "Not always — dense muscle raises BMI without extra fat. Athletes should also track body-fat percentage and waist size." },
+          { question: "How often should I check BMI?", answer: "Monthly is plenty. Daily fluctuations in water and food make frequent checks misleading." },
         ]}
       />
     </CalculatorLayout>

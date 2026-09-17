@@ -9,34 +9,83 @@ import { Button } from "@/components/ui/button";
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+import { Copy, RotateCcw } from "lucide-react";
+
+type DistanceResult = {
+  distance: number;
+  dx: number;
+  dy: number;
+};
+
+function computeDistance(x1Str: string, y1Str: string, x2Str: string, y2Str: string): DistanceResult | null {
+  const x1 = parseFloat(x1Str);
+  const y1 = parseFloat(y1Str);
+  const x2 = parseFloat(x2Str);
+  const y2 = parseFloat(y2Str);
+  if (!Number.isFinite(x1) || !Number.isFinite(y1) || !Number.isFinite(x2) || !Number.isFinite(y2)) return null;
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  return { distance: Math.sqrt(dx * dx + dy * dy), dx, dy };
+}
+
+const DEFAULT_X1 = "0";
+const DEFAULT_Y1 = "0";
+const DEFAULT_X2 = "3";
+const DEFAULT_Y2 = "4";
 
 const DistanceCalculator = () => {
-  const [x1, setX1] = useState("");
-  const [y1, setY1] = useState("");
-  const [x2, setX2] = useState("");
-  const [y2, setY2] = useState("");
-  const [distance, setDistance] = useState<number | null>(null);
+  const [x1, setX1] = useState(DEFAULT_X1);
+  const [y1, setY1] = useState(DEFAULT_Y1);
+  const [x2, setX2] = useState(DEFAULT_X2);
+  const [y2, setY2] = useState(DEFAULT_Y2);
+  // Pre-filled so the result renders instantly (no empty state)
+  const [distance, setDistance] = useState<DistanceResult | null>(() => computeDistance(DEFAULT_X1, DEFAULT_Y1, DEFAULT_X2, DEFAULT_Y2));
   const { toast } = useToast();
 
+  const formatDist = (v: number) =>
+    v.toLocaleString(undefined, { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+
   const calculate = () => {
-    const px1 = parseFloat(x1);
-    const py1 = parseFloat(y1);
-    const px2 = parseFloat(x2);
-    const py2 = parseFloat(y2);
-    
-    if (!isNaN(px1) && !isNaN(py1) && !isNaN(px2) && !isNaN(py2)) {
-      const d = Math.sqrt(Math.pow(px2 - px1, 2) + Math.pow(py2 - py1, 2));
-      setDistance(d);
+    if (x1.trim() === "" || y1.trim() === "" || x2.trim() === "" || y2.trim() === "") {
       toast({
-        title: "Distance Calculated",
-        description: `The distance is ${d.toFixed(4)}.`,
+        variant: "destructive",
+        title: "Invalid Input",
+        description: "Enter all four coordinates (x₁, y₁, x₂, y₂).",
       });
-    } else {
+      return;
+    }
+    const computed = computeDistance(x1, y1, x2, y2);
+    if (!computed) {
         toast({
             variant: "destructive",
             title: "Invalid Input",
             description: "Please enter valid numbers for all coordinates.",
         });
+        return;
+    }
+    setDistance(computed);
+    toast({
+      title: "Distance Calculated",
+      description: `The distance is ${formatDist(computed.distance)}.`,
+    });
+  };
+
+  const reset = () => {
+    setX1("");
+    setY1("");
+    setX2("");
+    setY2("");
+    setDistance(null);
+  };
+
+  const copyResult = async () => {
+    if (!distance) return;
+    const text = `Distance between (${x1}, ${y1}) and (${x2}, ${y2}) = ${formatDist(distance.distance)} — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
     }
   };
 
@@ -87,13 +136,23 @@ const DistanceCalculator = () => {
               </div>
             </div>
           </div>
-          <Button onClick={calculate} className="w-full gradient-button">
-            Calculate Distance
-          </Button>
+          <div className="flex gap-2">
+            <Button onClick={calculate} className="flex-1 gradient-button">
+              Calculate Distance
+            </Button>
+            <Button onClick={reset} variant="outline" size="icon" className="h-10 w-10 shrink-0" aria-label="Reset">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
           {distance !== null && (
-            <div className="mt-6 p-4 bg-primary/10 rounded-lg text-center">
-              <p className="text-sm text-muted-foreground">Distance</p>
-              <p className="text-4xl font-bold text-primary">{distance.toFixed(4)}</p>
+            <div className="mt-6 p-4 bg-[#FFF5F2] rounded-lg">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-sm text-neutral-600">Distance</p>
+                <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                  <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                </Button>
+              </div>
+              <p className="text-2xl font-bold text-primary text-center">{formatDist(distance.distance)}</p>
             </div>
           )}
         </div>

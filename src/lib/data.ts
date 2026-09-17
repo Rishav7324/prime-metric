@@ -1,4 +1,4 @@
-import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link, DollarSign, Heart, GraduationCap, Repeat, Percent, Divide, Sigma, Wrench, Clock, CalendarDays, WalletCards, ListOrdered, Square, Car, Flame, PersonStanding, Wallet, Dumbbell, Circle, Dices, MoveHorizontal, FileCheck, Ruler, Home, Scale, BrainCircuit, Image as ImageIcon, AlarmClock, Timer as TimerIcon, Globe } from "lucide-react";
+import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link, DollarSign, Heart, GraduationCap, Repeat, Percent, Divide, Sigma, Wrench, Clock, CalendarDays, WalletCards, ListOrdered, Square, Car, Flame, PersonStanding, Wallet, Dumbbell, Circle, Dices, MoveHorizontal, FileCheck, Ruler, Home, Scale, BrainCircuit, Image as ImageIcon, AlarmClock, Timer as TimerIcon, Globe, Receipt, Droplets, MoonStar, CalendarHeart, HeartPulse, Fingerprint, ShieldCheck, Hourglass } from "lucide-react";
 import { Calculator as CalculatorType } from "@/types/calculator";
 
 
@@ -15,7 +15,6 @@ export const financialCalculatorsData: Omit<CalculatorType, 'icon'>[] = [
   { id: "finance", name: "Finance Calculator", description: "General finance calculations", category: "financial", path: "/financial-calculators/finance-calculator", implemented: true },
   { id: "income-tax", name: "Income Tax Calculator", description: "Calculate income tax", category: "financial", path: "/financial-calculators/income-tax-calculator", implemented: true },
   { id: "salary", name: "Salary Calculator", description: "Calculate salary components", category: "financial", path: "/financial-calculators/salary-calculator", implemented: true },
-  { id: "interest", name: "Interest Calculator", description: "Calculate simple/compound interest", category: "financial", path: "/financial-calculators/compound-interest-calculator", implemented: true },
   { id: "simple-interest", name: "Simple Interest Calculator", description: "Calculate simple interest", category: "financial", path: "/financial-calculators/simple-interest-calculator", implemented: true },
   { id: "house-affordability", name: "House Affordability Calculator", description: "Calculate affordable house price", category: "financial", path: "/financial-calculators/house-affordability-calculator", implemented: true },
   { id: "rent", name: "Rent Calculator", description: "Calculate rental costs", category: "financial", path: "/financial-calculators/rent-calculator", implemented: true },
@@ -30,6 +29,12 @@ export const financialCalculatorsData: Omit<CalculatorType, 'icon'>[] = [
   { id: "apr", name: "APR Calculator", description: "Calculate annual percentage rate", category: "financial", path: "/financial-calculators/apr-calculator", implemented: true },
   { id: "fuel-cost", name: "Fuel Cost Calculator", description: "Calculate fuel costs", category: "financial", path: "/financial-calculators/fuel-cost-calculator", implemented: true },
   { id: "swp", name: "SWP Calculator", description: "Systematic Withdrawal Plan calculator", category: "financial", path: "/financial-calculators/swp-calculator", implemented: true },
+  { id: "gst", name: "GST Calculator", description: "Add or remove GST with CGST/SGST split", category: "financial", path: "/financial-calculators/gst-calculator", implemented: true },
+  { id: "fd", name: "FD Calculator", description: "Fixed deposit maturity calculator", category: "financial", path: "/financial-calculators/fd-calculator", implemented: true },
+  { id: "rd", name: "RD Calculator", description: "Recurring deposit maturity calculator", category: "financial", path: "/financial-calculators/rd-calculator", implemented: true },
+  { id: "ppf", name: "PPF Calculator", description: "Public Provident Fund maturity calculator", category: "financial", path: "/financial-calculators/ppf-calculator", implemented: true },
+  { id: "cagr", name: "CAGR Calculator", description: "Calculate compound annual growth rate", category: "financial", path: "/financial-calculators/cagr-calculator", implemented: true },
+  { id: "emi", name: "EMI Calculator", description: "Calculate home & personal loan EMI", category: "financial", path: "/financial-calculators/emi-calculator", implemented: true },
 ];
 
 export const healthCalculatorsData: Omit<CalculatorType, 'icon'>[] = [
@@ -45,6 +50,11 @@ export const healthCalculatorsData: Omit<CalculatorType, 'icon'>[] = [
   { id: "pace", name: "Pace Calculator", description: "Calculate running pace", category: "health", path: "/health-calculators/pace-calculator", implemented: true },
   { id: "carbohydrate", name: "Carbohydrate Calculator", description: "Calculate carb intake", category: "health", path: "/health-calculators/carbohydrate-calculator", implemented: true },
   { id: "healthy-weight", name: "Healthy Weight Calculator", description: "Find healthy weight range", category: "health", path: "/health-calculators/healthy-weight-calculator", implemented: true },
+  { id: "water-intake", name: "Water Intake Calculator", description: "Calculate daily water needs", category: "health", path: "/health-calculators/water-intake-calculator", implemented: true },
+  { id: "sleep", name: "Sleep Calculator", description: "Find ideal bedtime & wake times", category: "health", path: "/health-calculators/sleep-calculator", implemented: true },
+  { id: "ovulation", name: "Ovulation Calculator", description: "Track fertile window and ovulation day", category: "health", path: "/health-calculators/ovulation-calculator", implemented: true },
+  { id: "heart-rate", name: "Heart Rate Calculator", description: "Max HR and training zone targets", category: "health", path: "/health-calculators/heart-rate-calculator", implemented: true },
+  { id: "one-rep-max", name: "One Rep Max Calculator", description: "Estimate 1RM strength and training percentages", category: "health", path: "/health-calculators/one-rep-max-calculator", implemented: true },
 ];
 
 export const mathCalculatorsData: Omit<CalculatorType, 'icon'>[] = [
@@ -66,6 +76,8 @@ export const mathCalculatorsData: Omit<CalculatorType, 'icon'>[] = [
   { id: "distance", name: "Distance Calculator", description: "Calculate distance between points", category: "math", path: "/math-calculators/distance-calculator", implemented: true },
   { id: "percent-error", name: "Percent Error Calculator", description: "Calculate percent error", category: "math", path: "/math-calculators/percent-error-calculator", implemented: true },
   { id: "binary", name: "Binary Calculator", description: "Binary calculations", category: "math", path: "/math-calculators/binary-calculator", implemented: true },
+  { id: "hcf-lcm", name: "HCF and LCM Calculator", description: "GCD and LCM with step-by-step working", category: "math", path: "/math-calculators/hcf-lcm-calculator", implemented: true },
+  { id: "prime-checker", name: "Prime Number Checker", description: "Check primes with factors and neighbours", category: "math", path: "/math-calculators/prime-checker", implemented: true },
 ];
 
 export const otherCalculatorsData: Omit<CalculatorType, 'icon'>[] = [
@@ -84,6 +96,9 @@ export const otherCalculatorsData: Omit<CalculatorType, 'icon'>[] = [
   { id: "stopwatch", name: "Stopwatch", description: "Measure elapsed time with lap functionality", category: "other", path: "/other-calculators/stopwatch", implemented: true },
   { id: "timer", name: "Timer", description: "Set a countdown timer for any duration", category: "other", path: "/other-calculators/timer", implemented: true },
   { id: "world-clock", name: "World Clock", description: "Check current times in cities worldwide", category: "other", path: "/other-calculators/world-clock", implemented: true },
+  { id: "slug-generator", name: "Slug Generator", description: "Turn titles into SEO-friendly URL slugs", category: "other", path: "/other-calculators/slug-generator", implemented: true },
+  { id: "countdown", name: "Countdown Calculator", description: "Live countdown to any event", category: "other", path: "/other-calculators/countdown-calculator", implemented: true },
+  { id: "love", name: "Love Calculator", description: "Fun name compatibility score", category: "other", path: "/other-calculators/love-calculator", implemented: true },
 ];
 
 export const imageToolsData: Omit<CalculatorType, 'icon'>[] = [
@@ -106,6 +121,9 @@ export const developerToolsData: Omit<CalculatorType, 'icon'>[] = [
   { id: "hash-generator", name: "Hash Generator", description: "Generate MD5, SHA-1, SHA-256 hashes", category: "tools", path: "/tool/hash-generator", implemented: true },
   { id: "invoice-generator", name: "Invoice Generator", description: "Create professional business invoices", category: "tools", path: "/tool/invoice-generator", implemented: true },
   { id: "password", name: "Password Generator", description: "Generate secure passwords", category: "tools", path: "/other-calculators/password-generator", implemented: true },
+  { id: "uuid-generator", name: "UUID Generator", description: "Generate bulk UUID v4 identifiers", category: "tools", path: "/tool/uuid-generator", implemented: true },
+  { id: "timestamp-converter", name: "Timestamp Converter", description: "Convert Unix timestamps to dates", category: "tools", path: "/tool/timestamp-converter", implemented: true },
+  { id: "password-strength-checker", name: "Password Strength Checker", description: "Check password strength and crack time", category: "tools", path: "/tool/password-strength-checker", implemented: true },
 ];
 
 const iconMap: { [key: string]: CalculatorType['icon'] } = {
@@ -197,6 +215,25 @@ const iconMap: { [key: string]: CalculatorType['icon'] } = {
   "stopwatch": AlarmClock,
   "timer": TimerIcon,
   "world-clock": Globe,
+  "gst": Receipt,
+  "fd": Landmark,
+  "rd": Repeat,
+  "ppf": PiggyBank,
+  "cagr": TrendingUp,
+  "emi": Landmark,
+  "water-intake": Droplets,
+  "sleep": MoonStar,
+  "ovulation": CalendarHeart,
+  "heart-rate": HeartPulse,
+  "one-rep-max": Dumbbell,
+  "hcf-lcm": Divide,
+  "prime-checker": Sigma,
+  "uuid-generator": Fingerprint,
+  "timestamp-converter": Clock,
+  "password-strength-checker": ShieldCheck,
+  "slug-generator": Link,
+  "countdown": Hourglass,
+  "love": Heart,
 };
 
 const addIcons = (calculators: Omit<CalculatorType, 'icon'>[]): CalculatorType[] => {

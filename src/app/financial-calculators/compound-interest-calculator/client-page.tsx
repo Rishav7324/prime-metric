@@ -10,46 +10,77 @@ import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
-import { TrendingUp } from "lucide-react";
+import { CurrencySelector, getCurrencySymbol } from "@/components/CurrencySelector";
+import { Copy, RotateCcw, TrendingUp } from "lucide-react";
+
+type CompoundResult = { interest: number; total: number };
+
+function computeInterest(principalStr: string, rateStr: string, timeStr: string, typeStr: string): CompoundResult | null {
+  const p = parseFloat(principalStr);
+  const annualRate = parseFloat(rateStr);
+  const t = parseFloat(timeStr);
+
+  if (!(p > 0 && p <= 1e12)) return null;
+  if (isNaN(annualRate) || annualRate < 0 || annualRate > 100) return null;
+  if (!(t > 0 && t <= 50)) return null;
+  if (typeStr !== "simple" && typeStr !== "compound") return null;
+
+  const r = annualRate / 100;
+  let interest: number, total: number;
+
+  if (typeStr === "simple") {
+    interest = p * r * t;
+    total = p + interest;
+  } else {
+    total = p * Math.pow(1 + r, t);
+    interest = total - p;
+  }
+  if (!isFinite(interest) || !isFinite(total)) return null;
+
+  return { interest, total };
+}
 
 const InterestCalculatorClient = () => {
-  const [principal, setPrincipal] = useState("");
-  const [rate, setRate] = useState("");
-  const [time, setTime] = useState("");
+  const [principal, setPrincipal] = useState("10000");
+  const [rate, setRate] = useState("8");
+  const [time, setTime] = useState("10");
   const [type, setType] = useState("compound");
-  const [result, setResult] = useState<any>(null);
+  // Pre-filled so the result renders instantly (no empty state)
+  const [result, setResult] = useState<CompoundResult | null>(() => computeInterest("10000", "8", "10", "compound"));
+  const [currency, setCurrency] = useState("USD");
   const { toast } = useToast();
+  const currencySymbol = getCurrencySymbol(currency);
+
+  const fmt = (n: number) =>
+    n.toLocaleString("en-US", { maximumFractionDigits: 2, minimumFractionDigits: 2 });
 
   const calculate = () => {
-    const p = parseFloat(principal);
-    const r = parseFloat(rate) / 100;
-    const t = parseFloat(time);
-    
-    if (p > 0 && r >= 0 && t > 0) {
-      let interest, total;
-      
-      if (type === "simple") {
-        interest = p * r * t;
-        total = p + interest;
-      } else { // compound
-        total = p * Math.pow(1 + r, t);
-        interest = total - p;
-      }
-      
-      setResult({
-        interest: interest.toFixed(2),
-        total: total.toFixed(2)
-      });
+    const computed = computeInterest(principal, rate, time, type);
+    if (!computed) {
       toast({
-        title: "Calculation Complete",
-        description: `The calculated interest is $${interest.toFixed(2)}.`,
+        variant: "destructive",
+        title: "Invalid Input",
+        description: "Enter principal (1+), rate (0-100%), time (up to 50 yrs).",
       });
-    } else {
-        toast({
-            variant: "destructive",
-            title: "Invalid Input",
-            description: "Please enter valid, positive numbers for all fields.",
-        });
+      return;
+    }
+    setResult(computed);
+    toast({
+      title: "Calculation Complete",
+      description: `Interest is ${currencySymbol}${fmt(computed.interest)}; total ${currencySymbol}${fmt(computed.total)}.`,
+    });
+  };
+
+  const reset = () => { setPrincipal(""); setRate(""); setTime(""); setResult(null); };
+
+  const copyResult = async () => {
+    if (!result) return;
+    const text = `Interest (${type}): principal ${currencySymbol}${fmt(parseFloat(principal) || 0)} at ${rate}% for ${time} yrs → interest ${currencySymbol}${fmt(result.interest)}, total ${currencySymbol}${fmt(result.total)}. — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
     }
   };
 
@@ -60,14 +91,15 @@ const InterestCalculatorClient = () => {
       canonicalUrl="/financial-calculators/compound-interest-calculator"
       formula={type === 'simple' ? "Simple Interest: I = P × r × t" : "Compound Interest: A = P(1 + r)ⁿ"}
     >
-      <div className="grid md:grid-cols-2 gap-8">
-        <Card className="glass-card p-8">
-          <h2 className="text-2xl font-bold mb-6 font-headline">Investment Details</h2>
-          <div className="space-y-6">
-             <div>
-              <Label>Interest Type</Label>
+      <div className="grid sm:grid-cols-2 gap-4">
+        <Card className="bg-white border border-neutral-200 p-4 sm:p-5">
+          <h2 className="text-lg font-bold mb-4 font-headline">Investment Details</h2>
+          <div className="space-y-4">
+             <CurrencySelector value={currency} onChange={setCurrency} />
+              <div>
+               <Label>Interest Type</Label>
               <Select value={type} onValueChange={setType}>
-                <SelectTrigger className="mt-2 h-12 glass-card border-primary/30"><SelectValue /></SelectTrigger>
+                <SelectTrigger className="mt-2 h-10 bg-white border border-neutral-200"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="compound">Compound Interest</SelectItem>
                   <SelectItem value="simple">Simple Interest</SelectItem>
@@ -75,42 +107,54 @@ const InterestCalculatorClient = () => {
               </Select>
             </div>
             <div>
-              <Label>Principal Amount ($)</Label>
-              <Input type="number" value={principal} onChange={(e) => setPrincipal(e.target.value)} placeholder="e.g., 10000" className="mt-2 h-12 glass-card border-primary/30" />
+              <Label>Principal Amount ({currencySymbol})</Label>
+              <Input type="number" value={principal} onChange={(e) => setPrincipal(e.target.value)} placeholder="e.g., 10000" className="mt-2 h-10 bg-white border border-neutral-200" />
             </div>
             <div>
               <Label>Annual Interest Rate (%)</Label>
-              <Input type="number" step="0.1" value={rate} onChange={(e) => setRate(e.target.value)} placeholder="e.g., 8" className="mt-2 h-12 glass-card border-primary/30" />
+              <Input type="number" step="0.1" value={rate} onChange={(e) => setRate(e.target.value)} placeholder="e.g., 8" className="mt-2 h-10 bg-white border border-neutral-200" />
             </div>
             <div>
               <Label>Time Period (Years)</Label>
-              <Input type="number" value={time} onChange={(e) => setTime(e.target.value)} placeholder="e.g., 10" className="mt-2 h-12 glass-card border-primary/30" />
+              <Input type="number" value={time} onChange={(e) => setTime(e.target.value)} placeholder="e.g., 10" className="mt-2 h-10 bg-white border border-neutral-200" />
             </div>
-            <Button onClick={calculate} className="w-full h-12 gradient-button">Calculate Interest</Button>
+            <div className="flex gap-2">
+              <Button onClick={calculate} className="flex-1 h-10 gradient-button">Calculate Interest</Button>
+              <Button onClick={reset} variant="outline" size="icon" className="h-10 w-10 shrink-0" aria-label="Reset">
+                <RotateCcw className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </Card>
 
-        <Card className="glass-card p-8">
-          <h2 className="text-2xl font-bold mb-6 font-headline">Results</h2>
+        <Card className="bg-white border border-neutral-200 p-4 sm:p-5">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-bold font-headline">Results</h2>
+            {result && (
+              <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+              </Button>
+            )}
+          </div>
           {result ? (
-            <div className="space-y-6">
-              <div className="text-center py-8">
-                <div className="text-sm text-muted-foreground mb-2">Total Amount</div>
-                <div className="text-5xl font-bold gradient-text">${result.total}</div>
+            <div className="space-y-4">
+              <div className="text-center py-4">
+                <div className="text-sm text-neutral-600 mb-2">Total Amount</div>
+                <div className="text-3xl font-bold gradient-text">{currencySymbol}{fmt(result.total)}</div>
               </div>
               <div className="space-y-4">
-                <div className="p-4 rounded-lg glass-card border border-green-500/20">
-                  <div className="text-sm text-muted-foreground">Total Interest Earned</div>
-                  <div className="text-2xl font-bold text-green-400">${result.interest}</div>
+                <div className="p-4 rounded-lg bg-white border border-neutral-200 border border-green-500/20">
+                  <div className="text-sm text-neutral-600">Total Interest Earned</div>
+                  <div className="text-2xl font-bold text-green-600">{currencySymbol}{fmt(result.interest)}</div>
                 </div>
-                 <div className="p-4 rounded-lg glass-card border border-primary/20">
-                  <div className="text-sm text-muted-foreground">Principal Amount</div>
-                  <div className="text-2xl font-bold text-primary">${parseFloat(principal).toFixed(2)}</div>
+                 <div className="p-4 rounded-lg bg-white border border-neutral-200 border border-[#F2765E]/25">
+                  <div className="text-sm text-neutral-600">Principal Amount</div>
+                  <div className="text-2xl font-bold text-primary">{currencySymbol}{fmt(parseFloat(principal) || 0)}</div>
                 </div>
               </div>
             </div>
           ) : (
-            <div className="flex items-center justify-center h-64 text-muted-foreground">
+            <div className="flex items-center justify-center h-40 text-neutral-600">
               <div className="text-center">
                 <TrendingUp className="text-6xl mb-4 mx-auto w-16 h-16" />
                 <p>Enter details to calculate</p>

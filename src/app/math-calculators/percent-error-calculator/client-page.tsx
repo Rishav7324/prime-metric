@@ -8,18 +8,69 @@ import { Button } from "@/components/ui/button";
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+import { Copy, RotateCcw } from "lucide-react";
+
+type PercentErrorResult = {
+  percentError: number;
+  difference: number;
+};
+
+function computePercentError(observedStr: string, trueStr: string): PercentErrorResult | null {
+  const observed = parseFloat(observedStr);
+  const trueVal = parseFloat(trueStr);
+  if (!Number.isFinite(observed) || !Number.isFinite(trueVal)) return null;
+  if (trueVal === 0) return null;
+  return {
+    percentError: (Math.abs(observed - trueVal) / Math.abs(trueVal)) * 100,
+    difference: observed - trueVal,
+  };
+}
+
+function formatPct(v: number): string {
+  return v.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+const DEFAULT_OBSERVED = "9.8";
+const DEFAULT_TRUE = "10";
 
 const PercentErrorCalculator = () => {
-  const [observedValue, setObservedValue] = useState("");
-  const [trueValue, setTrueValue] = useState("");
-  const [result, setResult] = useState<any>(null);
+  const [observedValue, setObservedValue] = useState(DEFAULT_OBSERVED);
+  const [trueValue, setTrueValue] = useState(DEFAULT_TRUE);
+  // Pre-filled so the result renders instantly (no empty state)
+  const [result, setResult] = useState<PercentErrorResult | null>(() => computePercentError(DEFAULT_OBSERVED, DEFAULT_TRUE));
   const { toast } = useToast();
 
   const calculate = () => {
+    if (observedValue.trim() === "" || trueValue.trim() === "") {
+      toast({
+        variant: "destructive",
+        title: "Invalid Input",
+        description: "Enter both the observed and true values.",
+      });
+      return;
+    }
     const observed = parseFloat(observedValue);
     const trueVal = parseFloat(trueValue);
 
-    if (isNaN(observed) || isNaN(trueVal) || trueVal === 0) {
+    if (!Number.isFinite(observed) || !Number.isFinite(trueVal)) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Input",
+        description: "Please enter valid numbers for observed and true values.",
+      });
+      return;
+    }
+    if (trueVal === 0) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Input",
+        description: "The true value cannot be zero (division by zero).",
+      });
+      return;
+    }
+
+    const computed = computePercentError(observedValue, trueValue);
+    if (!computed) {
       toast({
         variant: "destructive",
         title: "Invalid Input",
@@ -27,15 +78,29 @@ const PercentErrorCalculator = () => {
       });
       return;
     }
-
-    const percentError = (Math.abs(observed - trueVal) / Math.abs(trueVal)) * 100;
-    
-    setResult({ percentError: percentError.toFixed(2) });
+    setResult(computed);
 
     toast({
         title: "Calculation Complete",
-        description: `The percent error is ${percentError.toFixed(2)}%.`,
+        description: `The percent error is ${formatPct(computed.percentError)}%.`,
     });
+  };
+
+  const reset = () => {
+    setObservedValue("");
+    setTrueValue("");
+    setResult(null);
+  };
+
+  const copyResult = async () => {
+    if (!result) return;
+    const text = `Percent error (observed ${observedValue}, true ${trueValue}) = ${formatPct(result.percentError)}% — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
 
   return (
@@ -54,11 +119,21 @@ const PercentErrorCalculator = () => {
             <Label>True (Accepted) Value</Label>
             <Input type="number" value={trueValue} onChange={(e) => setTrueValue(e.target.value)} placeholder="e.g., 10" />
           </div>
-          <Button onClick={calculate} className="w-full gradient-button">Calculate Percent Error</Button>
+          <div className="flex gap-2">
+            <Button onClick={calculate} className="flex-1 gradient-button">Calculate Percent Error</Button>
+            <Button onClick={reset} variant="outline" size="icon" className="h-10 w-10 shrink-0" aria-label="Reset">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
           {result && (
-            <div className="mt-6 p-4 bg-primary/10 rounded-lg text-center">
-              <p className="text-sm text-muted-foreground">Percent Error</p>
-              <p className="text-3xl font-bold text-primary">{result.percentError}%</p>
+            <div className="mt-6 p-4 bg-[#FFF5F2] rounded-lg">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-sm text-neutral-600">Percent Error</p>
+                <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                  <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                </Button>
+              </div>
+              <p className="text-3xl font-bold text-primary text-center">{formatPct(result.percentError)}%</p>
             </div>
           )}
         </div>

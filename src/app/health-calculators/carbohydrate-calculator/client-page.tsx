@@ -8,49 +8,81 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+import { Copy, RotateCcw } from "lucide-react";
+
+type CarbResult = {
+  dailyCarbs: number;
+  calories: number;
+  perMeal: number;
+};
+
+function computeCarbs(weightStr: string, activityLevelStr: string, goalStr: string): CarbResult | null {
+  const w = parseFloat(weightStr);
+  if (!(w > 0) || !(w >= 20 && w <= 500)) return null;
+
+  let carbsPerKg = 5;
+
+  if (activityLevelStr === "sedentary") carbsPerKg = 3;
+  else if (activityLevelStr === "light") carbsPerKg = 4;
+  else if (activityLevelStr === "moderate") carbsPerKg = 5;
+  else if (activityLevelStr === "active") carbsPerKg = 6;
+  else if (activityLevelStr === "very-active") carbsPerKg = 7;
+  else return null;
+
+  if (goalStr === "lose") carbsPerKg *= 0.7;
+  else if (goalStr === "gain") carbsPerKg *= 1.2;
+  else if (goalStr !== "maintain") return null;
+
+  const dailyCarbs = w * carbsPerKg;
+  const calories = dailyCarbs * 4;
+
+  return {
+    dailyCarbs: parseFloat(dailyCarbs.toFixed(1)),
+    calories: Math.round(calories),
+    perMeal: parseFloat((dailyCarbs / 3).toFixed(1)),
+  };
+}
 
 const CarbohydrateCalculatorClient = () => {
-  const [weight, setWeight] = useState("");
+  const [weight, setWeight] = useState("70");
   const [activityLevel, setActivityLevel] = useState("moderate");
   const [goal, setGoal] = useState("maintain");
-  const [result, setResult] = useState<any>(null);
+  // Pre-filled so the result renders instantly (no empty state)
+  const [result, setResult] = useState<CarbResult | null>(() => computeCarbs("70", "moderate", "maintain"));
   const { toast } = useToast();
 
   const calculate = () => {
-    const w = parseFloat(weight);
-    if (!w || w <= 0) {
+    const computed = computeCarbs(weight, activityLevel, goal);
+    if (!computed) {
       toast({
         variant: "destructive",
         title: "Invalid Input",
-        description: "Please enter a valid weight.",
+        description: "Enter weight (20-500 kg).",
       });
       return;
     }
 
-    let carbsPerKg = 5;
-
-    if (activityLevel === "sedentary") carbsPerKg = 3;
-    else if (activityLevel === "light") carbsPerKg = 4;
-    else if (activityLevel === "moderate") carbsPerKg = 5;
-    else if (activityLevel === "active") carbsPerKg = 6;
-    else if (activityLevel === "very-active") carbsPerKg = 7;
-
-    if (goal === "lose") carbsPerKg *= 0.7;
-    else if (goal === "gain") carbsPerKg *= 1.2;
-
-    const dailyCarbs = w * carbsPerKg;
-    const calories = dailyCarbs * 4;
-
-    setResult({
-      dailyCarbs: dailyCarbs.toFixed(1),
-      calories: calories.toFixed(0),
-      perMeal: (dailyCarbs / 3).toFixed(1)
-    });
+    setResult(computed);
 
     toast({
         title: "Calculation Complete",
-        description: `Your daily carbohydrate target is ${dailyCarbs.toFixed(1)}g.`,
+        description: `Your daily carbohydrate target is ${computed.dailyCarbs.toLocaleString()}g.`,
     });
+  };
+
+  const reset = () => {
+    setWeight(""); setResult(null);
+  };
+
+  const copyResult = async () => {
+    if (!result) return;
+    const text = `Daily carbs: ${result.dailyCarbs.toLocaleString()}g (${result.calories.toLocaleString()} cal), per meal: ${result.perMeal.toLocaleString()}g — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
 
   return (
@@ -66,6 +98,8 @@ const CarbohydrateCalculatorClient = () => {
             <Label>Weight (kg)</Label>
             <Input
               type="number"
+              min={20}
+              max={500}
               value={weight}
               onChange={(e) => setWeight(e.target.value)}
               placeholder="e.g., 70"
@@ -99,23 +133,33 @@ const CarbohydrateCalculatorClient = () => {
               </SelectContent>
             </Select>
           </div>
-          <Button onClick={calculate} className="w-full gradient-button">
-            Calculate Carbs
-          </Button>
+          <div className="flex gap-2">
+            <Button onClick={calculate} className="flex-1 gradient-button" disabled={!weight}>
+              Calculate Carbs
+            </Button>
+            <Button onClick={reset} variant="outline" size="icon" className="shrink-0" aria-label="Reset">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
           {result && (
             <div className="mt-6 space-y-3">
-              <div className="p-4 bg-primary/10 rounded-lg text-center">
-                <p className="text-sm text-muted-foreground">Daily Carbohydrates</p>
-                <p className="text-4xl font-bold text-primary">{result.dailyCarbs}g</p>
+              <div className="flex items-center justify-end">
+                <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                  <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                </Button>
+              </div>
+              <div className="p-4 bg-[#FFF5F2] rounded-lg text-center">
+                <p className="text-sm text-neutral-600">Daily Carbohydrates</p>
+                <p className="text-2xl font-bold text-primary">{result.dailyCarbs.toLocaleString()}g</p>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div className="p-3 bg-muted/50 rounded text-center">
-                  <p className="text-sm text-muted-foreground">Calories from Carbs</p>
-                  <p className="text-xl font-bold">{result.calories} cal</p>
+                  <p className="text-sm text-neutral-600">Calories from Carbs</p>
+                  <p className="text-xl font-bold">{result.calories.toLocaleString()} cal</p>
                 </div>
                 <div className="p-3 bg-muted/50 rounded text-center">
-                  <p className="text-sm text-muted-foreground">Per Meal (3 meals)</p>
-                  <p className="text-xl font-bold">{result.perMeal}g</p>
+                  <p className="text-sm text-neutral-600">Per Meal (3 meals)</p>
+                  <p className="text-xl font-bold">{result.perMeal.toLocaleString()}g</p>
                 </div>
               </div>
             </div>

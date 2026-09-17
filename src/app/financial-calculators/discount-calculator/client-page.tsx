@@ -9,39 +9,67 @@ import { Button } from "@/components/ui/button";
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+import { CurrencySelector, getCurrencySymbol } from "@/components/CurrencySelector";
+import { Copy, RotateCcw } from "lucide-react";
+
+type DiscountResult = {
+  finalPrice: number;
+  savings: number;
+};
+
+function computeDiscount(priceStr: string, discountStr: string): DiscountResult | null {
+  const price = parseFloat(priceStr);
+  const discount = parseFloat(discountStr);
+
+  if (!(price > 0 && price <= 1e12) || isNaN(discount) || discount < 0 || discount > 100) {
+    return null;
+  }
+
+  const savings = (price * discount) / 100;
+  const finalPrice = price - savings;
+  return { finalPrice, savings };
+}
 
 const DiscountCalculator = () => {
-  const [originalPrice, setOriginalPrice] = useState("");
-  const [discountPercent, setDiscountPercent] = useState("");
-  const [result, setResult] = useState<{
-    finalPrice: number;
-    savings: number;
-  } | null>(null);
+  const [originalPrice, setOriginalPrice] = useState("100");
+  const [discountPercent, setDiscountPercent] = useState("25");
+  const [currency, setCurrency] = useState("USD");
+  // Pre-filled so the result renders instantly (no empty state)
+  const [result, setResult] = useState<DiscountResult | null>(() => computeDiscount("100", "25"));
   const { toast } = useToast();
+  const currencySymbol = getCurrencySymbol(currency);
+
+  const fmt = (n: number) =>
+    n.toLocaleString("en-US", { maximumFractionDigits: 2, minimumFractionDigits: 2 });
 
   const calculateDiscount = () => {
-    const price = parseFloat(originalPrice);
-    const discount = parseFloat(discountPercent);
+    const computed = computeDiscount(originalPrice, discountPercent);
 
-    if (price > 0 && discount >= 0 && discount <= 100) {
-      const savings = (price * discount) / 100;
-      const finalPrice = price - savings;
-
-      const newResult = {
-        finalPrice: parseFloat(finalPrice.toFixed(2)),
-        savings: parseFloat(savings.toFixed(2)),
-      };
-      setResult(newResult);
-      toast({
-        title: "Discount Calculated",
-        description: `You save $${newResult.savings.toFixed(2)} and pay $${newResult.finalPrice.toFixed(2)}.`,
-      });
-    } else {
+    if (!computed) {
       toast({
         variant: "destructive",
         title: "Invalid Input",
-        description: "Please enter a valid price and a discount between 0 and 100.",
+        description: "Enter price (1+) and a discount between 0 and 100%.",
       });
+      return;
+    }
+    setResult(computed);
+    toast({
+      title: "Discount Calculated",
+      description: `You save ${currencySymbol}${fmt(computed.savings)} and pay ${currencySymbol}${fmt(computed.finalPrice)}.`,
+    });
+  };
+
+  const reset = () => { setOriginalPrice(""); setDiscountPercent(""); setResult(null); };
+
+  const copyResult = async () => {
+    if (!result) return;
+    const text = `Discount: ${discountPercent}% off ${currencySymbol}${fmt(parseFloat(originalPrice))} → Pay ${currencySymbol}${fmt(result.finalPrice)}, Save ${currencySymbol}${fmt(result.savings)}. — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
     }
   };
 
@@ -74,46 +102,51 @@ const DiscountCalculator = () => {
       canonicalUrl="/financial-calculators/discount-calculator"
       explanation={explanation}
     >
-      <div className="grid md:grid-cols-2 gap-8">
+      <div className="grid sm:grid-cols-2 gap-4">
         {/* Input Section */}
-        <Card className="glass-card p-8">
-          <h2 className="text-2xl font-bold mb-6 font-headline">Enter Details</h2>
-          <div className="space-y-6">
+        <Card className="bg-white border border-neutral-200 p-4 sm:p-5">
+          <h2 className="text-lg font-bold mb-4 font-headline">Enter Details</h2>
+          <div className="space-y-4">
+            <CurrencySelector value={currency} onChange={setCurrency} />
             <div>
-              <Label htmlFor="originalPrice" className="text-lg">Original Price ($)</Label>
+              <Label htmlFor="originalPrice" className="text-sm font-medium">Original Price ({currencySymbol})</Label>
               <Input
                 id="originalPrice"
                 type="number"
                 placeholder="e.g., 99.99"
                 value={originalPrice}
                 onChange={(e) => setOriginalPrice(e.target.value)}
-                className="mt-2 h-12 text-lg glass-card border-primary/30"
+                className="mt-2 h-10 text-sm bg-white border border-neutral-200"
               />
             </div>
 
             <div>
-              <Label htmlFor="discount" className="text-lg">Discount Percentage (%)</Label>
+              <Label htmlFor="discount" className="text-sm font-medium">Discount Percentage (%)</Label>
               <Input
                 id="discount"
                 type="number"
                 placeholder="e.g., 25"
                 value={discountPercent}
                 onChange={(e) => setDiscountPercent(e.target.value)}
-                className="mt-2 h-12 text-lg glass-card border-primary/30"
+                className="mt-2 h-10 text-sm bg-white border border-neutral-200"
               />
             </div>
 
-            <Button 
-              onClick={calculateDiscount}
-              className="w-full h-12 text-lg gradient-button"
-              disabled={!originalPrice || !discountPercent}
-            >
-              Calculate Discount
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                onClick={calculateDiscount}
+                className="flex-1 h-10 text-sm gradient-button"
+              >
+                Calculate Discount
+              </Button>
+              <Button onClick={reset} variant="outline" size="icon" className="h-10 w-10 shrink-0" aria-label="Reset">
+                <RotateCcw className="h-4 w-4" />
+              </Button>
+            </div>
 
             {/* Quick Discount Buttons */}
-            <div className="pt-4 border-t border-primary/20">
-              <p className="text-sm text-muted-foreground mb-3">Quick discounts:</p>
+            <div className="pt-4 border-t border-[#F2765E]/20">
+              <p className="text-sm text-neutral-600 mb-3">Quick discounts:</p>
               <div className="grid grid-cols-4 gap-2">
                 {[10, 20, 25, 30, 40, 50, 60, 75].map((percent) => (
                   <Button
@@ -123,18 +156,13 @@ const DiscountCalculator = () => {
                     onClick={() => {
                         setDiscountPercent(percent.toString());
                         if (originalPrice) {
-                            const price = parseFloat(originalPrice);
-                            if(price > 0){
-                                const savings = (price * percent) / 100;
-                                const finalPrice = price - savings;
-                                setResult({
-                                    finalPrice: parseFloat(finalPrice.toFixed(2)),
-                                    savings: parseFloat(savings.toFixed(2)),
-                                });
+                            const computed = computeDiscount(originalPrice, percent.toString());
+                            if (computed) {
+                                setResult(computed);
                             }
                         }
                     }}
-                    className="glass-card border-primary/20 hover:border-primary"
+                    className="bg-white border border-neutral-200 border-[#F2765E]/20 hover:border-[#F2765E]"
                   >
                     {percent}%
                   </Button>
@@ -145,39 +173,46 @@ const DiscountCalculator = () => {
         </Card>
 
         {/* Result Section */}
-        <Card className="glass-card p-8">
-          <h2 className="text-2xl font-bold mb-6 font-headline">Your Savings</h2>
+        <Card className="bg-white border border-neutral-200 p-4 sm:p-5">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-bold font-headline">Your Savings</h2>
+            {result && (
+              <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+              </Button>
+            )}
+          </div>
           {result ? (
-            <div className="space-y-6">
-              <div className="text-center py-8">
-                <div className="text-sm text-muted-foreground mb-2">You Pay</div>
-                <div className="text-6xl font-bold mb-4 gradient-text">
-                  ${result.finalPrice.toFixed(2)}
+            <div className="space-y-4">
+              <div className="text-center py-4">
+                <div className="text-sm text-neutral-600 mb-2">You Pay</div>
+                <div className="text-4xl font-bold mb-2 gradient-text">
+                  {currencySymbol}{fmt(result.finalPrice)}
                 </div>
-                <div className="text-lg text-green-400 font-semibold">
-                  You Save ${result.savings.toFixed(2)}
+                <div className="text-lg text-green-600 font-semibold">
+                  You Save {currencySymbol}{fmt(result.savings)}
                 </div>
               </div>
 
               <div className="space-y-4">
-                 <div className="flex justify-between items-center p-3 rounded-lg bg-muted/50">
-                    <span className="text-muted-foreground">Original Price</span>
-                    <span className="font-bold text-lg">${parseFloat(originalPrice).toFixed(2)}</span>
+                  <div className="flex justify-between items-center p-3 rounded-lg bg-muted/50">
+                      <span className="text-neutral-600">Original Price</span>
+                      <span className="font-bold text-lg">{currencySymbol}{fmt(parseFloat(originalPrice))}</span>
                 </div>
-                 <div className="flex justify-between items-center p-3 rounded-lg bg-muted/50">
-                    <span className="text-muted-foreground">Discount</span>
-                    <span className="font-bold text-lg">{discountPercent}%</span>
+                  <div className="flex justify-between items-center p-3 rounded-lg bg-muted/50">
+                     <span className="text-neutral-600">Discount</span>
+                     <span className="font-bold text-lg">{discountPercent}%</span>
                 </div>
-                 <div className="flex justify-between items-center p-3 rounded-lg bg-green-500/10 text-green-400">
-                    <span >Total Savings</span>
-                    <span className="font-bold text-lg">${result.savings.toFixed(2)}</span>
+                  <div className="flex justify-between items-center p-3 rounded-lg bg-green-500/10 text-green-600">
+                      <span >Total Savings</span>
+                      <span className="font-bold text-lg">{currencySymbol}{fmt(result.savings)}</span>
                 </div>
               </div>
             </div>
           ) : (
-            <div className="flex items-center justify-center h-64 text-muted-foreground">
+            <div className="flex items-center justify-center h-40 text-neutral-600">
               <div className="text-center">
-                <div className="text-6xl mb-4">🏷️</div>
+                <div className="text-4xl mb-2">🏷️</div>
                 <p>Enter details to calculate discount</p>
               </div>
             </div>

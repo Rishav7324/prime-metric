@@ -9,40 +9,67 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+import { Copy, RotateCcw } from "lucide-react";
+
+type ProteinResult = {
+  dailyProtein: number;
+  proteinPerKg: number;
+};
+
+function computeProtein(weightStr: string, activityLevelStr: string): ProteinResult | null {
+  const w = parseFloat(weightStr);
+  if (!(w >= 1 && w <= 500)) return null;
+
+  let proteinPerKg = 0.8; // Sedentary
+  if (activityLevelStr === "light") proteinPerKg = 1.2;
+  if (activityLevelStr === "active") proteinPerKg = 1.6;
+  if (activityLevelStr === "very-active") proteinPerKg = 2.0;
+
+  const dailyProtein = w * proteinPerKg;
+  if (!isFinite(dailyProtein) || dailyProtein <= 0) return null;
+
+  return { dailyProtein: Math.round(dailyProtein), proteinPerKg };
+}
 
 const ProteinCalculator = () => {
   const [weight, setWeight] = useState("70");
   const [activityLevel, setActivityLevel] = useState("active");
-  const [result, setResult] = useState<any>(null);
+  // Pre-filled so the result renders instantly (no empty state)
+  const [result, setResult] = useState<ProteinResult | null>(() => computeProtein("70", "active"));
   const { toast } = useToast();
 
   const calculate = () => {
-    const w = parseFloat(weight);
-
-    if (isNaN(w) || w <= 0) {
+    const computed = computeProtein(weight, activityLevel);
+    if (!computed) {
       toast({
         variant: "destructive",
         title: "Invalid Input",
-        description: "Please enter a valid weight.",
+        description: "Enter weight (1-500 kg).",
       });
       return;
     }
 
-    let proteinPerKg = 0.8; // Sedentary
-    if (activityLevel === "light") proteinPerKg = 1.2;
-    if (activityLevel === "active") proteinPerKg = 1.6;
-    if (activityLevel === "very-active") proteinPerKg = 2.0;
-
-    const dailyProtein = w * proteinPerKg;
-
-    setResult({
-      dailyProtein: dailyProtein.toFixed(0),
-    });
+    setResult(computed);
     
     toast({
         title: "Protein Needs Calculated",
-        description: `Your daily protein target is ${dailyProtein.toFixed(0)}g.`,
+        description: `Your daily protein target is ${computed.dailyProtein.toLocaleString()}g.`,
     });
+  };
+
+  const reset = () => {
+    setWeight(""); setResult(null);
+  };
+
+  const copyResult = async () => {
+    if (!result) return;
+    const text = `My daily protein: ${result.dailyProtein.toLocaleString()}g (${result.proteinPerKg}g per kg) — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
 
   return (
@@ -55,7 +82,7 @@ const ProteinCalculator = () => {
         <div className="space-y-4">
           <div>
             <Label>Weight (kg)</Label>
-            <Input type="number" value={weight} onChange={(e) => setWeight(e.target.value)} placeholder="e.g., 70" />
+            <Input type="number" min={1} max={500} value={weight} onChange={(e) => setWeight(e.target.value)} placeholder="e.g., 70" />
           </div>
           <div>
             <Label>Activity Level</Label>
@@ -69,11 +96,21 @@ const ProteinCalculator = () => {
               </SelectContent>
             </Select>
           </div>
-          <Button onClick={calculate} className="w-full gradient-button">Calculate Protein Needs</Button>
+          <div className="flex gap-2">
+            <Button onClick={calculate} className="flex-1 gradient-button" disabled={!weight}>Calculate Protein Needs</Button>
+            <Button onClick={reset} variant="outline" size="icon" className="shrink-0" aria-label="Reset">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
           {result && (
-            <div className="mt-6 p-4 bg-primary/10 rounded-lg text-center">
-              <p className="text-sm text-muted-foreground">Recommended Daily Protein Intake</p>
-              <p className="text-3xl font-bold text-primary">{result.dailyProtein} grams</p>
+            <div className="mt-6 p-4 bg-[#FFF5F2] rounded-lg text-center">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-sm text-neutral-600">Recommended Daily Protein Intake</p>
+                <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                  <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                </Button>
+              </div>
+              <p className="text-3xl font-bold text-primary">{result.dailyProtein.toLocaleString()} grams</p>
             </div>
           )}
         </div>

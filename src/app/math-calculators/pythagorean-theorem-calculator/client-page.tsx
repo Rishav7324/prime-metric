@@ -8,60 +8,116 @@ import { Button } from "@/components/ui/button";
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+import { Copy, RotateCcw } from "lucide-react";
+
+type PythagResult = {
+  missing: "a" | "b" | "c";
+  value: number;
+  label: string;
+};
+
+function computePythagorean(aStr: string, bStr: string, cStr: string): PythagResult | null {
+  const hasA = aStr.trim() !== "";
+  const hasB = bStr.trim() !== "";
+  const hasC = cStr.trim() !== "";
+  const count = [hasA, hasB, hasC].filter(Boolean).length;
+  if (count !== 2) return null;
+  const a = parseFloat(aStr);
+  const b = parseFloat(bStr);
+  const c = parseFloat(cStr);
+  if (hasA && !(a > 0 && Number.isFinite(a))) return null;
+  if (hasB && !(b > 0 && Number.isFinite(b))) return null;
+  if (hasC && !(c > 0 && Number.isFinite(c))) return null;
+  if (hasA && hasB && !hasC) {
+    return { missing: "c", value: Math.sqrt(a * a + b * b), label: "Side C (Hypotenuse)" };
+  }
+  if (hasA && hasC && !hasB) {
+    if (!(c > a)) return null;
+    return { missing: "b", value: Math.sqrt(c * c - a * a), label: "Side B" };
+  }
+  if (hasB && hasC && !hasA) {
+    if (!(c > b)) return null;
+    return { missing: "a", value: Math.sqrt(c * c - b * b), label: "Side A" };
+  }
+  return null;
+}
+
+const DEFAULT_A = "3";
+const DEFAULT_B = "4";
+const DEFAULT_C = "";
 
 const PythagoreanCalculator = () => {
-  const [sideA, setSideA] = useState("");
-  const [sideB, setSideB] = useState("");
-  const [sideC, setSideC] = useState("");
-  const [result, setResult] = useState<string>("");
+  const [sideA, setSideA] = useState(DEFAULT_A);
+  const [sideB, setSideB] = useState(DEFAULT_B);
+  const [sideC, setSideC] = useState(DEFAULT_C);
+  // Pre-filled so the result renders instantly (no empty state)
+  const [result, setResult] = useState<PythagResult | null>(() => computePythagorean(DEFAULT_A, DEFAULT_B, DEFAULT_C));
   const { toast } = useToast();
 
+  const formatVal = (v: number) =>
+    v.toLocaleString(undefined, { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+
   const calculate = () => {
+    const hasA = sideA.trim() !== "";
+    const hasB = sideB.trim() !== "";
+    const hasC = sideC.trim() !== "";
+    const count = [hasA, hasB, hasC].filter(Boolean).length;
+    if (count !== 2) {
+      toast({ title: "Invalid Input", description: "Please provide exactly two sides to calculate the third.", variant: "destructive" });
+      return;
+    }
     const a = parseFloat(sideA);
     const b = parseFloat(sideB);
     const c = parseFloat(sideC);
-
-    if (sideA && sideB && !sideC) {
-      if (a > 0 && b > 0) {
-        const c_squared = a*a + b*b;
-        const newC = Math.sqrt(c_squared);
-        setSideC(newC.toFixed(4));
-        setResult(`Side C (Hypotenuse) = ${newC.toFixed(4)}`);
-        toast({ title: "Success", description: "Calculated side C."});
-      } else {
-        toast({ title: "Error", description: "Sides A and B must be positive.", variant: "destructive"});
-      }
-    } else if (sideA && sideC && !sideB) {
-        if (a > 0 && c > 0 && c > a) {
-            const b_squared = c*c - a*a;
-            const newB = Math.sqrt(b_squared);
-            setSideB(newB.toFixed(4));
-            setResult(`Side B = ${newB.toFixed(4)}`);
-            toast({ title: "Success", description: "Calculated side B."});
-        } else {
-            toast({ title: "Error", description: "Side A must be positive and smaller than Side C.", variant: "destructive"});
-        }
-    } else if (sideB && sideC && !sideA) {
-        if (b > 0 && c > 0 && c > b) {
-            const a_squared = c*c - b*b;
-            const newA = Math.sqrt(a_squared);
-            setSideA(newA.toFixed(4));
-            setResult(`Side A = ${newA.toFixed(4)}`);
-            toast({ title: "Success", description: "Calculated side A."});
-        } else {
-            toast({ title: "Error", description: "Side B must be positive and smaller than Side C.", variant: "destructive"});
-        }
-    } else {
-        toast({ title: "Invalid Input", description: "Please provide exactly two sides to calculate the third.", variant: "destructive" });
+    if (hasA && !(a > 0 && Number.isFinite(a))) {
+      toast({ title: "Invalid Input", description: "Side A must be a positive number.", variant: "destructive" });
+      return;
     }
+    if (hasB && !(b > 0 && Number.isFinite(b))) {
+      toast({ title: "Invalid Input", description: "Side B must be a positive number.", variant: "destructive" });
+      return;
+    }
+    if (hasC && !(c > 0 && Number.isFinite(c))) {
+      toast({ title: "Invalid Input", description: "Side C (hypotenuse) must be a positive number.", variant: "destructive" });
+      return;
+    }
+    if (hasA && hasC && !(c > a)) {
+      toast({ title: "Invalid Input", description: "Side A must be positive and smaller than Side C.", variant: "destructive" });
+      return;
+    }
+    if (hasB && hasC && !(c > b)) {
+      toast({ title: "Invalid Input", description: "Side B must be positive and smaller than Side C.", variant: "destructive" });
+      return;
+    }
+    const computed = computePythagorean(sideA, sideB, sideC);
+    if (!computed) {
+      toast({ title: "Invalid Input", description: "Please provide exactly two valid sides to calculate the third.", variant: "destructive" });
+      return;
+    }
+    if (computed.missing === "c") setSideC(computed.value.toFixed(4));
+    if (computed.missing === "b") setSideB(computed.value.toFixed(4));
+    if (computed.missing === "a") setSideA(computed.value.toFixed(4));
+    setResult(computed);
+    toast({ title: "Success", description: `Calculated ${computed.label}: ${formatVal(computed.value)}.` });
   };
 
-  const clear = () => {
+  const reset = () => {
     setSideA("");
     setSideB("");
     setSideC("");
-    setResult("");
-  }
+    setResult(null);
+  };
+
+  const copyResult = async () => {
+    if (!result) return;
+    const text = `${result.label} = ${formatVal(result.value)} — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
+  };
 
   return (
     <CalculatorLayout
@@ -72,7 +128,7 @@ const PythagoreanCalculator = () => {
     >
       <Card className="p-6">
         <div className="space-y-4">
-          <p className="text-sm text-muted-foreground">Enter values for any two sides to calculate the third.</p>
+          <p className="text-sm text-neutral-600">Enter values for any two sides to calculate the third.</p>
           <div>
             <Label>Side a</Label>
             <Input type="number" value={sideA} onChange={(e) => setSideA(e.target.value)} placeholder="Enter length of side a" />
@@ -87,12 +143,19 @@ const PythagoreanCalculator = () => {
           </div>
           <div className="flex gap-2">
             <Button onClick={calculate} className="flex-1 gradient-button">Calculate</Button>
-            <Button onClick={clear} variant="outline" className="flex-1">Clear</Button>
+            <Button onClick={reset} variant="outline" size="icon" className="h-10 w-10 shrink-0" aria-label="Reset">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
           </div>
           {result && (
-            <div className="mt-6 p-4 bg-primary/10 rounded-lg text-center">
-              <p className="text-sm text-muted-foreground">Result</p>
-              <p className="text-2xl font-bold text-primary">{result}</p>
+            <div className="mt-6 p-4 bg-[#FFF5F2] rounded-lg">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-sm text-neutral-600">Result</p>
+                <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                  <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                </Button>
+              </div>
+              <p className="text-2xl font-bold text-primary text-center">{result.label} = {formatVal(result.value)}</p>
             </div>
           )}
         </div>

@@ -8,40 +8,80 @@ import { Button } from "@/components/ui/button";
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+import { Copy, RotateCcw } from "lucide-react";
+
+type PaceResult = {
+  pace: string;
+  paceSecondsPerKm: number;
+};
+
+function computePace(timeHStr: string, timeMStr: string, timeSStr: string, distanceStr: string): PaceResult | null {
+  const h = timeHStr === "" ? 0 : parseInt(timeHStr);
+  const m = timeMStr === "" ? 0 : parseInt(timeMStr);
+  const s = timeSStr === "" ? 0 : parseInt(timeSStr);
+  const dist = parseFloat(distanceStr);
+
+  if (isNaN(h) || isNaN(m) || isNaN(s) || isNaN(dist)) return null;
+  if (h < 0 || h > 24 || m < 0 || m >= 60 || s < 0 || s >= 60) return null;
+  if (!(dist > 0 && dist <= 1000)) return null;
+
+  const totalSeconds = h * 3600 + m * 60 + s;
+  if (!(totalSeconds > 0 && totalSeconds <= 24 * 3600)) return null;
+
+  const paceSecondsPerKm = totalSeconds / dist;
+  const paceMinutes = Math.floor(paceSecondsPerKm / 60);
+  const paceSeconds = Math.round(paceSecondsPerKm % 60);
+  // Handle rounding edge case where seconds round to 60
+  const finalMinutes = paceSeconds === 60 ? paceMinutes + 1 : paceMinutes;
+  const finalSeconds = paceSeconds === 60 ? 0 : paceSeconds;
+
+  return {
+    pace: `${finalMinutes}:${finalSeconds.toString().padStart(2, '0')}`,
+    paceSecondsPerKm,
+  };
+}
 
 const PaceCalculator = () => {
-  const [timeH, setTimeH] = useState("");
-  const [timeM, setTimeM] = useState("");
-  const [timeS, setTimeS] = useState("");
-  const [distance, setDistance] = useState("");
-  const [result, setResult] = useState<any>(null);
+  const [timeH, setTimeH] = useState("0");
+  const [timeM, setTimeM] = useState("30");
+  const [timeS, setTimeS] = useState("0");
+  const [distance, setDistance] = useState("5");
+  // Pre-filled so the result renders instantly (no empty state)
+  const [result, setResult] = useState<PaceResult | null>(() => computePace("0", "30", "0", "5"));
   const { toast } = useToast();
 
   const calculate = () => {
-    const totalSeconds = (parseInt(timeH) || 0) * 3600 + (parseInt(timeM) || 0) * 60 + (parseInt(timeS) || 0);
-    const dist = parseFloat(distance);
-
-    if (totalSeconds <= 0 || isNaN(dist) || dist <= 0) {
+    const computed = computePace(timeH, timeM, timeS, distance);
+    if (!computed) {
       toast({
         variant: "destructive",
         title: "Invalid Input",
-        description: "Please enter a valid time and distance.",
+        description: "Enter time (0-24h, 0-59m, 0-59s, total > 0) and distance (0.1-1000 km).",
       });
       return;
     }
 
-    const paceSecondsPerKm = totalSeconds / dist;
-    const paceMinutes = Math.floor(paceSecondsPerKm / 60);
-    const paceSeconds = Math.round(paceSecondsPerKm % 60);
-
-    setResult({
-      pace: `${paceMinutes}:${paceSeconds.toString().padStart(2, '0')}`,
-    });
+    setResult(computed);
 
     toast({
         title: "Pace Calculated",
-        description: `Your pace is ${paceMinutes}:${paceSeconds.toString().padStart(2, '0')} per kilometer.`,
+        description: `Your pace is ${computed.pace} per kilometer.`,
     });
+  };
+
+  const reset = () => {
+    setTimeH(""); setTimeM(""); setTimeS(""); setDistance(""); setResult(null);
+  };
+
+  const copyResult = async () => {
+    if (!result) return;
+    const text = `My running pace: ${result.pace} / km — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
 
   return (
@@ -64,11 +104,23 @@ const PaceCalculator = () => {
             <Label>Distance (kilometers)</Label>
             <Input type="number" value={distance} onChange={(e) => setDistance(e.target.value)} placeholder="e.g., 10" />
           </div>
-          <Button onClick={calculate} className="w-full gradient-button">Calculate Pace</Button>
+          <div className="flex gap-2">
+            <Button onClick={calculate} className="flex-1 gradient-button" disabled={!distance}>Calculate Pace</Button>
+            <Button onClick={reset} variant="outline" size="icon" className="shrink-0" aria-label="Reset">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
           {result && (
-            <div className="mt-6 p-4 bg-primary/10 rounded-lg text-center">
-              <p className="text-sm text-muted-foreground">Your Pace</p>
-              <p className="text-3xl font-bold text-primary">{result.pace} / km</p>
+            <div className="mt-6 space-y-3">
+              <div className="flex items-center justify-end">
+                <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                  <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                </Button>
+              </div>
+              <div className="p-4 bg-[#FFF5F2] rounded-lg text-center">
+                <p className="text-sm text-neutral-600">Your Pace</p>
+                <p className="text-3xl font-bold text-primary">{result.pace} / km</p>
+              </div>
             </div>
           )}
         </div>

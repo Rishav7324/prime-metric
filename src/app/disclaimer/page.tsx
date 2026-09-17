@@ -22,7 +22,7 @@ const DisclaimerPage = () => {
             <p>Prime Metric is committed to transparency and user safety. However, users must understand that all content, results, and calculations are provided strictly for educational and informational purposes only.</p>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">1. No Professional Advice</h2>
+            <h2 className="text-xl font-semibold mb-3 text-foreground">1. No Professional Advice</h2>
             <p className="mb-2">Prime Metric is not a substitute for professional advice.</p>
             <p className="mb-2">Our calculators and tools are created to help users understand estimates, formulas, and general guidance in different categories such as:</p>
             <ul className="list-disc pl-6 space-y-1">
@@ -52,7 +52,7 @@ const DisclaimerPage = () => {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">2. Accuracy of Calculations</h2>
+            <h2 className="text-xl font-semibold mb-3 text-foreground">2. Accuracy of Calculations</h2>
             <p>Prime Metric aims to provide correct formulas and accurate results. However:</p>
             <ul className="list-disc pl-6 space-y-1">
                 <li>Mathematical errors may occur</li>
@@ -73,7 +73,7 @@ const DisclaimerPage = () => {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">3. No Liability for Losses</h2>
+            <h2 className="text-xl font-semibold mb-3 text-foreground">3. No Liability for Losses</h2>
             <p>Prime Metric shall not be held liable for:</p>
             <ul className="list-disc pl-6 space-y-1">
                 <li>Financial losses</li>
@@ -91,7 +91,7 @@ const DisclaimerPage = () => {
           </section>
           
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">4. Educational Purpose Only</h2>
+            <h2 className="text-xl font-semibold mb-3 text-foreground">4. Educational Purpose Only</h2>
             <p>All calculators, tools, templates, examples, charts, and explanations are designed for educational purposes.</p>
             <p className="mt-2 font-semibold text-foreground">Prime Metric does not:</p>
             <ul className="list-disc pl-6 space-y-1">
@@ -105,7 +105,7 @@ const DisclaimerPage = () => {
           </section>
 
            <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">5. Third-Party Tools & Links</h2>
+            <h2 className="text-xl font-semibold mb-3 text-foreground">5. Third-Party Tools & Links</h2>
             <p>Prime Metric may contain:</p>
             <ul className="list-disc pl-6 space-y-1">
                 <li>Third-party links</li>
@@ -125,7 +125,7 @@ const DisclaimerPage = () => {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">6. User Responsibility</h2>
+            <h2 className="text-xl font-semibold mb-3 text-foreground">6. User Responsibility</h2>
             <p>Users agree to:</p>
             <ul className="list-disc pl-6 space-y-1">
                 <li>Enter correct data</li>
@@ -146,7 +146,7 @@ const DisclaimerPage = () => {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">7. Invoice Generator Disclaimer</h2>
+            <h2 className="text-xl font-semibold mb-3 text-foreground">7. Invoice Generator Disclaimer</h2>
             <p>The invoice generator tool allows users to:</p>
             <ul className="list-disc pl-6 space-y-1">
                 <li>Upload logos</li>
@@ -171,7 +171,7 @@ const DisclaimerPage = () => {
           </section>
 
            <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">8. Ads & Monetization</h2>
+            <h2 className="text-xl font-semibold mb-3 text-foreground">8. Ads & Monetization</h2>
             <p>Prime Metric displays advertisements using Google AdSense.</p>
             <p className="mt-2 font-semibold text-foreground">Ad content is:</p>
             <ul className="list-disc pl-6 space-y-1">
@@ -189,7 +189,7 @@ const DisclaimerPage = () => {
           </section>
 
            <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">9. No Warranties</h2>
+            <h2 className="text-xl font-semibold mb-3 text-foreground">9. No Warranties</h2>
             <p>Prime Metric provides its Services on an “as-is” and “as-available” basis.</p>
             <p className="mt-2 font-semibold text-foreground">We do NOT guarantee:</p>
             <ul className="list-disc pl-6 space-y-1">
@@ -204,7 +204,7 @@ const DisclaimerPage = () => {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">10. Limitation of Liability</h2>
+            <h2 className="text-xl font-semibold mb-3 text-foreground">10. Limitation of Liability</h2>
             <p>To the maximum extent allowed by applicable laws:</p>
             <p className="mt-2 font-semibold text-foreground">Prime Metric, its owners, developers, partners, and contributors shall NOT be liable for:</p>
             <ul className="list-disc pl-6 space-y-1">
@@ -220,12 +220,12 @@ const DisclaimerPage = () => {
           </section>
           
            <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">11. Changes to This Disclaimer</h2>
+            <h2 className="text-xl font-semibold mb-3 text-foreground">11. Changes to This Disclaimer</h2>
             <p>We may update or revise this Disclaimer at any time. Changes become effective immediately once published on this page. Continued use of the website after changes means you accept the updated Disclaimer.</p>
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-3 text-foreground">12. Contact Information</h2>
+            <h2 className="text-xl font-semibold mb-3 text-foreground">12. Contact Information</h2>
             <p>
               If you have questions regarding this Disclaimer, you can contact us:
               <br/>

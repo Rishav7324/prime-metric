@@ -8,49 +8,123 @@ import { Button } from "@/components/ui/button";
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+import { Copy, RotateCcw } from "lucide-react";
+
+type TriangleResult = {
+  area: number;
+  perimeter: number;
+  angleA: number;
+  angleB: number;
+  angleC: number;
+};
+
+const MAX_SIDE = 1000000;
+
+function clampCos(v: number): number {
+  return Math.min(1, Math.max(-1, v));
+}
+
+function computeTriangle(aStr: string, bStr: string, cStr: string): TriangleResult | null {
+  if (aStr.trim() === "" || bStr.trim() === "" || cStr.trim() === "") return null;
+  const a = parseFloat(aStr);
+  const b = parseFloat(bStr);
+  const c = parseFloat(cStr);
+  if (!Number.isFinite(a) || !Number.isFinite(b) || !Number.isFinite(c)) return null;
+  if (a <= 0 || b <= 0 || c <= 0) return null;
+  if (a > MAX_SIDE || b > MAX_SIDE || c > MAX_SIDE) return null;
+
+  // Triangle inequality theorem
+  if (a + b <= c || a + c <= b || b + c <= a) return null;
+
+  const perimeter = a + b + c;
+  const s = perimeter / 2; // semi-perimeter
+  const areaSquared = s * (s - a) * (s - b) * (s - c);
+  if (!Number.isFinite(areaSquared) || areaSquared <= 0) return null;
+  const area = Math.sqrt(areaSquared); // Heron's formula
+  if (!Number.isFinite(area)) return null;
+
+  // Law of Cosines to find angles
+  const angleA = Math.acos(clampCos((b * b + c * c - a * a) / (2 * b * c))) * (180 / Math.PI);
+  const angleB = Math.acos(clampCos((a * a + c * c - b * b) / (2 * a * c))) * (180 / Math.PI);
+  const angleC = 180 - angleA - angleB;
+  if (!Number.isFinite(angleA) || !Number.isFinite(angleB) || !Number.isFinite(angleC)) return null;
+
+  return { area, perimeter, angleA, angleB, angleC };
+}
+
+function formatMeasure(n: number): string {
+  return n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+const DEFAULT_A = "3";
+const DEFAULT_B = "4";
+const DEFAULT_C = "5";
 
 const TriangleCalculator = () => {
-  const [sideA, setSideA] = useState("");
-  const [sideB, setSideB] = useState("");
-  const [sideC, setSideC] = useState("");
-  const [result, setResult] = useState<any>(null);
+  const [sideA, setSideA] = useState(DEFAULT_A);
+  const [sideB, setSideB] = useState(DEFAULT_B);
+  const [sideC, setSideC] = useState(DEFAULT_C);
+  // Pre-filled so the result renders instantly (no empty state, no toast on init)
+  const [result, setResult] = useState<TriangleResult | null>(() => computeTriangle(DEFAULT_A, DEFAULT_B, DEFAULT_C));
   const { toast } = useToast();
 
   const calculate = () => {
+    if (sideA.trim() === "" || sideB.trim() === "" || sideC.trim() === "") {
+      toast({ title: "Invalid Input", description: "Please enter positive lengths for all three sides.", variant: "destructive" });
+      return;
+    }
     const a = parseFloat(sideA);
     const b = parseFloat(sideB);
     const c = parseFloat(sideC);
 
-    if (isNaN(a) || a <= 0 || isNaN(b) || b <= 0 || isNaN(c) || c <= 0) {
-      toast({ title: "Error", description: "Please enter positive lengths for all three sides.", variant: "destructive" });
+    if (isNaN(a) || isNaN(b) || isNaN(c) || !Number.isFinite(a) || !Number.isFinite(b) || !Number.isFinite(c)) {
+      toast({ title: "Invalid Input", description: "Side lengths must be valid numbers.", variant: "destructive" });
+      return;
+    }
+    if (a <= 0 || b <= 0 || c <= 0) {
+      toast({ title: "Invalid Input", description: "Please enter positive lengths for all three sides.", variant: "destructive" });
+      return;
+    }
+    if (a > MAX_SIDE || b > MAX_SIDE || c > MAX_SIDE) {
+      toast({ title: "Invalid Input", description: `Each side must be between 0 and ${MAX_SIDE.toLocaleString()}.`, variant: "destructive" });
       return;
     }
 
     // Triangle inequality theorem
     if (a + b <= c || a + c <= b || b + c <= a) {
-      toast({ title: "Error", description: "These side lengths do not form a valid triangle.", variant: "destructive" });
+      toast({ title: "Invalid Triangle", description: "These side lengths do not form a valid triangle (sum of any two sides must exceed the third).", variant: "destructive" });
       setResult(null);
       return;
     }
 
-    const perimeter = a + b + c;
-    const s = perimeter / 2; // semi-perimeter
-    const area = Math.sqrt(s * (s - a) * (s - b) * (s - c)); // Heron's formula
+    const computed = computeTriangle(sideA, sideB, sideC);
+    if (!computed) {
+      toast({ title: "Invalid Input", description: "Could not calculate a triangle with these side lengths.", variant: "destructive" });
+      setResult(null);
+      return;
+    }
 
-    // Law of Cosines to find angles
-    const angleA = Math.acos((b * b + c * c - a * a) / (2 * b * c)) * (180 / Math.PI);
-    const angleB = Math.acos((a * a + c * c - b * b) / (2 * a * c)) * (180 / Math.PI);
-    const angleC = 180 - angleA - angleB;
+    setResult(computed);
 
-    setResult({
-      area: area.toFixed(2),
-      perimeter: perimeter.toFixed(2),
-      angleA: angleA.toFixed(2),
-      angleB: angleB.toFixed(2),
-      angleC: angleC.toFixed(2),
-    });
+    toast({ title: "Triangle Calculated", description: `Area is ${formatMeasure(computed.area)} sq units.` });
+  };
 
-    toast({ title: "Success", description: "Triangle properties calculated." });
+  const reset = () => {
+    setSideA("");
+    setSideB("");
+    setSideC("");
+    setResult(null);
+  };
+
+  const copyResult = async () => {
+    if (!result) return;
+    const text = `Triangle (${Number(sideA).toLocaleString()}, ${Number(sideB).toLocaleString()}, ${Number(sideC).toLocaleString()}): Area ${formatMeasure(result.area)}, Perimeter ${formatMeasure(result.perimeter)}, Angles ${formatMeasure(result.angleA)}°, ${formatMeasure(result.angleB)}°, ${formatMeasure(result.angleC)}° — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
 
   return (
@@ -61,7 +135,7 @@ const TriangleCalculator = () => {
     >
       <Card className="p-6">
         <div className="space-y-4">
-          <p className="text-sm text-muted-foreground">Enter the lengths of the three sides of the triangle.</p>
+          <p className="text-sm text-neutral-600">Enter the lengths of the three sides of the triangle.</p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <Label>Side a</Label>
@@ -76,31 +150,42 @@ const TriangleCalculator = () => {
               <Input type="number" value={sideC} onChange={(e) => setSideC(e.target.value)} placeholder="Length of side c" />
             </div>
           </div>
-          <Button onClick={calculate} className="w-full gradient-button">Calculate</Button>
+          <div className="flex gap-2">
+            <Button onClick={calculate} className="flex-1 gradient-button">Calculate</Button>
+            <Button onClick={reset} variant="outline" size="icon" className="h-10 w-10 shrink-0" aria-label="Reset">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
           {result && (
             <div className="mt-6 space-y-4">
+              <div className="flex items-center justify-between">
+                <h2 className="text-lg font-bold text-black">Your Result</h2>
+                <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                  <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                </Button>
+              </div>
               <div className="grid grid-cols-2 gap-4">
-                 <div className="p-3 bg-primary/10 rounded text-center">
-                    <p className="text-sm text-muted-foreground">Area</p>
-                    <p className="text-xl font-bold text-primary">{result.area}</p>
+                  <div className="p-3 bg-[#FFF5F2] rounded text-center">
+                     <p className="text-sm text-neutral-600">Area</p>
+                     <p className="text-xl font-bold text-primary">{formatMeasure(result.area)}</p>
                 </div>
-                 <div className="p-3 bg-muted/50 rounded text-center">
-                    <p className="text-sm text-muted-foreground">Perimeter</p>
-                    <p className="text-xl font-bold">{result.perimeter}</p>
+                  <div className="p-3 bg-muted/50 rounded text-center">
+                     <p className="text-sm text-neutral-600">Perimeter</p>
+                     <p className="text-xl font-bold">{formatMeasure(result.perimeter)}</p>
                 </div>
               </div>
               <div className="grid grid-cols-3 gap-4">
                 <div className="p-3 bg-muted/50 rounded text-center">
-                  <p className="text-sm text-muted-foreground">Angle A</p>
-                  <p className="text-lg font-bold">{result.angleA}°</p>
+                  <p className="text-sm text-neutral-600">Angle A</p>
+                  <p className="text-lg font-bold">{formatMeasure(result.angleA)}°</p>
                 </div>
                 <div className="p-3 bg-muted/50 rounded text-center">
-                  <p className="text-sm text-muted-foreground">Angle B</p>
-                  <p className="text-lg font-bold">{result.angleB}°</p>
+                  <p className="text-sm text-neutral-600">Angle B</p>
+                  <p className="text-lg font-bold">{formatMeasure(result.angleB)}°</p>
                 </div>
                 <div className="p-3 bg-muted/50 rounded text-center">
-                  <p className="text-sm text-muted-foreground">Angle C</p>
-                  <p className="text-lg font-bold">{result.angleC}°</p>
+                  <p className="text-sm text-neutral-600">Angle C</p>
+                  <p className="text-lg font-bold">{formatMeasure(result.angleC)}°</p>
                 </div>
               </div>
             </div>

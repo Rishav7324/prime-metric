@@ -37,10 +37,10 @@ export const CurrencySelector = ({ value, onChange, label = "Currency", classNam
   const selectedCurrency = currencies.find(c => c.code === value);
   
   return (
-    <div className={`space-y-2 ${className}`}>
-      <Label htmlFor="currency">{label}</Label>
+    <div className={`space-y-1.5 ${className}`}>
+      <Label htmlFor="currency" className="text-sm font-medium">{label}</Label>
       <Select value={value} onValueChange={onChange}>
-        <SelectTrigger id="currency" className="w-full">
+        <SelectTrigger id="currency" className="w-full h-10 text-sm bg-white">
           <SelectValue>
             {selectedCurrency && `${selectedCurrency.symbol} ${selectedCurrency.code} - ${selectedCurrency.name}`}
           </SelectValue>

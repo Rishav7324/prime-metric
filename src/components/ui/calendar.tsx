@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
-import { DayPicker } from "react-day-picker"
+import { DayPicker, getDefaultClassNames } from "react-day-picker"
 
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
@@ -15,51 +15,84 @@ function Calendar({
   showOutsideDays = true,
   ...props
 }: CalendarProps) {
+  const defaultClassNames = getDefaultClassNames()
+
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
       className={cn("p-3", className)}
       classNames={{
-        months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
-        month: "space-y-4",
-        caption: "flex justify-center pt-1 relative items-center",
-        caption_label: "text-sm font-medium",
-        nav: "space-x-1 flex items-center",
-        nav_button: cn(
+        root: cn("w-fit", defaultClassNames.root),
+        months: cn(
+          "flex flex-col gap-4 sm:flex-row",
+          defaultClassNames.months
+        ),
+        month: cn("flex flex-col gap-4", defaultClassNames.month),
+        nav: cn(
+          "flex items-center gap-1 w-full absolute top-0 inset-x-0 justify-between",
+          defaultClassNames.nav
+        ),
+        button_previous: cn(
           buttonVariants({ variant: "outline" }),
-          "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100"
+          "size-7 bg-transparent p-0 opacity-50 hover:opacity-100",
+          defaultClassNames.button_previous
         ),
-        nav_button_previous: "absolute left-1",
-        nav_button_next: "absolute right-1",
-        table: "w-full border-collapse space-y-1",
-        head_row: "flex",
-        head_cell:
-          "text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]",
-        row: "flex w-full mt-2",
-        cell: "h-9 w-9 text-center text-sm p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
+        button_next: cn(
+          buttonVariants({ variant: "outline" }),
+          "size-7 bg-transparent p-0 opacity-50 hover:opacity-100",
+          defaultClassNames.button_next
+        ),
+        month_caption: cn(
+          "flex justify-center items-center h-7 w-full px-7",
+          defaultClassNames.month_caption
+        ),
+        weekdays: cn("flex", defaultClassNames.weekdays),
+        weekday: cn(
+          "text-neutral-500 rounded-md w-9 font-normal text-[0.8rem]",
+          defaultClassNames.weekday
+        ),
+        week: cn("flex w-full mt-2", defaultClassNames.week),
         day: cn(
-          buttonVariants({ variant: "ghost" }),
-          "h-9 w-9 p-0 font-normal aria-selected:opacity-100"
+          "relative p-0 text-center text-sm focus-within:z-20 size-9",
+          defaultClassNames.day
         ),
-        day_range_end: "day-range-end",
-        day_selected:
-          "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
-        day_today: "bg-accent text-accent-foreground",
-        day_outside:
-          "day-outside text-muted-foreground aria-selected:bg-accent/50 aria-selected:text-muted-foreground",
-        day_disabled: "text-muted-foreground opacity-50",
-        day_range_middle:
-          "aria-selected:bg-accent aria-selected:text-accent-foreground",
-        day_hidden: "invisible",
+        day_button: cn(
+          buttonVariants({ variant: "ghost" }),
+          "size-9 p-0 font-normal aria-selected:opacity-100",
+          defaultClassNames.day_button
+        ),
+        range_start: cn("rounded-l-md", defaultClassNames.range_start),
+        range_end: cn("rounded-r-md", defaultClassNames.range_end),
+        range_middle: cn(
+          "aria-selected:bg-[#FFF5F2] aria-selected:text-black",
+          defaultClassNames.range_middle
+        ),
+        selected: cn(
+          "bg-[#F2765E]! text-white! hover:bg-[#F2765E] hover:text-white focus:bg-[#F2765E] focus:text-white",
+          defaultClassNames.selected
+        ),
+        today: cn(
+          "bg-[#FFF5F2] text-[#c25136]",
+          defaultClassNames.today
+        ),
+        outside: cn(
+          "text-neutral-500 aria-selected:bg-[#FFF5F2]/50 aria-selected:text-neutral-500",
+          defaultClassNames.outside
+        ),
+        disabled: cn(
+          "text-neutral-500 opacity-50",
+          defaultClassNames.disabled
+        ),
+        hidden: cn("invisible", defaultClassNames.hidden),
         ...classNames,
       }}
       components={{
-        IconLeft: ({ className, ...props }) => (
-          <ChevronLeft className={cn("h-4 w-4", className)} {...props} />
-        ),
-        IconRight: ({ className, ...props }) => (
-          <ChevronRight className={cn("h-4 w-4", className)} {...props} />
-        ),
+        Chevron: ({ orientation, className, ...props }) =>
+          orientation === "left" ? (
+            <ChevronLeft className={cn("size-4", className)} {...props} />
+          ) : (
+            <ChevronRight className={cn("size-4", className)} {...props} />
+          ),
       }}
       {...props}
     />

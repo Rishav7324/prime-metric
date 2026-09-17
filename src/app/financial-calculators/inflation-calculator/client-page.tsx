@@ -9,37 +9,74 @@ import { Button } from "@/components/ui/button";
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+import { CurrencySelector, getCurrencySymbol } from "@/components/CurrencySelector";
+import { Copy, RotateCcw } from "lucide-react";
+
+type InflationResult = {
+  futureValue: number;
+  purchasingPower: number;
+  totalInflation: number;
+};
+
+function computeInflation(amountStr: string, yearsStr: string, rateStr: string): InflationResult | null {
+  const principal = parseFloat(amountStr);
+  const y = parseInt(yearsStr);
+  const ratePct = parseFloat(rateStr);
+
+  if (!(principal > 0 && principal <= 1e12) || isNaN(y) || y < 0 || y > 100 || isNaN(ratePct) || ratePct < -20 || ratePct > 100) {
+    return null;
+  }
+
+  const rate = ratePct / 100;
+  const futureValue = principal * Math.pow(1 + rate, y);
+  const purchasingPower = principal / Math.pow(1 + rate, y);
+  const totalInflation = futureValue - principal;
+  return { futureValue, purchasingPower, totalInflation };
+}
 
 const InflationCalculator = () => {
   const [amount, setAmount] = useState("1000");
   const [years, setYears] = useState("10");
   const [inflationRate, setInflationRate] = useState("3");
-  const [result, setResult] = useState<any>(null);
+  // Pre-filled so the result renders instantly (no empty state)
+  const [result, setResult] = useState<InflationResult | null>(() => computeInflation("1000", "10", "3"));
+  const [currency, setCurrency] = useState("USD");
   const { toast } = useToast();
+  const currencySymbol = getCurrencySymbol(currency);
+
+  const fmt = (n: number) =>
+    n.toLocaleString("en-US", { maximumFractionDigits: 2, minimumFractionDigits: 2 });
 
   const calculate = () => {
-    const principal = parseFloat(amount);
-    const y = parseInt(years);
-    const rate = parseFloat(inflationRate) / 100;
-    
-    if (isNaN(principal) || isNaN(y) || isNaN(rate) || principal <= 0 || y < 0 ) {
+    const computed = computeInflation(amount, years, inflationRate);
+
+    if (!computed) {
       toast({
         variant: "destructive",
         title: "Invalid Input",
-        description: "Please enter valid positive numbers for all fields.",
+        description: "Enter amount (1+), years (0-100), rate (-20 to 100%).",
       });
       return;
     }
-    
-    const futureValue = principal * Math.pow(1 + rate, y);
-    const purchasingPower = principal / Math.pow(1 + rate, y);
-    const totalInflation = futureValue - principal;
-    
-    setResult({ futureValue, purchasingPower, totalInflation });
+
+    setResult(computed);
     toast({
       title: "Calculation Complete",
-      description: "The impact of inflation has been calculated.",
+      description: `You will need ${currencySymbol}${fmt(computed.futureValue)} in ${years} years.`,
     });
+  };
+
+  const reset = () => { setAmount(""); setYears(""); setInflationRate(""); setResult(null); };
+
+  const copyResult = async () => {
+    if (!result) return;
+    const text = `Inflation: ${currencySymbol}${fmt(parseFloat(amount))} today at ${inflationRate}% for ${years} yrs → Need ${currencySymbol}${fmt(result.futureValue)}, purchasing power ${currencySymbol}${fmt(result.purchasingPower)}. — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
 
   return (
@@ -52,8 +89,9 @@ const InflationCalculator = () => {
     >
       <Card className="p-6">
         <div className="space-y-4">
+          <CurrencySelector value={currency} onChange={setCurrency} />
           <div>
-            <Label>Current Amount ($)</Label>
+            <Label>Current Amount ({currencySymbol})</Label>
             <Input
               type="number"
               value={amount}
@@ -80,26 +118,36 @@ const InflationCalculator = () => {
               step="0.1"
             />
           </div>
-          <Button onClick={calculate} className="w-full gradient-button">Calculate Inflation Impact</Button>
+          <div className="flex gap-2">
+            <Button onClick={calculate} className="flex-1 gradient-button">Calculate Inflation Impact</Button>
+            <Button onClick={reset} variant="outline" size="icon" className="shrink-0" aria-label="Reset">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
           {result && (
             <div className="mt-6 space-y-4">
-              <div className="p-4 bg-primary/10 rounded-lg text-center">
-                <p className="text-sm text-muted-foreground">To have the same purchasing power as ${parseFloat(amount).toLocaleString()} today, you will need:</p>
-                <p className="text-4xl font-bold text-primary">
-                  ${result.futureValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              <div className="p-4 bg-[#FFF5F2] rounded-lg text-center">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-sm text-neutral-600">To have the same purchasing power as {currencySymbol}{fmt(parseFloat(amount))} today, you will need:</p>
+                  <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs shrink-0 ml-2">
+                    <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                  </Button>
+                </div>
+                <p className="text-2xl font-bold text-primary">
+                  {currencySymbol}{fmt(result.futureValue)}
                 </p>
-                 <p className="text-sm text-muted-foreground">in {years} years.</p>
+                  <p className="text-sm text-neutral-600">in {years} years.</p>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="p-4 bg-muted/50 rounded-lg text-center">
-                  <p className="text-sm text-muted-foreground">Future Purchasing Power</p>
-                  <p className="text-xl font-bold">${result.purchasingPower.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
-                  <p className="text-xs text-muted-foreground mt-1">Today's ${parseFloat(amount).toLocaleString()} will be worth this much.</p>
+                  <p className="text-sm text-neutral-600">Future Purchasing Power</p>
+                  <p className="text-xl font-bold">{currencySymbol}{fmt(result.purchasingPower)}</p>
+                  <p className="text-xs text-neutral-600 mt-1">Today's {currencySymbol}{fmt(parseFloat(amount))} will be worth this much.</p>
                 </div>
                 <div className="p-4 bg-muted/50 rounded-lg text-center">
-                  <p className="text-sm text-muted-foreground">Value Lost to Inflation</p>
-                  <p className="text-xl font-bold text-red-400">${result.totalInflation.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
-                   <p className="text-xs text-muted-foreground mt-1">The increase in cost for the same value.</p>
+                  <p className="text-sm text-neutral-600">Value Lost to Inflation</p>
+                  <p className="text-xl font-bold text-red-600">{currencySymbol}{fmt(result.totalInflation)}</p>
+                    <p className="text-xs text-neutral-600 mt-1">The increase in cost for the same value.</p>
                 </div>
               </div>
             </div>

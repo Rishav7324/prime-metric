@@ -10,45 +10,71 @@ import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
 import { CurrencySelector, getCurrencySymbol } from "@/components/CurrencySelector";
+import { Copy, RotateCcw } from "lucide-react";
+
+type RentResult = {
+  affordableRent: number; monthlyIncome: number;
+};
+
+function computeRent(
+  incomeStr: string,
+  period: string,
+  pctStr: string
+): RentResult | null {
+  const inc = parseFloat(incomeStr);
+  const pct = parseFloat(pctStr);
+
+  if (!(inc > 0 && inc <= 1e12)) return null;
+  if (isNaN(pct) || pct <= 0 || pct > 100) return null;
+
+  const monthlyIncome = period === "annually" ? inc / 12 : inc;
+  return { affordableRent: monthlyIncome * (pct / 100), monthlyIncome };
+}
 
 const RentCalculator = () => {
   const [income, setIncome] = useState("5000");
   const [incomePeriod, setIncomePeriod] = useState("monthly");
   const [percentage, setPercentage] = useState("30");
   const [currency, setCurrency] = useState("USD");
-  const [result, setResult] = useState<any>(null);
+  // Pre-filled so the result renders instantly (no empty state)
+  const [result, setResult] = useState<RentResult | null>(() => computeRent("5000", "monthly", "30"));
   const { toast } = useToast();
   
   const currencySymbol = getCurrencySymbol(currency);
 
-  const calculate = () => {
-    const inc = parseFloat(income);
-    const pct = parseFloat(percentage) / 100;
+  const fmt = (n: number) =>
+    n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-    if (isNaN(inc) || inc <= 0 || isNaN(pct)) {
+  const calculate = () => {
+    const computed = computeRent(income, incomePeriod, percentage);
+    if (!computed) {
       toast({
         variant: "destructive",
         title: "Invalid Input",
-        description: "Please enter a valid income and percentage.",
+        description: "Enter income (1+), percentage (1-100%).",
       });
       return;
     }
 
-    let monthlyIncome = inc;
-    if (incomePeriod === 'annually') {
-      monthlyIncome = inc / 12;
-    }
-
-    const affordableRent = monthlyIncome * pct;
-
-    setResult({
-      affordableRent: affordableRent.toFixed(2),
-    });
+    setResult(computed);
 
     toast({
         title: "Calculation Complete",
-        description: `Your affordable monthly rent is ${currencySymbol}${affordableRent.toFixed(2)}.`,
+        description: `Your affordable monthly rent is ${currencySymbol}${fmt(computed.affordableRent)}.`,
     });
+  };
+
+  const reset = () => { setIncome(""); setPercentage(""); setIncomePeriod("monthly"); setResult(null); };
+
+  const copyResult = async () => {
+    if (!result) return;
+    const text = `Affordable rent: ${currencySymbol}${fmt(result.affordableRent)}/month (income ${currencySymbol}${fmt(result.monthlyIncome)}/month at ${percentage}%). — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
 
   return (
@@ -80,11 +106,23 @@ const RentCalculator = () => {
               <Input type="number" value={percentage} onChange={(e) => setPercentage(e.target.value)} placeholder="e.g., 30" />
             </div>
           </div>
-          <Button onClick={calculate} className="w-full gradient-button">Calculate Affordable Rent</Button>
+          <div className="flex gap-2">
+            <Button onClick={calculate} className="flex-1 gradient-button">Calculate Affordable Rent</Button>
+            <Button onClick={reset} variant="outline" size="icon" className="shrink-0" aria-label="Reset">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
           {result && (
-            <div className="mt-6 p-4 bg-primary/10 rounded-lg text-center">
-              <p className="text-sm text-muted-foreground">Affordable Monthly Rent</p>
-              <p className="text-3xl font-bold text-primary">{currencySymbol}{result.affordableRent}</p>
+            <div className="mt-6 space-y-3">
+              <div className="flex items-center justify-end">
+                <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                  <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                </Button>
+              </div>
+              <div className="p-4 bg-[#FFF5F2] rounded-lg text-center">
+                <p className="text-sm text-neutral-600">Affordable Monthly Rent</p>
+                <p className="text-3xl font-bold text-primary">{currencySymbol}{fmt(result.affordableRent)}</p>
+              </div>
             </div>
           )}
         </div>

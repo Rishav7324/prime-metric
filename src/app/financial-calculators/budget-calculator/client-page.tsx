@@ -9,41 +9,84 @@ import { Button } from "@/components/ui/button";
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+import { CurrencySelector, getCurrencySymbol } from "@/components/CurrencySelector";
+import { Copy, RotateCcw } from "lucide-react";
+
+type BudgetResult = { totalExpenses: number; remaining: number; savingsRate: number };
+
+function computeBudget(
+  incomeStr: string,
+  housingStr: string,
+  transportationStr: string,
+  foodStr: string,
+  utilitiesStr: string,
+  entertainmentStr: string,
+  otherStr: string
+): BudgetResult | null {
+  const monthlyIncome = parseFloat(incomeStr);
+  if (!(monthlyIncome > 0 && monthlyIncome <= 1e9)) return null;
+
+  const raw = [housingStr, transportationStr, foodStr, utilitiesStr, entertainmentStr, otherStr];
+  const expenses: number[] = [];
+  for (const e of raw) {
+    if (e.trim() === "") { expenses.push(0); continue; }
+    const v = parseFloat(e);
+    if (isNaN(v) || v < 0 || v > 1e9) return null;
+    expenses.push(v);
+  }
+  const totalExpenses = expenses.reduce((a, b) => a + b, 0);
+  const remaining = monthlyIncome - totalExpenses;
+  const savingsRate = (remaining / monthlyIncome) * 100;
+
+  return { totalExpenses, remaining, savingsRate };
+}
 
 const BudgetCalculatorClient = () => {
-  const [income, setIncome] = useState("");
-  const [housing, setHousing] = useState("");
-  const [transportation, setTransportation] = useState("");
-  const [food, setFood] = useState("");
-  const [utilities, setUtilities] = useState("");
-  const [entertainment, setEntertainment] = useState("");
-  const [other, setOther] = useState("");
-  const [result, setResult] = useState<any>(null);
+  const [income, setIncome] = useState("5000");
+  const [housing, setHousing] = useState("1500");
+  const [transportation, setTransportation] = useState("400");
+  const [food, setFood] = useState("600");
+  const [utilities, setUtilities] = useState("250");
+  const [entertainment, setEntertainment] = useState("300");
+  const [other, setOther] = useState("200");
+  // Pre-filled so the result renders instantly (no empty state)
+  const [result, setResult] = useState<BudgetResult | null>(() => computeBudget("5000", "1500", "400", "600", "250", "300", "200"));
+  const [currency, setCurrency] = useState("USD");
   const { toast } = useToast();
+  const currencySymbol = getCurrencySymbol(currency);
+
+  const fmt = (n: number) =>
+    n.toLocaleString("en-US", { maximumFractionDigits: 2, minimumFractionDigits: 2 });
 
   const calculate = () => {
-    const monthlyIncome = parseFloat(income);
-
-    if (isNaN(monthlyIncome) || monthlyIncome <= 0) {
+    const computed = computeBudget(income, housing, transportation, food, utilities, entertainment, other);
+    if (!computed) {
       toast({
         variant: "destructive",
         title: "Invalid Input",
-        description: "Please enter a valid monthly income.",
+        description: "Enter income (1+); expenses must be 0 or more.",
       });
       return;
     }
 
-    const expenses = [housing, transportation, food, utilities, entertainment, other]
-      .map(e => parseFloat(e) || 0);
-    const totalExpenses = expenses.reduce((a, b) => a + b, 0);
-    const remaining = monthlyIncome - totalExpenses;
-    const savingsRate = (remaining / monthlyIncome) * 100;
-    
-    setResult({ totalExpenses, remaining, savingsRate });
+    setResult(computed);
     toast({
         title: "Budget Calculated",
-        description: "Your monthly budget has been analyzed.",
+        description: `Remaining ${currencySymbol}${fmt(computed.remaining)} (${computed.savingsRate.toLocaleString("en-US", { maximumFractionDigits: 1 })}% savings).`,
     });
+  };
+
+  const reset = () => { setIncome(""); setHousing(""); setTransportation(""); setFood(""); setUtilities(""); setEntertainment(""); setOther(""); setResult(null); };
+
+  const copyResult = async () => {
+    if (!result) return;
+    const text = `Budget: income ${currencySymbol}${fmt(parseFloat(income))}, expenses ${currencySymbol}${fmt(result.totalExpenses)}, remaining ${currencySymbol}${fmt(result.remaining)} (${result.savingsRate.toLocaleString("en-US", { maximumFractionDigits: 1 })}% savings). — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
 
   return (
@@ -55,8 +98,9 @@ const BudgetCalculatorClient = () => {
     >
       <Card className="p-6">
         <div className="space-y-4">
+          <CurrencySelector value={currency} onChange={setCurrency} />
           <div className="space-y-2">
-            <Label className="text-lg">Monthly Income ($)</Label>
+            <Label className="text-sm font-medium">Monthly Income ({currencySymbol})</Label>
             <Input
               type="number"
               value={income}
@@ -122,23 +166,33 @@ const BudgetCalculatorClient = () => {
               />
             </div>
           </div>
-          <Button onClick={calculate} className="w-full gradient-button h-12">Calculate Budget</Button>
+          <div className="flex gap-2">
+            <Button onClick={calculate} className="flex-1 gradient-button h-10">Calculate Budget</Button>
+            <Button onClick={reset} variant="outline" size="icon" className="h-10 w-10 shrink-0" aria-label="Reset">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
           {result && (
             <div className="mt-6 space-y-3">
+              <div className="flex items-center justify-end">
+                <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                  <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                </Button>
+              </div>
               <div className={`p-4 rounded-lg text-center ${result.remaining >= 0 ? 'bg-green-500/10' : 'bg-red-500/10'}`}>
-                <p className="text-sm text-muted-foreground">Money Remaining</p>
-                <p className={`text-3xl font-bold ${result.remaining >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                  ${result.remaining.toFixed(2)}
+                <p className="text-sm text-neutral-600">Money Remaining</p>
+                <p className={`text-3xl font-bold ${result.remaining >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  {currencySymbol}{fmt(result.remaining)}
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div className="p-3 bg-muted/50 rounded text-center">
-                  <p className="text-sm text-muted-foreground">Total Expenses</p>
-                  <p className="text-lg font-bold">${result.totalExpenses.toFixed(2)}</p>
+                  <p className="text-sm text-neutral-600">Total Expenses</p>
+                  <p className="text-lg font-bold">{currencySymbol}{fmt(result.totalExpenses)}</p>
                 </div>
                 <div className="p-3 bg-muted/50 rounded text-center">
-                  <p className="text-sm text-muted-foreground">Savings Rate</p>
-                  <p className="text-lg font-bold">{result.savingsRate.toFixed(1)}%</p>
+                  <p className="text-sm text-neutral-600">Savings Rate</p>
+                  <p className="text-lg font-bold">{result.savingsRate.toLocaleString("en-US", { maximumFractionDigits: 1, minimumFractionDigits: 1 })}%</p>
                 </div>
               </div>
             </div>

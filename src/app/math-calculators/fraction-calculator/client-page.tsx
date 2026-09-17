@@ -10,93 +10,160 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+import { Copy, RotateCcw } from "lucide-react";
+
+type FractionOp = "add" | "subtract" | "multiply" | "divide";
+
+type FractionResult = {
+  numerator: number;
+  denominator: number;
+  display: string;
+  decimal: number;
+};
+
+const gcd = (a: number, b: number): number => {
+  a = Math.abs(a); b = Math.abs(b);
+  while (b !== 0) { const t = b; b = a % b; a = t; }
+  return a || 1;
+};
+
+const simplify = (numerator: number, denominator: number) => {
+  if (denominator === 0) return { num: numerator, den: denominator };
+  const divisor = gcd(numerator, denominator);
+  const num = numerator / divisor;
+  const den = denominator / divisor;
+  return den < 0 ? { num: -num, den: -den } : { num, den };
+};
+
+function computeFraction(n1Str: string, d1Str: string, n2Str: string, d2Str: string, op: string): FractionResult | null {
+  const n1 = parseInt(n1Str, 10);
+  const d1 = parseInt(d1Str, 10);
+  const n2 = parseInt(n2Str, 10);
+  const d2 = parseInt(d2Str, 10);
+  if ([n1, d1, n2, d2].some((v) => !Number.isFinite(v))) return null;
+  if (d1 === 0 || d2 === 0) return null;
+  if ([n1, d1, n2, d2].some((v) => Math.abs(v) > 1_000_000)) return null;
+
+  let numerator = 0;
+  let denominator = 1;
+
+  switch (op) {
+    case "add":
+      numerator = n1 * d2 + n2 * d1;
+      denominator = d1 * d2;
+      break;
+    case "subtract":
+      numerator = n1 * d2 - n2 * d1;
+      denominator = d1 * d2;
+      break;
+    case "multiply":
+      numerator = n1 * n2;
+      denominator = d1 * d2;
+      break;
+    case "divide":
+      if (n2 === 0) return null;
+      numerator = n1 * d2;
+      denominator = d1 * n2;
+      break;
+    default:
+      return null;
+  }
+
+  const simplified = simplify(numerator, denominator);
+  if (simplified.den === 0 || !Number.isFinite(simplified.num) || !Number.isFinite(simplified.den)) return null;
+
+  let display = "";
+  if (simplified.num === 0) {
+    display = "0";
+  } else if (simplified.den === 1) {
+    display = simplified.num.toLocaleString();
+  } else {
+    display = `${simplified.num.toLocaleString()} / ${simplified.den.toLocaleString()}`;
+  }
+  const decimal = simplified.num / simplified.den;
+  if (!Number.isFinite(decimal)) return null;
+  return { numerator: simplified.num, denominator: simplified.den, display, decimal };
+}
 
 const FractionCalculator = () => {
-  const [num1, setNum1] = useState("");
-  const [den1, setDen1] = useState("");
-  const [num2, setNum2] = useState("");
-  const [den2, setDen2] = useState("");
-  const [operation, setOperation] = useState("add");
-  const [result, setResult] = useState<string>("");
+  const [num1, setNum1] = useState("1");
+  const [den1, setDen1] = useState("2");
+  const [num2, setNum2] = useState("3");
+  const [den2, setDen2] = useState("4");
+  const [operation, setOperation] = useState<FractionOp>("add");
+  // Pre-filled so the result renders instantly (no empty state)
+  const [result, setResult] = useState<FractionResult | null>(() => computeFraction("1", "2", "3", "4", "add"));
   const { toast } = useToast();
 
-  const gcd = (a: number, b: number): number => {
-    return b === 0 ? a : gcd(b, a % b);
-  };
-
-  const simplify = (numerator: number, denominator: number) => {
-    if (denominator === 0) return { num: numerator, den: denominator };
-    const divisor = gcd(Math.abs(numerator), Math.abs(denominator));
-    const num = numerator / divisor;
-    const den = denominator / divisor;
-    return den < 0 ? { num: -num, den: -den } : { num, den };
-  };
-
   const calculate = () => {
-    const n1 = parseInt(num1);
-    const d1 = parseInt(den1);
-    const n2 = parseInt(num2);
-    const d2 = parseInt(den2);
-    
-    if (isNaN(n1) || isNaN(d1) || isNaN(n2) || isNaN(d2) || d1 === 0 || d2 === 0) {
+    const n1 = parseInt(num1, 10);
+    const d1 = parseInt(den1, 10);
+    const n2 = parseInt(num2, 10);
+    const d2 = parseInt(den2, 10);
+
+    if ([n1, d1, n2, d2].some((v) => !Number.isFinite(v))) {
       toast({
         variant: "destructive",
         title: "Invalid Input",
-        description: "Please enter valid numbers for numerators and non-zero denominators.",
+        description: "Please enter valid whole numbers for all numerators and denominators.",
       });
-      setResult("");
+      return;
+    }
+    if (d1 === 0 || d2 === 0) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Input",
+        description: "Denominators cannot be zero (division by zero).",
+      });
+      return;
+    }
+    if ([n1, d1, n2, d2].some((v) => Math.abs(v) > 1_000_000)) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Input",
+        description: "Values must be within ±1,000,000.",
+      });
+      return;
+    }
+    if (operation === "divide" && n2 === 0) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Input",
+        description: "Cannot divide by a zero fraction (second numerator is zero).",
+      });
       return;
     }
 
-    let numerator = 0;
-    let denominator = 1;
-
-    switch (operation) {
-      case "add":
-        numerator = n1 * d2 + n2 * d1;
-        denominator = d1 * d2;
-        break;
-      case "subtract":
-        numerator = n1 * d2 - n2 * d1;
-        denominator = d1 * d2;
-        break;
-      case "multiply":
-        numerator = n1 * n2;
-        denominator = d1 * d2;
-        break;
-      case "divide":
-        if (n2 === 0) {
-            toast({
-                variant: "destructive",
-                title: "Error",
-                description: "Cannot divide by zero.",
-            });
-            setResult("");
-            return;
-        }
-        numerator = n1 * d2;
-        denominator = d1 * n2;
-        break;
+    const computed = computeFraction(num1, den1, num2, den2, operation);
+    if (!computed) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Input",
+        description: "Could not compute the fraction. Check for division by zero.",
+      });
+      return;
     }
 
-    const simplified = simplify(numerator, denominator);
-    
-    let resultString = "";
-    if (simplified.den === 0) {
-        resultString = "Undefined (division by zero)";
-    } else if (simplified.num === 0) {
-        resultString = "0";
-    } else if (simplified.den === 1) {
-        resultString = simplified.num.toString();
-    } else {
-        resultString = `${simplified.num} / ${simplified.den}`;
-    }
-
-    setResult(resultString);
+    setResult(computed);
     toast({
-        title: "Calculation Complete",
-        description: `The result is ${resultString}.`,
+      title: "Calculation Complete",
+      description: `The result is ${computed.display} (≈ ${computed.decimal.toLocaleString(undefined, { maximumFractionDigits: 6 })}).`,
     });
+  };
+
+  const reset = () => {
+    setNum1(""); setDen1(""); setNum2(""); setDen2(""); setResult(null);
+  };
+
+  const copyResult = async () => {
+    if (!result) return;
+    const text = `Fraction result: ${result.display} (≈ ${result.decimal.toLocaleString(undefined, { maximumFractionDigits: 6 })}) — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
 
   return (
@@ -111,7 +178,7 @@ const FractionCalculator = () => {
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="num1">Fraction 1 - Numerator</Label>
+              <Label className="text-sm font-medium" htmlFor="num1">Fraction 1 - Numerator</Label>
               <Input
                 id="num1"
                 type="number"
@@ -121,7 +188,7 @@ const FractionCalculator = () => {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="den1">Fraction 1 - Denominator</Label>
+              <Label className="text-sm font-medium" htmlFor="den1">Fraction 1 - Denominator</Label>
               <Input
                 id="den1"
                 type="number"
@@ -133,7 +200,7 @@ const FractionCalculator = () => {
           </div>
           <div className="space-y-2">
             <Label>Operation</Label>
-            <Select value={operation} onValueChange={setOperation}>
+            <Select value={operation} onValueChange={(v) => setOperation(v as FractionOp)}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
@@ -147,7 +214,7 @@ const FractionCalculator = () => {
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="num2">Fraction 2 - Numerator</Label>
+              <Label className="text-sm font-medium" htmlFor="num2">Fraction 2 - Numerator</Label>
               <Input
                 id="num2"
                 type="number"
@@ -157,7 +224,7 @@ const FractionCalculator = () => {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="den2">Fraction 2 - Denominator</Label>
+              <Label className="text-sm font-medium" htmlFor="den2">Fraction 2 - Denominator</Label>
               <Input
                 id="den2"
                 type="number"
@@ -167,13 +234,24 @@ const FractionCalculator = () => {
               />
             </div>
           </div>
-          <Button onClick={calculate} className="w-full gradient-button">
-            Calculate
-          </Button>
+          <div className="flex gap-2">
+            <Button onClick={calculate} className="flex-1 gradient-button">
+              Calculate
+            </Button>
+            <Button onClick={reset} variant="outline" size="icon" className="shrink-0" aria-label="Reset">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
           {result && (
-            <div className="mt-6 p-4 bg-primary/10 rounded-lg text-center">
-              <p className="text-sm text-muted-foreground">Result</p>
-              <p className="text-3xl font-bold text-primary">{result}</p>
+            <div className="mt-6 p-4 bg-[#FFF5F2] rounded-lg">
+              <div className="flex items-center justify-between mb-1">
+                <p className="text-sm text-neutral-600">Result</p>
+                <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                  <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                </Button>
+              </div>
+              <p className="text-3xl font-bold text-primary text-center">{result.display}</p>
+              <p className="text-sm text-neutral-500 text-center mt-1">≈ {result.decimal.toLocaleString(undefined, { maximumFractionDigits: 6 })}</p>
             </div>
           )}
         </div>

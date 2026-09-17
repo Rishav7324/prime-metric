@@ -8,21 +8,21 @@ import { faqData } from "@/lib/data";
 
 export function Faq() {
   return (
-    <section id="faq" className="py-20 sm:py-32">
-      <div className="container max-w-3xl mx-auto">
+    <section id="faq" className="py-10 sm:py-14 bg-white">
+      <div className="mx-auto max-w-2xl px-4">
         <div className="text-center">
-          <h2 className="font-headline text-3xl sm:text-4xl font-bold">Frequently Asked Questions</h2>
-          <p className="mt-4 text-lg text-muted-foreground">
-            Find answers to common questions about Prime Metric.
+          <h2 className="text-2xl sm:text-3xl font-bold text-black">FAQs</h2>
+          <p className="mt-2 text-sm sm:text-base text-neutral-600">
+            Quick answers about Prime Metric.
           </p>
         </div>
-        <Accordion type="single" collapsible className="w-full mt-12">
+        <Accordion type="single" collapsible className="w-full mt-6">
           {faqData.map((item, index) => (
-            <AccordionItem value={`item-${index}`} key={index} className="glass-card mb-4 px-6 rounded-2xl border">
-              <AccordionTrigger className="text-lg font-semibold text-left hover:no-underline">
+            <AccordionItem value={`item-${index}`} key={index} className="bg-white border border-neutral-200 mb-2 px-4 rounded-xl">
+              <AccordionTrigger className="text-sm sm:text-base font-semibold text-left text-black hover:no-underline py-3">
                 {item.question}
               </AccordionTrigger>
-              <AccordionContent className="text-base text-muted-foreground">
+              <AccordionContent className="text-sm text-neutral-600 pb-3">
                 {item.answer}
               </AccordionContent>
             </AccordionItem>

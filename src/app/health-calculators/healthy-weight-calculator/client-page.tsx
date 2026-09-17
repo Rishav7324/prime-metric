@@ -9,44 +9,81 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+import { Copy, RotateCcw } from "lucide-react";
+
+type HealthyWeightResult = {
+  min: number;
+  max: number;
+  ideal: number;
+};
+
+function computeHealthyWeight(heightStr: string, unitStr: string): HealthyWeightResult | null {
+  const raw = parseFloat(heightStr);
+  if (isNaN(raw) || !(raw > 0)) return null;
+
+  let heightInCm = raw;
+  if (unitStr === "inches") {
+    if (!(raw >= 20 && raw <= 120)) return null;
+    heightInCm = raw * 2.54;
+  } else if (unitStr === "cm") {
+    if (!(raw >= 50 && raw <= 300)) return null;
+  } else {
+    return null;
+  }
+
+  const heightInM = heightInCm / 100;
+  const minHealthyWeight = 18.5 * heightInM * heightInM;
+  const maxHealthyWeight = 24.9 * heightInM * heightInM;
+  const idealWeight = 22 * heightInM * heightInM;
+
+  return {
+    min: parseFloat(minHealthyWeight.toFixed(1)),
+    max: parseFloat(maxHealthyWeight.toFixed(1)),
+    ideal: parseFloat(idealWeight.toFixed(1)),
+  };
+}
 
 const HealthyWeightCalculatorClient = () => {
-  const [height, setHeight] = useState("");
+  const [height, setHeight] = useState("175");
   const [unit, setUnit] = useState("cm");
-  const [result, setResult] = useState<any>(null);
+  // Pre-filled so the result renders instantly (no empty state)
+  const [result, setResult] = useState<HealthyWeightResult | null>(() => computeHealthyWeight("175", "cm"));
   const { toast } = useToast();
 
   const calculate = () => {
-    let heightInCm = parseFloat(height);
-
-    if (isNaN(heightInCm) || heightInCm <= 0) {
+    const computed = computeHealthyWeight(height, unit);
+    if (!computed) {
       toast({
         variant: "destructive",
         title: "Invalid Input",
-        description: "Please enter a valid, positive height.",
+        description: unit === "inches"
+          ? "Enter height (20-120 inches)."
+          : "Enter height (50-300 cm).",
       });
       return;
     }
 
-    if (unit === "inches") {
-      heightInCm = heightInCm * 2.54;
-    }
-    
-    const heightInM = heightInCm / 100;
-    const minHealthyWeight = 18.5 * heightInM * heightInM;
-    const maxHealthyWeight = 24.9 * heightInM * heightInM;
-    const idealWeight = 22 * heightInM * heightInM;
-
-    setResult({
-      min: minHealthyWeight.toFixed(1),
-      max: maxHealthyWeight.toFixed(1),
-      ideal: idealWeight.toFixed(1)
-    });
+    setResult(computed);
     
     toast({
       title: "Calculation Complete",
-      description: `Your ideal weight is around ${idealWeight.toFixed(1)} kg.`,
+      description: `Your ideal weight is around ${computed.ideal.toLocaleString()} kg.`,
     });
+  };
+
+  const reset = () => {
+    setHeight(""); setResult(null);
+  };
+
+  const copyResult = async () => {
+    if (!result) return;
+    const text = `Ideal weight: ~${result.ideal.toLocaleString()} kg. Healthy range: ${result.min.toLocaleString()} - ${result.max.toLocaleString()} kg — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
 
   return (
@@ -80,20 +117,30 @@ const HealthyWeightCalculatorClient = () => {
               </Select>
             </div>
           </div>
-          <Button onClick={calculate} className="w-full gradient-button">
-            Calculate Range
-          </Button>
+          <div className="flex gap-2">
+            <Button onClick={calculate} className="flex-1 gradient-button" disabled={!height}>
+              Calculate Range
+            </Button>
+            <Button onClick={reset} variant="outline" size="icon" className="shrink-0" aria-label="Reset">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
           {result && (
             <div className="mt-6 space-y-3">
-              <div className="p-4 bg-primary/10 rounded-lg text-center">
-                <p className="text-sm text-muted-foreground">Ideal Weight (approx.)</p>
-                <p className="text-4xl font-bold text-primary">{result.ideal} kg</p>
+              <div className="flex items-center justify-end">
+                <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                  <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                </Button>
+              </div>
+              <div className="p-4 bg-[#FFF5F2] rounded-lg text-center">
+                <p className="text-sm text-neutral-600">Ideal Weight (approx.)</p>
+                <p className="text-2xl font-bold text-primary">{result.ideal.toLocaleString()} kg</p>
               </div>
               <div className="p-4 bg-muted/50 rounded-lg text-center">
-                <p className="text-sm text-muted-foreground mb-2">Healthy Weight Range</p>
-                <p className="text-2xl font-bold">{result.min} kg - {result.max} kg</p>
+                <p className="text-sm text-neutral-600 mb-2">Healthy Weight Range</p>
+                <p className="text-2xl font-bold">{result.min.toLocaleString()} kg - {result.max.toLocaleString()} kg</p>
               </div>
-              <div className="text-sm text-muted-foreground text-center">
+              <div className="text-sm text-neutral-600 text-center">
                 Based on a healthy BMI range of 18.5 - 24.9 for your height.
               </div>
             </div>

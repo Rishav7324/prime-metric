@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,35 +9,96 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
-import { Ruler } from "lucide-react";
+import { Ruler, Copy, RotateCcw } from "lucide-react";
+
+type HeightResult = {
+  display: string;
+  heightInCm: number;
+};
+
+const VALID_UNITS = ["feet-inches", "cm", "meters"];
+
+function computeHeight(
+  fromUnit: string,
+  toUnit: string,
+  feetStr: string,
+  inchesStr: string,
+  cmStr: string,
+  metersStr: string
+): HeightResult | null {
+  if (!VALID_UNITS.includes(fromUnit) || !VALID_UNITS.includes(toUnit)) return null;
+  let heightInCm = 0;
+  if (fromUnit === "cm") {
+    const cmVal = parseFloat(cmStr);
+    if (!isFinite(cmVal) || cmVal <= 0 || cmVal < 20 || cmVal > 300) return null;
+    heightInCm = cmVal;
+  } else if (fromUnit === "meters") {
+    const mVal = parseFloat(metersStr);
+    if (!isFinite(mVal) || mVal <= 0 || mVal < 0.2 || mVal > 3) return null;
+    heightInCm = mVal * 100;
+  } else {
+    const ftVal = parseFloat(feetStr) || 0;
+    const inVal = parseFloat(inchesStr) || 0;
+    if (ftVal <= 0 && inVal <= 0) return null;
+    if (ftVal < 0 || ftVal > 9 || inVal < 0 || inVal >= 12) return null;
+    heightInCm = ftVal * 30.48 + inVal * 2.54;
+    if (heightInCm < 20 || heightInCm > 300) return null;
+  }
+  let display = "";
+  if (toUnit === "cm") {
+    display = `${heightInCm.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} cm`;
+  } else if (toUnit === "meters") {
+    display = `${(heightInCm / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} m`;
+  } else {
+    const totalInches = heightInCm / 2.54;
+    const ft = Math.floor(totalInches / 12);
+    const inc = totalInches % 12;
+    display = `${ft.toLocaleString()}' ${inc.toFixed(1)}"`;
+  }
+  return { display, heightInCm };
+}
 
 const HeightCalculatorClient = () => {
   const [fromUnit, setFromUnit] = useState("feet-inches");
   const [toUnit, setToUnit] = useState("cm");
-  const [feet, setFeet] = useState("");
-  const [inches, setInches] = useState("");
-  const [cm, setCm] = useState("");
-  const [meters, setMeters] = useState("");
-  const [result, setResult] = useState("");
+  const [feet, setFeet] = useState("5");
+  const [inches, setInches] = useState("9");
+  const [cm, setCm] = useState("175");
+  const [meters, setMeters] = useState("1.75");
+  const [result, setResult] = useState<HeightResult | null>(null);
   const { toast } = useToast();
 
+  useEffect(() => {
+    // Pre-filled defaults + instant result on mount (no toast on init)
+    const computed = computeHeight("feet-inches", "cm", "5", "9", "175", "1.75");
+    if (computed) setResult(computed);
+  }, []);
+
   const convert = () => {
-    let heightInCm = 0;
-    
-    if(fromUnit === 'cm') {
+    if (!VALID_UNITS.includes(fromUnit) || !VALID_UNITS.includes(toUnit)) {
+      toast({ variant: "destructive", title: "Invalid Input", description: "Please select valid from and to units." });
+      return;
+    }
+    if (fromUnit === 'cm') {
       const cmVal = parseFloat(cm);
-      if(!cmVal || cmVal <= 0) {
+      if (isNaN(cmVal) || cmVal <= 0) {
         toast({ variant: "destructive", title: "Invalid Input", description: "Please enter a valid height in centimeters." });
         return;
       }
-      heightInCm = cmVal;
+      if (cmVal < 20 || cmVal > 300) {
+        toast({ variant: "destructive", title: "Invalid Input", description: "Height must be between 20 and 300 cm." });
+        return;
+      }
     } else if (fromUnit === 'meters') {
       const mVal = parseFloat(meters);
-      if(!mVal || mVal <= 0) {
+      if (isNaN(mVal) || mVal <= 0) {
         toast({ variant: "destructive", title: "Invalid Input", description: "Please enter a valid height in meters." });
         return;
       }
-      heightInCm = mVal * 100;
+      if (mVal < 0.2 || mVal > 3) {
+        toast({ variant: "destructive", title: "Invalid Input", description: "Height must be between 0.2 and 3 meters." });
+        return;
+      }
     } else if (fromUnit === 'feet-inches') {
       const ftVal = parseFloat(feet) || 0;
       const inVal = parseFloat(inches) || 0;
@@ -45,23 +106,35 @@ const HeightCalculatorClient = () => {
         toast({ variant: "destructive", title: "Invalid Input", description: "Please enter a valid height in feet and/or inches." });
         return;
       }
-      heightInCm = ftVal * 30.48 + inVal * 2.54;
+      if (ftVal < 0 || ftVal > 9) {
+        toast({ variant: "destructive", title: "Invalid Input", description: "Feet must be between 0 and 9." });
+        return;
+      }
+      if (inVal < 0 || inVal >= 12) {
+        toast({ variant: "destructive", title: "Invalid Input", description: "Inches must be between 0 and 11." });
+        return;
+      }
     }
+    const computed = computeHeight(fromUnit, toUnit, feet, inches, cm, meters);
+    if (!computed) {
+      toast({ variant: "destructive", title: "Invalid Input", description: "Height must be between 20 and 300 cm (realistic range)." });
+      return;
+    }
+    setResult(computed);
+    toast({ title: "Success", description: `Height converted: ${computed.display}.` });
+  };
 
-    let output = "";
-    if (toUnit === "cm") {
-      output = `${heightInCm.toFixed(2)} cm`;
-    } else if (toUnit === "meters") {
-      output = `${(heightInCm / 100).toFixed(2)} m`;
-    } else if (toUnit === "feet-inches") {
-      const totalInches = heightInCm / 2.54;
-      const ft = Math.floor(totalInches / 12);
-      const inc = (totalInches % 12).toFixed(1);
-      output = `${ft}' ${inc}"`;
+  const reset = () => setResult(null);
+
+  const copyResult = async () => {
+    if (!result) return;
+    const text = `Height: ${result.display} (${result.heightInCm.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} cm) — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
     }
-    
-    setResult(output);
-    toast({ title: "Success", description: "Height converted successfully!" });
   };
 
   const renderInputs = () => {
@@ -119,15 +192,25 @@ const HeightCalculatorClient = () => {
             </Select>
           </div>
           
-          <Button onClick={convert} className="w-full gradient-button">
-            <Ruler className="w-4 h-4 mr-2" />
-            Convert
-          </Button>
+          <div className="flex gap-2">
+            <Button onClick={convert} className="flex-1 gradient-button">
+              <Ruler className="w-4 h-4 mr-2" />
+              Convert
+            </Button>
+            <Button onClick={reset} variant="outline" size="icon" className="h-10 w-10 shrink-0" aria-label="Reset">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
 
           {result && (
-            <div className="mt-6 p-4 bg-primary/10 rounded-lg text-center">
-              <p className="text-sm text-muted-foreground">Converted Height</p>
-              <p className="text-4xl font-bold text-primary">{result}</p>
+            <div className="mt-6 p-4 bg-[#FFF5F2] rounded-lg text-center">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-sm text-neutral-600">Converted Height</p>
+                <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                  <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                </Button>
+              </div>
+              <p className="text-2xl font-bold text-primary">{result.display}</p>
             </div>
           )}
         </div>

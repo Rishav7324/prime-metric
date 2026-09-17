@@ -1,5 +1,4 @@
-import Head from "next/head";
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 
 type LegalPageLayoutProps = {
   title: string;
@@ -11,12 +10,12 @@ const LegalPageLayout = ({
   children,
 }: LegalPageLayoutProps) => {
   return (
-    <main className="py-12 sm:py-20">
-      <div className="container">
-        <div className="text-center max-w-2xl mx-auto">
-          <h1 className="font-headline text-3xl sm:text-5xl font-bold">{title}</h1>
+    <main className="py-8 sm:py-10 bg-white text-black">
+      <div className="mx-auto max-w-2xl px-4">
+        <div className="text-center">
+          <h1 className="text-2xl sm:text-3xl font-bold text-black">{title}</h1>
         </div>
-        <div className="mt-12 max-w-2xl mx-auto">{children}</div>
+        <div className="mt-6">{children}</div>
       </div>
     </main>
   );

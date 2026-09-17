@@ -9,40 +9,63 @@ import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
 import { CurrencySelector, getCurrencySymbol } from "@/components/CurrencySelector";
+import { Copy, RotateCcw } from "lucide-react";
+
+type SalesTaxResult = { taxAmount: number; totalPrice: number; price: number };
+
+function computeSalesTax(priceStr: string, taxRateStr: string): SalesTaxResult | null {
+  const p = parseFloat(priceStr);
+  const ratePct = parseFloat(taxRateStr);
+  if (!(p >= 0 && p <= 1e12) || isNaN(ratePct) || ratePct < 0 || ratePct > 100) {
+    return null;
+  }
+  const rate = ratePct / 100;
+  const taxAmount = p * rate;
+  const totalPrice = p + taxAmount;
+  return { taxAmount, totalPrice, price: p };
+}
 
 const SalesTaxCalculator = () => {
-  const [price, setPrice] = useState("");
+  const [price, setPrice] = useState("99.99");
   const [taxRate, setTaxRate] = useState("8");
   const [currency, setCurrency] = useState("USD");
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<SalesTaxResult | null>(() => computeSalesTax("99.99", "8"));
   const { toast } = useToast();
   const currencySymbol = getCurrencySymbol(currency);
 
-  const calculate = () => {
-    const p = parseFloat(price);
-    const rate = parseFloat(taxRate) / 100;
+  const fmt = (n: number) =>
+    n.toLocaleString("en-US", { maximumFractionDigits: 2, minimumFractionDigits: 2 });
 
-    if (isNaN(p) || p < 0 || isNaN(rate) || rate < 0) {
+  const calculate = () => {
+    const computed = computeSalesTax(price, taxRate);
+    if (!computed) {
       toast({
         variant: "destructive",
         title: "Invalid Input",
-        description: "Please enter a valid price and tax rate.",
+        description: "Enter a valid price (0 to 1,000,000,000,000) and tax rate (0-100%).",
       });
       return;
     }
 
-    const taxAmount = p * rate;
-    const totalPrice = p + taxAmount;
-
-    setResult({
-      taxAmount: taxAmount.toFixed(2),
-      totalPrice: totalPrice.toFixed(2),
-    });
+    setResult(computed);
 
     toast({
         title: "Tax Calculated",
-        description: `The total price is ${currencySymbol}${totalPrice.toFixed(2)}.`,
+        description: `The total price is ${currencySymbol}${fmt(computed.totalPrice)}.`,
     });
+  };
+
+  const reset = () => { setPrice(""); setTaxRate(""); setResult(null); };
+
+  const copyResult = async () => {
+    if (!result) return;
+    const text = `Sales tax: price ${currencySymbol}${fmt(result.price)}, tax ${currencySymbol}${fmt(result.taxAmount)}, total ${currencySymbol}${fmt(result.totalPrice)}. — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
 
   return (
@@ -64,16 +87,26 @@ const SalesTaxCalculator = () => {
               <Input type="number" value={taxRate} onChange={(e) => setTaxRate(e.target.value)} placeholder="e.g., 8.25" />
             </div>
           </div>
-          <Button onClick={calculate} className="w-full gradient-button">Calculate Total Price</Button>
+          <div className="flex gap-2">
+            <Button onClick={calculate} className="flex-1 gradient-button">Calculate Total Price</Button>
+            <Button onClick={reset} variant="outline" size="icon" className="h-10 w-10 shrink-0" aria-label="Reset">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
           {result && (
             <div className="mt-6 space-y-3">
-              <div className="p-4 bg-primary/10 rounded-lg text-center">
-                <p className="text-sm text-muted-foreground">Total Price (including tax)</p>
-                <p className="text-3xl font-bold text-primary">{currencySymbol}{result.totalPrice}</p>
+              <div className="flex justify-end">
+                <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                  <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                </Button>
+              </div>
+              <div className="p-4 bg-[#FFF5F2] rounded-lg text-center">
+                <p className="text-sm text-neutral-600">Total Price (including tax)</p>
+                <p className="text-3xl font-bold text-primary">{currencySymbol}{fmt(result.totalPrice)}</p>
               </div>
               <div className="p-3 bg-muted/50 rounded text-center">
-                <p className="text-sm text-muted-foreground">Sales Tax Amount</p>
-                <p className="text-lg font-bold">{currencySymbol}{result.taxAmount}</p>
+                <p className="text-sm text-neutral-600">Sales Tax Amount</p>
+                <p className="text-lg font-bold">{currencySymbol}{fmt(result.taxAmount)}</p>
               </div>
             </div>
           )}

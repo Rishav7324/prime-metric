@@ -8,61 +8,97 @@ import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+import { Copy, RotateCcw } from "lucide-react";
+
+type BodyFatResult = {
+  bodyFat: number;
+  name: string;
+  color: string;
+};
+
+function getBodyFatCategory(bf: number, g: string): { name: string; color: string } {
+  if (g === "male") {
+    if (bf < 6) return { name: "Essential Fat", color: "text-blue-600" };
+    if (bf < 14) return { name: "Athletes", color: "text-green-600" };
+    if (bf < 18) return { name: "Fitness", color: "text-emerald-400" };
+    if (bf < 25) return { name: "Average", color: "text-yellow-600" };
+    return { name: "Obese", color: "text-red-600" };
+  } else {
+    if (bf < 14) return { name: "Essential Fat", color: "text-blue-600" };
+    if (bf < 21) return { name: "Athletes", color: "text-green-600" };
+    if (bf < 25) return { name: "Fitness", color: "text-emerald-400" };
+    if (bf < 32) return { name: "Average", color: "text-yellow-600" };
+    return { name: "Obese", color: "text-red-600" };
+  }
+}
+
+function computeBodyFat(genderStr: string, heightStr: string, neckStr: string, waistStr: string, hipStr: string): BodyFatResult | null {
+  const h = parseFloat(heightStr);
+  const n = parseFloat(neckStr);
+  const wa = parseFloat(waistStr);
+  const hi = parseFloat(hipStr);
+
+  if (!(h >= 50 && h <= 300) || !(n >= 20 && n <= 80) || !(wa >= 40 && wa <= 200)) return null;
+
+  let bodyFat = 0;
+  if (genderStr === "male") {
+    if (!(wa - n > 0)) return null;
+    bodyFat = 495 / (1.0324 - 0.19077 * Math.log10(wa - n) + 0.15456 * Math.log10(h)) - 450;
+  } else {
+    if (!(hi >= 40 && hi <= 200)) return null;
+    if (!(wa + hi - n > 0)) return null;
+    bodyFat = 495 / (1.29579 - 0.35004 * Math.log10(wa + hi - n) + 0.22100 * Math.log10(h)) - 450;
+  }
+
+  if (!isFinite(bodyFat) || !(bodyFat >= 1 && bodyFat <= 70)) return null;
+
+  const category = getBodyFatCategory(bodyFat, genderStr);
+  return { bodyFat: parseFloat(bodyFat.toFixed(1)), name: category.name, color: category.color };
+}
 
 const BodyFatCalculatorClient = () => {
   const [gender, setGender] = useState("male");
-  const [height, setHeight] = useState("");
-  const [neck, setNeck] = useState("");
-  const [waist, setWaist] = useState("");
-  const [hip, setHip] = useState("");
-  const [result, setResult] = useState<any>(null);
+  const [height, setHeight] = useState("175");
+  const [neck, setNeck] = useState("38");
+  const [waist, setWaist] = useState("85");
+  const [hip, setHip] = useState("95");
+  // Pre-filled so the result renders instantly (no empty state)
+  const [result, setResult] = useState<BodyFatResult | null>(() => computeBodyFat("male", "175", "38", "85", "95"));
   const { toast } = useToast();
 
   const calculate = () => {
-    const h = parseFloat(height);
-    const n = parseFloat(neck);
-    const wa = parseFloat(waist);
-    const hi = parseFloat(hip);
-
-    let bodyFat = 0;
-    if (gender === "male") {
-        if(!(h > 0 && wa > 0 && n > 0)) {
-            toast({ variant: "destructive", title: "Invalid Input", description: "Please enter valid height, waist, and neck measurements." });
-            return;
-        }
-      bodyFat = 495 / (1.0324 - 0.19077 * Math.log10(wa - n) + 0.15456 * Math.log10(h)) - 450;
-    } else { // female
-        if(!(h > 0 && wa > 0 && n > 0 && hi > 0)) {
-            toast({ variant: "destructive", title: "Invalid Input", description: "Please enter valid height, waist, neck and hip measurements." });
-            return;
-        }
-      bodyFat = 495 / (1.29579 - 0.35004 * Math.log10(wa + hi - n) + 0.22100 * Math.log10(h)) - 450;
+    const computed = computeBodyFat(gender, height, neck, waist, hip);
+    if (!computed) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Input",
+        description: gender === "male"
+          ? "Enter height (50-300 cm), neck (20-80 cm), and waist (40-200 cm). Waist must exceed neck."
+          : "Enter height (50-300 cm), neck (20-80 cm), waist (40-200 cm), and hip (40-200 cm).",
+      });
+      return;
     }
+    setResult(computed);
+    toast({ title: "Success", description: `Your estimated body fat is ${computed.bodyFat.toFixed(1)}% (${computed.name}).` });
+  };
 
-    if (bodyFat && bodyFat > 0) {
-        const category = getCategory(bodyFat, gender);
-        setResult({ bodyFat: bodyFat.toFixed(1), category: category });
-        toast({ title: "Success", description: `Your estimated body fat is ${bodyFat.toFixed(1)}% (${category.name}).` });
-    } else {
-        toast({ variant: "destructive", title: "Calculation Error", description: "Could not calculate body fat. Please check your measurements." });
-        setResult(null);
+  const reset = () => {
+    setHeight(""); setNeck(""); setWaist(""); setHip(""); setResult(null);
+  };
+
+  const copyResult = async () => {
+    if (!result) return;
+    const text = `My body fat: ${result.bodyFat.toFixed(1)}% (${result.name}) — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
     }
   };
 
   const getCategory = (bf: number, g: string) => {
-    if (g === "male") {
-      if (bf < 6) return { name: "Essential Fat", color: "text-blue-400" };
-      if (bf < 14) return { name: "Athletes", color: "text-green-400" };
-      if (bf < 18) return { name: "Fitness", color: "text-emerald-400" };
-      if (bf < 25) return { name: "Average", color: "text-yellow-400" };
-      return { name: "Obese", color: "text-red-400" };
-    } else { // female
-      if (bf < 14) return { name: "Essential Fat", color: "text-blue-400" };
-      if (bf < 21) return { name: "Athletes", color: "text-green-400" };
-      if (bf < 25) return { name: "Fitness", color: "text-emerald-400" };
-      if (bf < 32) return { name: "Average", color: "text-yellow-400" };
-      return { name: "Obese", color: "text-red-400" };
-    }
+    return getBodyFatCategory(bf, g);
   };
 
   return (
@@ -72,14 +108,14 @@ const BodyFatCalculatorClient = () => {
       keywords="body fat calculator, us navy body fat, body composition, fitness calculator"
       canonicalUrl="/health-calculators/body-fat-calculator"
     >
-      <div className="grid md:grid-cols-2 gap-8">
-        <Card className="glass-card p-8">
-          <h2 className="text-2xl font-bold mb-6">Your Measurements</h2>
+      <div className="grid sm:grid-cols-2 gap-4">
+        <Card className="bg-white border border-neutral-200 p-4 sm:p-5">
+          <h2 className="text-lg font-bold mb-4">Your Measurements</h2>
           <div className="space-y-4">
             <div>
               <Label>Gender</Label>
-              <Select value={gender} onValueChange={(val) => { setGender(val); setResult(null); }}>
-                <SelectTrigger className="mt-1 h-12 glass-card border-primary/30">
+              <Select value={gender} onValueChange={setGender}>
+                <SelectTrigger className="mt-1 h-10 bg-white border border-neutral-200">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -90,41 +126,53 @@ const BodyFatCalculatorClient = () => {
             </div>
             <div>
               <Label>Height (cm)</Label>
-              <Input type="number" value={height} onChange={(e) => setHeight(e.target.value)} placeholder="e.g., 175" className="mt-1 h-12 glass-card border-primary/30" />
+              <Input type="number" min={50} max={300} value={height} onChange={(e) => setHeight(e.target.value)} placeholder="e.g., 175" className="mt-1 h-10 bg-white border border-neutral-200" />
             </div>
             <div>
               <Label>Neck (cm)</Label>
-              <Input type="number" value={neck} onChange={(e) => setNeck(e.target.value)} placeholder="e.g., 38" className="mt-1 h-12 glass-card border-primary/30" />
+              <Input type="number" min={20} max={80} value={neck} onChange={(e) => setNeck(e.target.value)} placeholder="e.g., 38" className="mt-1 h-10 bg-white border border-neutral-200" />
             </div>
             <div>
               <Label>Waist (cm)</Label>
-              <Input type="number" value={waist} onChange={(e) => setWaist(e.target.value)} placeholder="e.g., 85" className="mt-1 h-12 glass-card border-primary/30" />
+              <Input type="number" min={40} max={200} value={waist} onChange={(e) => setWaist(e.target.value)} placeholder="e.g., 85" className="mt-1 h-10 bg-white border border-neutral-200" />
             </div>
             {gender === "female" && (
               <div>
                 <Label>Hip (cm)</Label>
-                <Input type="number" value={hip} onChange={(e) => setHip(e.target.value)} placeholder="e.g., 95" className="mt-1 h-12 glass-card border-primary/30" />
+                <Input type="number" min={40} max={200} value={hip} onChange={(e) => setHip(e.target.value)} placeholder="e.g., 95" className="mt-1 h-10 bg-white border border-neutral-200" />
               </div>
             )}
-            <Button onClick={calculate} className="w-full h-12 gradient-button">Calculate Body Fat</Button>
+            <div className="flex gap-2">
+              <Button onClick={calculate} className="flex-1 h-10 gradient-button" disabled={!height || !neck || !waist}>Calculate Body Fat</Button>
+              <Button onClick={reset} variant="outline" size="icon" className="h-10 w-10 shrink-0" aria-label="Reset">
+                <RotateCcw className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </Card>
 
-        <Card className="glass-card p-8">
-          <h2 className="text-2xl font-bold mb-6">Results</h2>
+        <Card className="bg-white border border-neutral-200 p-4 sm:p-5">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-bold">Results</h2>
+            {result && (
+              <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+              </Button>
+            )}
+          </div>
           {result ? (
-            <div className="space-y-6">
-              <div className="text-center py-8">
-                <div className="text-6xl font-bold gradient-text">{result.bodyFat}%</div>
-                <div className={`text-2xl font-semibold mt-4 ${result.category.color}`}>{result.category.name}</div>
+            <div className="space-y-4">
+              <div className="text-center py-4">
+                <div className="text-6xl font-bold gradient-text">{result.bodyFat.toFixed(1)}%</div>
+                <div className={`text-xl font-semibold mt-4 ${result.color}`}>{result.name}</div>
               </div>
-              <div className="text-sm text-muted-foreground text-center">
+              <div className="text-sm text-neutral-600 text-center">
                   Body Fat Percentage (BFP) estimated with the U.S. Navy method.
               </div>
             </div>
           ) : (
-            <div className="flex items-center justify-center h-64 text-muted-foreground">
-              <div className="text-center"><div className="text-6xl mb-4">💪</div><p>Enter measurements to calculate body fat</p></div>
+            <div className="flex items-center justify-center h-40 text-neutral-600">
+              <div className="text-center"><div className="text-4xl mb-2">💪</div><p>Enter measurements to calculate body fat</p></div>
             </div>
           )}
         </Card>

@@ -5,38 +5,102 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
-import { FileCode, Copy } from "lucide-react";
+import { FileCode, Copy, RotateCcw } from "lucide-react";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
 
+const DEMO_INPUT = "Hello, PrimeMetric!";
+
+const encodeBase64Unicode = (str: string): string => {
+  const bytes = new TextEncoder().encode(str);
+  let bin = "";
+  bytes.forEach((b) => {
+    bin += String.fromCharCode(b);
+  });
+  return btoa(bin);
+};
+
+const decodeBase64Unicode = (b64: string): string => {
+  const bin = atob(b64);
+  const bytes = Uint8Array.from(bin, (c) => c.charCodeAt(0));
+  return new TextDecoder().decode(bytes);
+};
+
+const isValidBase64 = (str: string): boolean => {
+  const s = str.trim().replace(/\s+/g, "");
+  if (s.length === 0 || s.length % 4 !== 0) return false;
+  if (!/^[A-Za-z0-9+/]*={0,2}$/.test(s)) return false;
+  try {
+    decodeBase64Unicode(s);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
 const Base64Tool = () => {
-  const [input, setInput] = useState("");
-  const [output, setOutput] = useState("");
+  const [input, setInput] = useState(DEMO_INPUT);
+  const [output, setOutput] = useState<string>(() => {
+    try {
+      return encodeBase64Unicode(DEMO_INPUT);
+    } catch {
+      return "";
+    }
+  });
   const { toast } = useToast();
 
+  const inputByteLength = new TextEncoder().encode(input).length;
+  const outputByteLength = output ? new TextEncoder().encode(output).length : 0;
+
   const encode = () => {
+    if (!input.trim()) {
+      toast({ variant: "destructive", title: "Empty Input", description: "Please enter text to encode." });
+      return;
+    }
     try {
-      const encoded = btoa(input);
+      const encoded = encodeBase64Unicode(input);
       setOutput(encoded);
-      toast({ title: "Success", description: "Text encoded to Base64!"});
-    } catch (error) {
-      toast({ variant: "destructive", title: "Error", description: "Error encoding to Base64" });
+      toast({ title: "Encoded", description: "Text encoded to Base64." });
+    } catch {
+      toast({ variant: "destructive", title: "Encoding failed", description: "Could not encode this text to Base64." });
     }
   };
 
   const decode = () => {
+    if (!input.trim()) {
+      toast({ variant: "destructive", title: "Empty Input", description: "Please enter a Base64 string to decode." });
+      return;
+    }
+    if (!isValidBase64(input)) {
+      toast({ variant: "destructive", title: "Invalid Base64", description: "Input is not valid Base64. Check for typos or missing padding (=)." });
+      return;
+    }
     try {
-      const decoded = atob(input);
+      const decoded = decodeBase64Unicode(input.trim());
       setOutput(decoded);
-      toast({ title: "Success", description: "Base64 decoded!"});
-    } catch (error) {
-      toast({ variant: "destructive", title: "Error", description: "Error decoding Base64 - invalid input" });
+      toast({ title: "Decoded", description: "Base64 decoded successfully." });
+    } catch {
+      toast({ variant: "destructive", title: "Invalid Base64", description: "Could not decode — input is not valid Base64." });
     }
   };
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(output);
-    toast({ title: "Success", description: "Copied to clipboard!"});
+  const copyToClipboard = async () => {
+    if (!output) {
+      toast({ variant: "destructive", title: "Nothing to copy", description: "Generate an output first." });
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(output);
+      toast({ title: "Copied", description: "Output copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
+  };
+
+  const clear = () => {
+    setInput("");
+    setOutput("");
+    toast({ title: "Cleared", description: "Input and output cleared." });
   };
 
   return (
@@ -46,9 +110,9 @@ const Base64Tool = () => {
         keywords="base64 encoder, base64 decoder, encode base64, decode base64, base64 converter, base64 tool"
         canonicalUrl="/tool/base64"
       >
-        <div className="max-w-4xl mx-auto space-y-6">
+        <div className="max-w-4xl mx-auto space-y-4">
           <Card className="p-6 space-y-4">
-            <Label htmlFor="input">Input Text</Label>
+            <Label className="text-sm font-medium" htmlFor="input">Input Text</Label>
             <Textarea
               id="input"
               value={input}
@@ -56,6 +120,7 @@ const Base64Tool = () => {
               placeholder="Enter text to encode or Base64 to decode..."
               className="min-h-[150px] font-mono text-sm"
             />
+            <p className="text-xs text-neutral-500">{input.length} characters • {inputByteLength} bytes</p>
             
             <div className="flex gap-2">
               <Button onClick={encode} className="flex-1">
@@ -66,6 +131,9 @@ const Base64Tool = () => {
                 <FileCode className="w-4 h-4 mr-2" />
                 Decode from Base64
               </Button>
+              <Button onClick={clear} variant="outline" size="icon" className="shrink-0" aria-label="Clear">
+                <RotateCcw className="w-4 h-4" />
+              </Button>
             </div>
           </Card>
 
@@ -73,16 +141,23 @@ const Base64Tool = () => {
             <Card className="p-6 space-y-4">
               <div className="flex justify-between items-center">
                 <Label>Output</Label>
-                <Button variant="outline" size="sm" onClick={copyToClipboard}>
-                  <Copy className="w-4 h-4 mr-2" />
-                  Copy
-                </Button>
+                <div className="flex gap-2">
+                  <Button variant="outline" size="sm" onClick={copyToClipboard}>
+                    <Copy className="w-4 h-4 mr-2" />
+                    Copy
+                  </Button>
+                  <Button variant="outline" size="sm" onClick={clear} aria-label="Clear">
+                    <RotateCcw className="w-4 h-4 mr-2" />
+                    Clear
+                  </Button>
+                </div>
               </div>
               <Textarea
                 value={output}
                 readOnly
                 className="min-h-[150px] font-mono text-sm bg-muted/50"
               />
+              <p className="text-xs text-neutral-500">{output.length} characters • {outputByteLength} bytes</p>
             </Card>
           )}
         </div>

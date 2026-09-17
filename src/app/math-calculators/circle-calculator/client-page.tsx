@@ -9,35 +9,103 @@ import { Button } from "@/components/ui/button";
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+import { Copy, RotateCcw } from "lucide-react";
+
+type CircleResult = {
+  area: number;
+  circumference: number;
+  diameter: number;
+};
+
+const MAX_RADIUS = 1000000;
+
+function computeCircle(radiusStr: string): CircleResult | null {
+  if (radiusStr.trim() === "") return null;
+  const r = parseFloat(radiusStr);
+  if (!Number.isFinite(r) || isNaN(r)) return null;
+  if (r <= 0 || r > MAX_RADIUS) return null;
+  const area = Math.PI * r * r;
+  const circumference = 2 * Math.PI * r;
+  const diameter = 2 * r;
+  if (!Number.isFinite(area) || !Number.isFinite(circumference) || !Number.isFinite(diameter)) return null;
+  return { area, circumference, diameter };
+}
+
+function formatCircle(n: number): string {
+  return n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+const DEFAULT_RADIUS = "10";
 
 const CircleCalculator = () => {
-  const [radius, setRadius] = useState("");
-  const [result, setResult] = useState<any>(null);
+  const [radius, setRadius] = useState(DEFAULT_RADIUS);
+  // Pre-filled so the result renders instantly (no empty state, no toast on init)
+  const [result, setResult] = useState<CircleResult | null>(() => computeCircle(DEFAULT_RADIUS));
   const { toast } = useToast();
 
   const calculate = () => {
-    const r = parseFloat(radius);
-    
-    if (r > 0) {
-      const area = Math.PI * r * r;
-      const circumference = 2 * Math.PI * r;
-      const diameter = 2 * r;
-      
-      setResult({
-        area: area.toFixed(2),
-        circumference: circumference.toFixed(2),
-        diameter: diameter.toFixed(2)
-      });
+    if (radius.trim() === "") {
       toast({
-        title: "Circle Calculated",
-        description: "The circle's properties have been calculated.",
+        variant: "destructive",
+        title: "Invalid Input",
+        description: "Please enter a radius value.",
       });
-    } else {
-        toast({
-            variant: "destructive",
-            title: "Invalid Input",
-            description: "Please enter a valid positive number for the radius.",
-        });
+      return;
+    }
+    const r = parseFloat(radius);
+    if (isNaN(r) || !Number.isFinite(r)) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Input",
+        description: "Radius must be a valid number.",
+      });
+      return;
+    }
+    if (r <= 0) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Input",
+        description: "Radius must be greater than zero.",
+      });
+      return;
+    }
+    if (r > MAX_RADIUS) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Input",
+        description: `Radius must be between 0 and ${MAX_RADIUS.toLocaleString()}.`,
+      });
+      return;
+    }
+    const computed = computeCircle(radius);
+    if (!computed) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Input",
+        description: "Please enter a valid positive number for the radius.",
+      });
+      return;
+    }
+    setResult(computed);
+    toast({
+      title: "Circle Calculated",
+      description: `Area is ${formatCircle(computed.area)} sq units.`,
+    });
+  };
+
+  const reset = () => {
+    setRadius("");
+    setResult(null);
+  };
+
+  const copyResult = async () => {
+    if (!result) return;
+    const text = `Circle (r=${Number(radius).toLocaleString()}): Area ${formatCircle(result.area)} sq units, Circumference ${formatCircle(result.circumference)}, Diameter ${formatCircle(result.diameter)} — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
     }
   };
 
@@ -51,7 +119,7 @@ const CircleCalculator = () => {
       <Card className="p-6">
         <div className="space-y-4">
           <div>
-            <Label htmlFor="radius">Radius</Label>
+            <Label className="text-sm font-medium" htmlFor="radius">Radius</Label>
             <Input
               id="radius"
               type="number"
@@ -61,23 +129,34 @@ const CircleCalculator = () => {
               className="mt-2"
             />
           </div>
-          <Button onClick={calculate} className="w-full gradient-button">
-            Calculate
-          </Button>
+          <div className="flex gap-2">
+            <Button onClick={calculate} className="flex-1 gradient-button" disabled={!radius.trim()}>
+              Calculate
+            </Button>
+            <Button onClick={reset} variant="outline" size="icon" className="h-10 w-10 shrink-0" aria-label="Reset">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
           {result && (
             <div className="mt-6 space-y-4">
-              <div className="p-4 bg-primary/10 rounded-lg text-center">
-                <p className="text-sm text-muted-foreground">Area</p>
-                <p className="text-3xl font-bold text-primary">{result.area} sq units</p>
+              <div className="flex items-center justify-between">
+                <h2 className="text-lg font-bold text-black">Your Result</h2>
+                <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                  <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                </Button>
+              </div>
+              <div className="p-4 bg-[#FFF5F2] rounded-lg text-center">
+                <p className="text-sm text-neutral-600">Area</p>
+                <p className="text-3xl font-bold text-primary">{formatCircle(result.area)} sq units</p>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="p-4 bg-muted/50 rounded-lg text-center">
-                  <p className="text-sm text-muted-foreground">Circumference</p>
-                  <p className="text-xl font-bold">{result.circumference}</p>
+                  <p className="text-sm text-neutral-600">Circumference</p>
+                  <p className="text-xl font-bold">{formatCircle(result.circumference)}</p>
                 </div>
                 <div className="p-4 bg-muted/50 rounded-lg text-center">
-                  <p className="text-sm text-muted-foreground">Diameter</p>
-                  <p className="text-xl font-bold">{result.diameter}</p>
+                  <p className="text-sm text-neutral-600">Diameter</p>
+                  <p className="text-xl font-bold">{formatCircle(result.diameter)}</p>
                 </div>
               </div>
             </div>

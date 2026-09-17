@@ -8,10 +8,44 @@ import { Button } from "@/components/ui/button";
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+import { Copy, RotateCcw } from "lucide-react";
+
+type PregnancyResult = {
+  dueDate: string;
+  weeksPregnant: number;
+};
+
+function computePregnancy(lmpStr: string): PregnancyResult | null {
+  if (!lmpStr) return null;
+  const lmp = new Date(lmpStr);
+  if (isNaN(lmp.getTime())) return null;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const lmpDay = new Date(lmp);
+  lmpDay.setHours(0, 0, 0, 0);
+  if (lmpDay.getTime() > today.getTime()) return null;
+  const diffDays = Math.floor((today.getTime() - lmpDay.getTime()) / (1000 * 60 * 60 * 24));
+  if (diffDays > 294) return null; // more than 42 weeks ago
+  const dueDate = new Date(lmpDay.getTime() + 280 * 24 * 60 * 60 * 1000);
+  const weeksPregnant = Math.floor(diffDays / 7);
+  return {
+    dueDate: dueDate.toDateString(),
+    weeksPregnant,
+  };
+}
+
+function defaultLmpString(): string {
+  // ~280 days ago so a due date (LMP + 280 days ≈ today) shows instantly.
+  const d = new Date();
+  d.setHours(0, 0, 0, 0);
+  d.setDate(d.getDate() - 280);
+  return d.toISOString().split("T")[0];
+}
 
 const PregnancyCalculator = () => {
-  const [lastPeriodDate, setLastPeriodDate] = useState("");
-  const [result, setResult] = useState<any>(null);
+  const [lastPeriodDate, setLastPeriodDate] = useState<string>(() => defaultLmpString());
+  // Pre-filled so the result renders instantly (no empty state)
+  const [result, setResult] = useState<PregnancyResult | null>(() => computePregnancy(defaultLmpString()));
   const { toast } = useToast();
 
   const calculate = () => {
@@ -25,19 +59,59 @@ const PregnancyCalculator = () => {
     }
 
     const lmp = new Date(lastPeriodDate);
-    const dueDate = new Date(lmp.getTime() + 280 * 24 * 60 * 60 * 1000);
-    const today = new Date();
-    const weeksPregnant = Math.floor((today.getTime() - lmp.getTime()) / (1000 * 60 * 60 * 24 * 7));
+    if (isNaN(lmp.getTime())) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Input",
+        description: "Enter a valid date for your last menstrual period (YYYY-MM-DD).",
+      });
+      return;
+    }
 
-    setResult({
-      dueDate: dueDate.toDateString(),
-      weeksPregnant,
-    });
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const lmpDay = new Date(lmp);
+    lmpDay.setHours(0, 0, 0, 0);
+    if (lmpDay.getTime() > today.getTime()) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Input",
+        description: "Last period date cannot be in the future.",
+      });
+      return;
+    }
+
+    const computed = computePregnancy(lastPeriodDate);
+    if (!computed) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Input",
+        description: "Enter a date within the last 42 weeks (294 days).",
+      });
+      return;
+    }
+
+    setResult(computed);
 
     toast({
         title: "Due Date Estimated",
-        description: `Your estimated due date is ${dueDate.toDateString()}.`,
+        description: `Your estimated due date is ${computed.dueDate}.`,
     });
+  };
+
+  const reset = () => {
+    setLastPeriodDate(""); setResult(null);
+  };
+
+  const copyResult = async () => {
+    if (!result) return;
+    const text = `Estimated due date: ${result.dueDate}. Approximately ${result.weeksPregnant.toLocaleString()} weeks pregnant — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
 
   return (
@@ -57,16 +131,26 @@ const PregnancyCalculator = () => {
               className="w-full"
             />
           </div>
-          <Button onClick={calculate} className="w-full gradient-button">Calculate Due Date</Button>
+          <div className="flex gap-2">
+            <Button onClick={calculate} className="flex-1 gradient-button" disabled={!lastPeriodDate}>Calculate Due Date</Button>
+            <Button onClick={reset} variant="outline" size="icon" className="shrink-0" aria-label="Reset">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
           {result && (
             <div className="mt-6 space-y-3">
-              <div className="p-4 bg-primary/10 rounded-lg text-center">
-                <p className="text-sm text-muted-foreground">Estimated Due Date</p>
+              <div className="flex items-center justify-end">
+                <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                  <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                </Button>
+              </div>
+              <div className="p-4 bg-[#FFF5F2] rounded-lg text-center">
+                <p className="text-sm text-neutral-600">Estimated Due Date</p>
                 <p className="text-3xl font-bold text-primary">{result.dueDate}</p>
               </div>
               <div className="p-3 bg-muted/50 rounded text-center">
-                <p className="text-sm text-muted-foreground">You are approximately</p>
-                <p className="text-lg font-bold">{result.weeksPregnant} weeks pregnant</p>
+                <p className="text-sm text-neutral-600">You are approximately</p>
+                <p className="text-lg font-bold">{result.weeksPregnant.toLocaleString()} weeks pregnant</p>
               </div>
             </div>
           )}

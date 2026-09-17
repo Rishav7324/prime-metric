@@ -10,53 +10,85 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+import { CurrencySelector, getCurrencySymbol } from "@/components/CurrencySelector";
+import { Copy, RotateCcw } from "lucide-react";
+
+type TaxResult = {
+  taxRate: number;
+  taxAmount: number;
+  netIncome: number;
+};
+
+function computeIncomeTax(incomeStr: string, filingStatus: string): TaxResult | null {
+  const grossIncome = parseFloat(incomeStr);
+
+  if (isNaN(grossIncome) || grossIncome < 0 || grossIncome > 1e12) {
+    return null;
+  }
+
+  let taxRate = 0;
+
+  // Simplified tax brackets
+  if (filingStatus === "single") {
+    if (grossIncome <= 10000) taxRate = 0.10;
+    else if (grossIncome <= 40000) taxRate = 0.12;
+    else if (grossIncome <= 85000) taxRate = 0.22;
+    else taxRate = 0.24;
+  } else { // married
+    if (grossIncome <= 20000) taxRate = 0.10;
+    else if (grossIncome <= 80000) taxRate = 0.12;
+    else if (grossIncome <= 170000) taxRate = 0.22;
+    else taxRate = 0.24;
+  }
+
+  const taxAmount = grossIncome * taxRate;
+  const netIncome = grossIncome - taxAmount;
+  return { taxRate: taxRate * 100, taxAmount, netIncome };
+}
 
 const IncomeTaxCalculator = () => {
-  const [income, setIncome] = useState("");
+  const [income, setIncome] = useState("75000");
   const [filingStatus, setFilingStatus] = useState("single");
-  const [result, setResult] = useState<any>(null);
+  const [currency, setCurrency] = useState("USD");
+  // Pre-filled so the result renders instantly (no empty state)
+  const [result, setResult] = useState<TaxResult | null>(() => computeIncomeTax("75000", "single"));
   const { toast } = useToast();
+  const currencySymbol = getCurrencySymbol(currency);
+
+  const fmt = (n: number) =>
+    n.toLocaleString("en-US", { maximumFractionDigits: 2, minimumFractionDigits: 2 });
 
   const calculate = () => {
-    const grossIncome = parseFloat(income);
+    const computed = computeIncomeTax(income, filingStatus);
 
-    if (isNaN(grossIncome) || grossIncome < 0) {
+    if (!computed) {
       toast({
         variant: "destructive",
         title: "Invalid Input",
-        description: "Please enter a valid annual income.",
+        description: "Enter annual income (0 to 1,000,000,000,000).",
       });
       return;
     }
 
-    let taxRate = 0;
-    
-    // Simplified tax brackets
-    if (filingStatus === "single") {
-      if (grossIncome <= 10000) taxRate = 0.10;
-      else if (grossIncome <= 40000) taxRate = 0.12;
-      else if (grossIncome <= 85000) taxRate = 0.22;
-      else taxRate = 0.24;
-    } else { // married
-      if (grossIncome <= 20000) taxRate = 0.10;
-      else if (grossIncome <= 80000) taxRate = 0.12;
-      else if (grossIncome <= 170000) taxRate = 0.22;
-      else taxRate = 0.24;
-    }
-
-    const taxAmount = grossIncome * taxRate;
-    const netIncome = grossIncome - taxAmount;
-
-    setResult({
-      taxRate: (taxRate * 100).toFixed(2),
-      taxAmount: taxAmount.toFixed(2),
-      netIncome: netIncome.toFixed(2)
-    });
+    setResult(computed);
 
     toast({
         title: "Tax Calculated",
-        description: `Your estimated tax amount is $${taxAmount.toFixed(2)}.`,
+        description: `Your estimated tax amount is ${currencySymbol}${fmt(computed.taxAmount)}.`,
     });
+  };
+
+  const reset = () => { setIncome(""); setFilingStatus("single"); setResult(null); };
+
+  const copyResult = async () => {
+    if (!result) return;
+    const text = `Income tax (${filingStatus}): income ${currencySymbol}${fmt(parseFloat(income))} → Tax ${currencySymbol}${fmt(result.taxAmount)} (${fmt(result.taxRate)}%), Net ${currencySymbol}${fmt(result.netIncome)}. — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
 
   return (
@@ -68,8 +100,9 @@ const IncomeTaxCalculator = () => {
     >
       <Card className="p-6">
         <div className="space-y-4">
+          <CurrencySelector value={currency} onChange={setCurrency} />
           <div>
-            <Label>Annual Gross Income ($)</Label>
+            <Label>Annual Gross Income ({currencySymbol})</Label>
             <Input
               type="number"
               value={income}
@@ -79,7 +112,11 @@ const IncomeTaxCalculator = () => {
           </div>
           <div>
             <Label>Filing Status</Label>
-            <Select value={filingStatus} onValueChange={setFilingStatus}>
+            <Select value={filingStatus} onValueChange={(value) => {
+              setFilingStatus(value);
+              const recomputed = computeIncomeTax(income, value);
+              if (recomputed) setResult(recomputed);
+            }}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
@@ -89,23 +126,33 @@ const IncomeTaxCalculator = () => {
               </SelectContent>
             </Select>
           </div>
-          <Button onClick={calculate} className="w-full gradient-button">
-            Calculate Tax
-          </Button>
+          <div className="flex gap-2">
+            <Button onClick={calculate} className="flex-1 gradient-button">
+              Calculate Tax
+            </Button>
+            <Button onClick={reset} variant="outline" size="icon" className="shrink-0" aria-label="Reset">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
           {result && (
             <div className="mt-6 space-y-3">
-              <div className="p-4 bg-primary/10 rounded-lg text-center">
-                <p className="text-sm text-muted-foreground">Net Income (After Tax)</p>
-                <p className="text-4xl font-bold text-primary">${result.netIncome}</p>
+              <div className="p-4 bg-[#FFF5F2] rounded-lg text-center">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-sm text-neutral-600">Net Income (After Tax)</p>
+                  <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                    <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                  </Button>
+                </div>
+                <p className="text-2xl font-bold text-primary">{currencySymbol}{fmt(result.netIncome)}</p>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div className="p-3 bg-muted/50 rounded text-center">
-                  <p className="text-sm text-muted-foreground">Effective Tax Rate</p>
-                  <p className="text-xl font-bold">{result.taxRate}%</p>
+                  <p className="text-sm text-neutral-600">Effective Tax Rate</p>
+                  <p className="text-xl font-bold">{fmt(result.taxRate)}%</p>
                 </div>
                 <div className="p-3 bg-muted/50 rounded text-center">
-                  <p className="text-sm text-muted-foreground">Total Tax Amount</p>
-                  <p className="text-xl font-bold">${result.taxAmount}</p>
+                  <p className="text-sm text-neutral-600">Total Tax Amount</p>
+                  <p className="text-xl font-bold">{currencySymbol}{fmt(result.taxAmount)}</p>
                 </div>
               </div>
             </div>

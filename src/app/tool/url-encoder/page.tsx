@@ -5,38 +5,61 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
-import { Link, Copy } from "lucide-react";
+import { Link, Copy, RotateCcw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 
+const DEFAULT_URL = "https://primemetric.online";
+
 const URLEncoder = () => {
-  const [input, setInput] = useState("");
-  const [output, setOutput] = useState("");
+  const [input, setInput] = useState<string>(DEFAULT_URL);
+  // Pre-filled so the output shows instantly
+  const [output, setOutput] = useState<string>(() => encodeURIComponent(DEFAULT_URL));
   const { toast } = useToast();
 
   const encode = () => {
+    if (!input.trim()) {
+      setOutput("");
+      toast({ variant: "destructive", title: "Empty Input", description: "Enter text or a URL to encode." });
+      return;
+    }
     try {
       const encoded = encodeURIComponent(input);
       setOutput(encoded);
-      toast({ title: "Success", description: "URL encoded!" });
-    } catch (error) {
-      toast({ variant: "destructive", title: "Error", description: "Error encoding URL" });
+      toast({ title: "Encoded", description: "URL encoded successfully." });
+    } catch {
+      toast({ variant: "destructive", title: "Encode failed", description: "Error encoding URL." });
     }
   };
 
   const decode = () => {
+    if (!input.trim()) {
+      setOutput("");
+      toast({ variant: "destructive", title: "Empty Input", description: "Enter text or a URL to decode." });
+      return;
+    }
     try {
       const decoded = decodeURIComponent(input);
       setOutput(decoded);
-      toast({ title: "Success", description: "URL decoded!" });
-    } catch (error) {
-      toast({ variant: "destructive", title: "Error", description: "Error decoding URL - invalid input" });
+      toast({ title: "Decoded", description: "URL decoded successfully." });
+    } catch {
+      toast({ variant: "destructive", title: "Invalid Input", description: "Error decoding URL - invalid input." });
     }
   };
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(output);
-    toast({ title: "Success", description: "Copied to clipboard!" });
+  const reset = () => {
+    setInput("");
+    setOutput("");
+  };
+
+  const copyToClipboard = async () => {
+    if (!output) return;
+    try {
+      await navigator.clipboard.writeText(output);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
 
   return (
@@ -46,9 +69,9 @@ const URLEncoder = () => {
         keywords="url encoder, url decoder, encode url, decode url, uri encoder, percent encoding"
         canonicalUrl="/tool/url-encoder"
       >
-        <div className="max-w-4xl mx-auto space-y-6">
+        <div className="max-w-4xl mx-auto space-y-4">
           <Card className="p-6 space-y-4">
-            <Label htmlFor="input">Input Text or URL</Label>
+            <Label className="text-sm font-medium" htmlFor="input">Input Text or URL</Label>
             <Textarea
               id="input"
               value={input}
@@ -65,6 +88,9 @@ const URLEncoder = () => {
               <Button onClick={decode} variant="outline" className="flex-1">
                 <Link className="w-4 h-4 mr-2" />
                 Decode URL
+              </Button>
+              <Button onClick={reset} variant="outline" size="icon" className="shrink-0" aria-label="Reset">
+                <RotateCcw className="h-4 w-4" />
               </Button>
             </div>
           </Card>

@@ -1,57 +1,101 @@
 'use client';
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
-import { Play, Pause, RotateCcw, Flag } from "lucide-react";
+import { Play, Pause, RotateCcw, Flag, Copy } from "lucide-react";
+
+const formatTime = (ms: number): string => {
+  const minutes = Math.floor(ms / 60000).toString().padStart(2, '0');
+  const seconds = Math.floor((ms % 60000) / 1000).toString().padStart(2, '0');
+  const centiseconds = Math.floor((ms % 1000) / 10).toString().padStart(2, '0');
+  return `${minutes}:${seconds}.${centiseconds}`;
+};
 
 const StopwatchClient = () => {
-  const [time, setTime] = useState(0);
-  const [isRunning, setIsRunning] = useState(false);
+  const [time, setTime] = useState<number>(0);
+  const [isRunning, setIsRunning] = useState<boolean>(false);
   const [laps, setLaps] = useState<number[]>([]);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
-    if (isRunning) {
-      timerRef.current = setInterval(() => {
-        setTime(prevTime => prevTime + 10);
-      }, 10);
-    } else if (timerRef.current) {
-      clearInterval(timerRef.current);
-    }
+    if (!isRunning) return;
+    timerRef.current = setInterval(() => {
+      setTime(prevTime => prevTime + 10);
+    }, 10);
     return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
     };
   }, [isRunning]);
 
-  const handleStartStop = () => {
-    setIsRunning(!isRunning);
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+    };
+  }, []);
+
+  const splits: number[] = useMemo(() => {
+    return laps.map((lap, i) => (i === 0 ? lap : lap - laps[i - 1]));
+  }, [laps]);
+
+  const fastestLap: number | null = splits.length > 0 ? Math.min(...splits) : null;
+  const slowestLap: number | null = splits.length > 0 ? Math.max(...splits) : null;
+
+  const handleStartStop = (): void => {
+    setIsRunning(prev => !prev);
   };
 
-  const handleLap = () => {
-    if (isRunning) {
-      setLaps(prevLaps => [...prevLaps, time]);
-      toast({ title: "Lap Recorded", description: `Lap ${laps.length + 1} recorded.` });
+  const handleLap = (): void => {
+    if (!isRunning) {
+      toast({ variant: "destructive", title: "Not Running", description: "Start the stopwatch before recording a lap." });
+      return;
     }
+    const lapNumber = laps.length + 1;
+    setLaps(prevLaps => [...prevLaps, time]);
+    toast({ title: "Lap Recorded", description: `Lap ${lapNumber.toLocaleString()} recorded.` });
   };
 
-  const handleReset = () => {
+  const handleReset = (): void => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
     setIsRunning(false);
     setTime(0);
     setLaps([]);
     toast({ title: "Stopwatch Reset", description: "The stopwatch has been reset to zero." });
   };
 
-  const formatTime = (ms: number) => {
-    const minutes = Math.floor(ms / 60000).toString().padStart(2, '0');
-    const seconds = Math.floor((ms % 60000) / 1000).toString().padStart(2, '0');
-    const milliseconds = Math.floor((ms % 1000) / 10).toString().padStart(2, '0');
-    return `${minutes}:${seconds}.${milliseconds}`;
+  const copyResult = async (): Promise<void> => {
+    if (time === 0 && laps.length === 0) return;
+    const lines: string[] = [
+      `Stopwatch: ${formatTime(time)}`,
+      `Laps: ${laps.length.toLocaleString()}`,
+      ...splits.map((split, i) => `Lap ${(i + 1).toLocaleString()}: ${formatTime(laps[i])} (split ${formatTime(split)})`),
+    ];
+    if (fastestLap !== null && slowestLap !== null) {
+      lines.push(`Fastest split: ${formatTime(fastestLap)}`, `Slowest split: ${formatTime(slowestLap)}`);
+    }
+    const text = `${lines.join("\n")} — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
+
+  const isResetDisabled: boolean = !isRunning && time === 0 && laps.length === 0;
 
   return (
     <CalculatorLayout
@@ -70,18 +114,35 @@ const StopwatchClient = () => {
           <Button onClick={handleStartStop} size="lg" className="w-32 gradient-button">
             {isRunning ? <><Pause className="mr-2" /> Pause</> : <><Play className="mr-2" /> Start</>}
           </Button>
-          <Button onClick={handleReset} variant="destructive" size="lg">
+          <Button onClick={handleReset} variant="destructive" size="lg" disabled={isResetDisabled}>
             <RotateCcw className="mr-2" /> Reset
           </Button>
         </div>
 
         {laps.length > 0 && (
           <div className="mt-8">
-            <h3 className="text-lg font-semibold mb-2">Laps</h3>
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-lg font-semibold">Laps</h3>
+              <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+              </Button>
+            </div>
+            {fastestLap !== null && slowestLap !== null && (
+              <div className="grid grid-cols-2 gap-2 mb-3 text-center">
+                <div className="p-2 bg-muted/50 rounded-md">
+                  <p className="text-xs text-neutral-600">Fastest split</p>
+                  <p className="font-mono font-bold">{formatTime(fastestLap)}</p>
+                </div>
+                <div className="p-2 bg-muted/50 rounded-md">
+                  <p className="text-xs text-neutral-600">Slowest split</p>
+                  <p className="font-mono font-bold">{formatTime(slowestLap)}</p>
+                </div>
+              </div>
+            )}
             <ul className="space-y-2 max-h-40 overflow-y-auto pr-2">
               {laps.map((lap, index) => (
                 <li key={index} className="flex justify-between p-2 bg-muted/50 rounded-md">
-                  <span>Lap {index + 1}</span>
+                  <span>Lap {(index + 1).toLocaleString()}</span>
                   <span className="font-mono">{formatTime(lap)}</span>
                 </li>
               )).reverse()}

@@ -8,43 +8,123 @@ import { Button } from "@/components/ui/button";
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+import { Copy, RotateCcw } from "lucide-react";
+
+type QuadraticResult = {
+  discriminant: number;
+  kind: "two-real" | "one-real" | "complex";
+  x1: number | null;
+  x2: number | null;
+  realPart: number | null;
+  imagPart: number | null;
+  display: string;
+};
+
+function formatRoot(v: number): string {
+  return v.toLocaleString(undefined, { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+}
+
+function computeQuadratic(aStr: string, bStr: string, cStr: string): QuadraticResult | null {
+  const a = parseFloat(aStr);
+  const b = parseFloat(bStr);
+  const c = parseFloat(cStr);
+  if (!Number.isFinite(a) || !Number.isFinite(b) || !Number.isFinite(c)) return null;
+  if (a === 0) return null;
+  const discriminant = b * b - 4 * a * c;
+  if (discriminant > 0) {
+    const x1 = (-b + Math.sqrt(discriminant)) / (2 * a);
+    const x2 = (-b - Math.sqrt(discriminant)) / (2 * a);
+    return {
+      discriminant,
+      kind: "two-real",
+      x1,
+      x2,
+      realPart: null,
+      imagPart: null,
+      display: `Two real roots: x₁ = ${formatRoot(x1)}, x₂ = ${formatRoot(x2)}`,
+    };
+  }
+  if (discriminant === 0) {
+    const x = -b / (2 * a);
+    return {
+      discriminant,
+      kind: "one-real",
+      x1: x,
+      x2: null,
+      realPart: null,
+      imagPart: null,
+      display: `One real root: x = ${formatRoot(x)}`,
+    };
+  }
+  const realPart = -b / (2 * a);
+  const imagPart = Math.sqrt(-discriminant) / (2 * a);
+  return {
+    discriminant,
+    kind: "complex",
+    x1: null,
+    x2: null,
+    realPart,
+    imagPart,
+    display: `Two complex roots: x = ${formatRoot(realPart)} ± ${formatRoot(Math.abs(imagPart))}i`,
+  };
+}
+
+const DEFAULT_A = "1";
+const DEFAULT_B = "-3";
+const DEFAULT_C = "2";
 
 const QuadraticFormulaCalculator = () => {
-  const [a, setA] = useState("");
-  const [b, setB] = useState("");
-  const [c, setC] = useState("");
-  const [result, setResult] = useState<string>("");
+  const [a, setA] = useState(DEFAULT_A);
+  const [b, setB] = useState(DEFAULT_B);
+  const [c, setC] = useState(DEFAULT_C);
+  // Pre-filled so the result renders instantly (no empty state)
+  const [result, setResult] = useState<QuadraticResult | null>(() => computeQuadratic(DEFAULT_A, DEFAULT_B, DEFAULT_C));
   const { toast } = useToast();
 
   const calculate = () => {
+    if (a.trim() === "" || b.trim() === "" || c.trim() === "") {
+      toast({ title: "Invalid Input", description: "Please enter values for a, b, and c.", variant: "destructive" });
+      return;
+    }
     const valA = parseFloat(a);
     const valB = parseFloat(b);
     const valC = parseFloat(c);
 
-    if (isNaN(valA) || isNaN(valB) || isNaN(valC)) {
-      toast({ title: "Error", description: "Please enter valid numbers for a, b, and c.", variant: "destructive" });
+    if (!Number.isFinite(valA) || !Number.isFinite(valB) || !Number.isFinite(valC)) {
+      toast({ title: "Invalid Input", description: "Please enter valid numbers for a, b, and c.", variant: "destructive" });
       return;
     }
     if (valA === 0) {
-        toast({ title: "Error", description: "The value of 'a' cannot be zero for a quadratic equation.", variant: "destructive" });
+        toast({ title: "Invalid Input", description: "The coefficient 'a' cannot be zero for a quadratic equation.", variant: "destructive" });
         return;
     }
 
-    const discriminant = valB * valB - 4 * valA * valC;
-
-    if (discriminant > 0) {
-      const x1 = (-valB + Math.sqrt(discriminant)) / (2 * valA);
-      const x2 = (-valB - Math.sqrt(discriminant)) / (2 * valA);
-      setResult(`Two real roots: x₁ = ${x1.toFixed(4)}, x₂ = ${x2.toFixed(4)}`);
-    } else if (discriminant === 0) {
-      const x = -valB / (2 * valA);
-      setResult(`One real root: x = ${x.toFixed(4)}`);
-    } else {
-      const realPart = (-valB / (2 * valA)).toFixed(4);
-      const imaginaryPart = (Math.sqrt(-discriminant) / (2 * valA)).toFixed(4);
-      setResult(`Two complex roots: x = ${realPart} ± ${imaginaryPart}i`);
+    const computed = computeQuadratic(a, b, c);
+    if (!computed) {
+      toast({ title: "Invalid Input", description: "Could not solve with the given coefficients.", variant: "destructive" });
+      return;
     }
-    toast({ title: "Success", description: "Quadratic equation solved."});
+    setResult(computed);
+    toast({ title: "Success", description: computed.display });
+  };
+
+  const reset = () => {
+    setA("");
+    setB("");
+    setC("");
+    setResult(null);
+  };
+
+  const copyResult = async () => {
+    if (!result) return;
+    const disc = result.discriminant.toLocaleString(undefined, { maximumFractionDigits: 4 });
+    const text = `${result.display} (a=${a}, b=${b}, c=${c}, discriminant=${disc}) — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
 
   return (
@@ -70,11 +150,21 @@ const QuadraticFormulaCalculator = () => {
               <Input type="number" value={c} onChange={(e) => setC(e.target.value)} placeholder="e.g., 2" />
             </div>
           </div>
-          <Button onClick={calculate} className="w-full gradient-button">Solve for x</Button>
+          <div className="flex gap-2">
+            <Button onClick={calculate} className="flex-1 gradient-button">Solve for x</Button>
+            <Button onClick={reset} variant="outline" size="icon" className="h-10 w-10 shrink-0" aria-label="Reset">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
           {result && (
-            <div className="mt-6 p-4 bg-primary/10 rounded-lg text-center">
-              <p className="text-sm text-muted-foreground">Result</p>
-              <p className="text-xl font-bold text-primary">{result}</p>
+            <div className="mt-6 p-4 bg-[#FFF5F2] rounded-lg">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-sm text-neutral-600">Result</p>
+                <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                  <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                </Button>
+              </div>
+              <p className="text-xl font-bold text-primary text-center">{result.display}</p>
             </div>
           )}
         </div>

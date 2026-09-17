@@ -9,41 +9,72 @@ import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
 import { CurrencySelector, getCurrencySymbol } from "@/components/CurrencySelector";
+import { Copy, RotateCcw } from "lucide-react";
+
+type RoiResult = {
+  netProfit: number; roi: number;
+};
+
+function computeRoi(
+  initialStr: string,
+  finalStr: string
+): RoiResult | null {
+  const initial = parseFloat(initialStr);
+  const final = parseFloat(finalStr);
+
+  if (!(initial > 0 && initial <= 1e12)) return null;
+  if (isNaN(final) || final < 0 || final > 1e15) return null;
+
+  const netProfit = final - initial;
+  return { netProfit, roi: (netProfit / initial) * 100 };
+}
 
 const RoiCalculator = () => {
-  const [initialInvestment, setInitialInvestment] = useState("");
-  const [finalValue, setFinalValue] = useState("");
+  const [initialInvestment, setInitialInvestment] = useState("10000");
+  const [finalValue, setFinalValue] = useState("15000");
   const [currency, setCurrency] = useState("USD");
-  const [result, setResult] = useState<any>(null);
+  // Pre-filled so the result renders instantly (no empty state)
+  const [result, setResult] = useState<RoiResult | null>(() => computeRoi("10000", "15000"));
   const { toast } = useToast();
   
   const currencySymbol = getCurrencySymbol(currency);
 
-  const calculate = () => {
-    const initial = parseFloat(initialInvestment);
-    const final = parseFloat(finalValue);
+  const fmt = (n: number) =>
+    n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-    if (isNaN(initial) || initial === 0 || isNaN(final)) {
+  const fmtPct = (n: number) =>
+    n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+  const calculate = () => {
+    const computed = computeRoi(initialInvestment, finalValue);
+    if (!computed) {
       toast({
         variant: "destructive",
         title: "Invalid Input",
-        description: "Please enter valid numbers for both fields. Initial investment cannot be zero.",
+        description: "Enter initial investment (1+) and final value (0+).",
       });
       return;
     }
 
-    const netProfit = final - initial;
-    const roi = (netProfit / initial) * 100;
-
-    setResult({
-      netProfit: netProfit.toFixed(2),
-      roi: roi.toFixed(2),
-    });
+    setResult(computed);
 
     toast({
         title: "ROI Calculated",
-        description: `Your Return on Investment is ${roi.toFixed(2)}%.`,
+        description: `Your Return on Investment is ${fmtPct(computed.roi)}%.`,
     });
+  };
+
+  const reset = () => { setInitialInvestment(""); setFinalValue(""); setResult(null); };
+
+  const copyResult = async () => {
+    if (!result) return;
+    const text = `ROI: ${fmtPct(result.roi)}% (net profit ${currencySymbol}${fmt(result.netProfit)} on ${currencySymbol}${fmt(parseFloat(initialInvestment))}). — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
 
   return (
@@ -63,16 +94,26 @@ const RoiCalculator = () => {
             <Label>Final Value of Investment ({currencySymbol})</Label>
             <Input type="number" value={finalValue} onChange={(e) => setFinalValue(e.target.value)} placeholder="e.g., 1500" />
           </div>
-          <Button onClick={calculate} className="w-full gradient-button">Calculate ROI</Button>
+          <div className="flex gap-2">
+            <Button onClick={calculate} className="flex-1 gradient-button">Calculate ROI</Button>
+            <Button onClick={reset} variant="outline" size="icon" className="shrink-0" aria-label="Reset">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
           {result && (
             <div className="mt-6 space-y-3">
-              <div className="p-4 bg-primary/10 rounded-lg text-center">
-                <p className="text-sm text-muted-foreground">Return on Investment (ROI)</p>
-                <p className="text-3xl font-bold text-primary">{result.roi}%</p>
+              <div className="flex items-center justify-end">
+                <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                  <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                </Button>
+              </div>
+              <div className="p-4 bg-[#FFF5F2] rounded-lg text-center">
+                <p className="text-sm text-neutral-600">Return on Investment (ROI)</p>
+                <p className="text-3xl font-bold text-primary">{fmtPct(result.roi)}%</p>
               </div>
               <div className="p-3 bg-muted/50 rounded text-center">
-                <p className="text-sm text-muted-foreground">Net Profit</p>
-                <p className="text-lg font-bold">{currencySymbol}{result.netProfit}</p>
+                <p className="text-sm text-neutral-600">Net Profit</p>
+                <p className="text-lg font-bold">{currencySymbol}{fmt(result.netProfit)}</p>
               </div>
             </div>
           )}

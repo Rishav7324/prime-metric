@@ -10,42 +10,70 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import CalculatorLayout from "@/components/CalculatorLayout";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 import { useToast } from "@/hooks/use-toast";
+import { CurrencySelector, getCurrencySymbol } from "@/components/CurrencySelector";
+import { Copy, RotateCcw } from "lucide-react";
+
+function computeFinance(calcType: string, valueStr: string, rateStr: string, periodsStr: string): number | null {
+  const pv = parseFloat(valueStr);
+  const rPct = parseFloat(rateStr);
+  const n = parseFloat(periodsStr);
+
+  if (!(pv > 0 && pv <= 1e12) || isNaN(rPct) || rPct < 0 || rPct > 100 || !(n > 0 && n <= 100)) {
+    return null;
+  }
+
+  const r = rPct / 100;
+  if (calcType === "future-value") {
+    return pv * Math.pow(1 + r, n);
+  }
+  return pv / Math.pow(1 + r, n);
+}
 
 const FinanceCalculator = () => {
   const [calcType, setCalcType] = useState("future-value");
-  const [presentValue, setPresentValue] = useState("");
-  const [rate, setRate] = useState("");
-  const [periods, setPeriods] = useState("");
-  const [result, setResult] = useState<number | null>(null);
+  const [presentValue, setPresentValue] = useState("10000");
+  const [rate, setRate] = useState("5");
+  const [periods, setPeriods] = useState("10");
+  const [currency, setCurrency] = useState("USD");
+  // Pre-filled so the result renders instantly (no empty state)
+  const [result, setResult] = useState<number | null>(() => computeFinance("future-value", "10000", "5", "10"));
   const { toast } = useToast();
+  const currencySymbol = getCurrencySymbol(currency);
+
+  const fmt = (n: number) =>
+    n.toLocaleString("en-US", { maximumFractionDigits: 2, minimumFractionDigits: 2 });
 
   const calculate = () => {
-    const pv = parseFloat(presentValue);
-    const r = parseFloat(rate) / 100;
-    const n = parseFloat(periods);
+    const computed = computeFinance(calcType, presentValue, rate, periods);
 
-    if (isNaN(pv) || isNaN(r) || isNaN(n) || pv <= 0 || r < 0 || n <= 0) {
+    if (computed === null) {
       toast({
         variant: "destructive",
         title: "Invalid Input",
-        description: "Please enter valid positive numbers for all fields.",
+        description: "Enter value (1+), rate (0-100%), periods (1-100).",
       });
       return;
     }
 
-    let calculatedResult = 0;
-    
-    if (calcType === "future-value") {
-      calculatedResult = pv * Math.pow(1 + r, n);
-    } else if (calcType === "present-value") {
-      calculatedResult = pv / Math.pow(1 + r, n);
-    }
-
-    setResult(calculatedResult);
+    setResult(computed);
     toast({
         title: "Calculation Complete",
-        description: `The ${calcType === "future-value" ? "Future Value" : "Present Value"} has been calculated.`,
+        description: `The ${calcType === "future-value" ? "Future Value" : "Present Value"} is ${currencySymbol}${fmt(computed)}.`,
     });
+  };
+
+  const reset = () => { setPresentValue(""); setRate(""); setPeriods(""); setResult(null); };
+
+  const copyResult = async () => {
+    if (result === null) return;
+    const label = calcType === "future-value" ? "Future Value" : "Present Value";
+    const text = `${label}: ${currencySymbol}${fmt(result)} (from ${currencySymbol}${fmt(parseFloat(presentValue))} at ${rate}% for ${periods} periods). — via PrimeMetric`;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Result copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
   };
 
   return (
@@ -57,11 +85,14 @@ const FinanceCalculator = () => {
     >
       <Card className="p-6">
         <div className="space-y-4">
+          <CurrencySelector value={currency} onChange={setCurrency} />
           <div>
             <Label>Calculation Type</Label>
             <Select value={calcType} onValueChange={(value) => {
               setCalcType(value);
-              setResult(null);
+              const recomputed = computeFinance(value, presentValue, rate, periods);
+              if (recomputed !== null) setResult(recomputed);
+              else setResult(null);
             }}>
               <SelectTrigger>
                 <SelectValue />
@@ -73,7 +104,7 @@ const FinanceCalculator = () => {
             </Select>
           </div>
           <div>
-            <Label>{calcType === "future-value" ? "Present Value ($)" : "Future Value ($)"}</Label>
+            <Label>{calcType === "future-value" ? `Present Value (${currencySymbol})` : `Future Value (${currencySymbol})`}</Label>
             <Input
               type="number"
               value={presentValue}
@@ -100,15 +131,25 @@ const FinanceCalculator = () => {
               placeholder="e.g., 10"
             />
           </div>
-          <Button onClick={calculate} className="w-full gradient-button">
-            Calculate
-          </Button>
+          <div className="flex gap-2">
+            <Button onClick={calculate} className="flex-1 gradient-button">
+              Calculate
+            </Button>
+            <Button onClick={reset} variant="outline" size="icon" className="shrink-0" aria-label="Reset">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
           {result !== null && !isNaN(result) && (
-            <div className="mt-6 p-4 bg-primary/10 rounded-lg text-center">
-              <p className="text-sm text-muted-foreground">
-                Calculated {calcType === "future-value" ? "Future Value" : "Present Value"}
-              </p>
-              <p className="text-4xl font-bold text-primary">${result.toFixed(2)}</p>
+            <div className="mt-6 p-4 bg-[#FFF5F2] rounded-lg text-center">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-sm text-neutral-600">
+                  Calculated {calcType === "future-value" ? "Future Value" : "Present Value"}
+                </p>
+                <Button onClick={copyResult} variant="outline" size="sm" className="h-8 text-xs">
+                  <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+                </Button>
+              </div>
+              <p className="text-2xl font-bold text-primary">{currencySymbol}{fmt(result)}</p>
             </div>
           )}
         </div>

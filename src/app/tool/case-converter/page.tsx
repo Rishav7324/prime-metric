@@ -5,15 +5,36 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
-import { Type, Copy } from "lucide-react";
+import { Type, Copy, RotateCcw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import CalculatorContentSection from "@/components/CalculatorContentSection";
 
+type CaseType = "upper" | "lower" | "title" | "sentence" | "camel" | "snake";
+
+const DEMO_TEXT = "The quick brown fox jumps over the lazy dog. Try converting this text!";
+const CASE_LABELS: Record<CaseType, string> = {
+  upper: "UPPERCASE",
+  lower: "lowercase",
+  title: "Title Case",
+  sentence: "Sentence case",
+  camel: "camelCase",
+  snake: "snake_case",
+};
+
 const CaseConverter = () => {
-  const [text, setText] = useState("");
+  const [text, setText] = useState(DEMO_TEXT);
   const { toast } = useToast();
 
-  const convertCase = (type: string) => {
+  const charCount = text.length;
+  const byteCount = new TextEncoder().encode(text).length;
+  const wordCount = text.trim() ? text.trim().split(/\s+/).length : 0;
+  const lineCount = text ? text.split("\n").length : 0;
+
+  const convertCase = (type: CaseType) => {
+    if (!text.trim()) {
+      toast({ variant: "destructive", title: "Empty Input", description: "Please enter text to convert." });
+      return;
+    }
     let converted = "";
     switch (type) {
       case "upper":
@@ -38,12 +59,25 @@ const CaseConverter = () => {
         break;
     }
     setText(converted);
-    toast({ title: "Success", description: "Text converted!"});
+    toast({ title: "Converted", description: `Text converted to ${CASE_LABELS[type]}.` });
   };
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(text);
-    toast({ title: "Success", description: "Copied to clipboard!"});
+  const copyToClipboard = async () => {
+    if (!text) {
+      toast({ variant: "destructive", title: "Nothing to copy", description: "Enter text first." });
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: "Copied", description: "Text copied to clipboard." });
+    } catch {
+      toast({ variant: "destructive", title: "Copy failed", description: "Clipboard not available." });
+    }
+  };
+
+  const clear = () => {
+    setText("");
+    toast({ title: "Cleared", description: "Text cleared." });
   };
 
   return (
@@ -53,14 +87,20 @@ const CaseConverter = () => {
         keywords="case converter, text converter, uppercase, lowercase, title case, sentence case, camel case, snake case"
         canonicalUrl="/tool/case-converter"
       >
-        <div className="max-w-4xl mx-auto space-y-6">
+        <div className="max-w-4xl mx-auto space-y-4">
           <Card className="p-6">
             <div className="flex justify-between items-center mb-2">
-              <Label htmlFor="text">Enter your text</Label>
-              <Button variant="outline" size="sm" onClick={copyToClipboard} disabled={!text}>
-                <Copy className="w-4 h-4 mr-2" />
-                Copy
-              </Button>
+              <Label className="text-sm font-medium" htmlFor="text">Enter your text</Label>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm" onClick={copyToClipboard} disabled={!text}>
+                  <Copy className="w-4 h-4 mr-2" />
+                  Copy
+                </Button>
+                <Button variant="outline" size="sm" onClick={clear} disabled={!text} aria-label="Clear">
+                  <RotateCcw className="w-4 h-4 mr-2" />
+                  Clear
+                </Button>
+              </div>
             </div>
             <Textarea
               id="text"
@@ -69,6 +109,7 @@ const CaseConverter = () => {
               placeholder="Type or paste your text here..."
               className="min-h-[200px]"
             />
+            <p className="text-xs text-neutral-500 mt-2">{charCount} characters • {wordCount} words • {lineCount} lines • {byteCount} bytes</p>
           </Card>
 
           <div className="grid md:grid-cols-3 gap-4">
