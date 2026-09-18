@@ -1,0 +1,13 @@
+import { generateMetadata } from "@/components/CalculatorLayout";
+import PercentageCalculator from "./client-page";
+
+export const metadata = generateMetadata({
+  title: "प्रतिशत कैलकुलेटर",
+  description: "किसी भी संख्या का प्रतिशत, छूट, वृद्धि-कमी आसानी से निकालें | Free Percentage Calculator in Hindi",
+  keywords: "प्रतिशत कैलकुलेटर, percentage calculator hindi, प्रतिशत कैसे निकालें, percent calculator hindi, छूट कैलकुलेटर",
+  canonicalUrl: "/hi/percentage-calculator",
+});
+
+export default function PercentageCalculatorHindiPage() {
+  return <PercentageCalculator />;
+}
