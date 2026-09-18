@@ -1,4 +1,4 @@
-import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link, DollarSign, Heart, GraduationCap, Repeat, Percent, Divide, Sigma, Wrench, Clock, CalendarDays, WalletCards, ListOrdered, Square, Car, Flame, PersonStanding, Wallet, Dumbbell, Circle, Dices, MoveHorizontal, FileCheck, Ruler, Home, Scale, BrainCircuit, Image as ImageIcon, AlarmClock, Timer as TimerIcon,   Globe, Receipt, Droplets, MoonStar, CalendarHeart, HeartPulse, Fingerprint, ShieldCheck, Hourglass, BarChart3, Network, Baby, Activity } from "lucide-react";
+import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link, DollarSign, Heart, GraduationCap, Repeat, Percent, Divide, Sigma, Wrench, Clock, CalendarDays, WalletCards, ListOrdered, Square, Car, Flame, PersonStanding, Wallet, Dumbbell, Circle, Dices, MoveHorizontal, FileCheck, Ruler, Home, Scale, BrainCircuit, Image as ImageIcon, AlarmClock, Timer as TimerIcon,   Globe, Receipt, Droplets, MoonStar, CalendarHeart, HeartPulse, Fingerprint, ShieldCheck, Hourglass, BarChart3, Network, Baby, Activity, Bitcoin } from "lucide-react";
 import { Calculator as CalculatorType } from "@/types/calculator";
 
 
@@ -44,6 +44,10 @@ export const financialCalculatorsData: Omit<CalculatorType, 'icon'>[] = [
   { id: "rent-vs-buy", name: "Rent vs Buy Calculator", description: "Compare renting vs buying home costs", category: "financial", path: "/financial-calculators/rent-vs-buy-calculator", implemented: true },
   { id: "tax-regime", name: "Tax Regime Calculator", description: "Compare old vs new tax regime", category: "financial", path: "/financial-calculators/tax-regime-calculator", implemented: true },
   { id: "debt-payoff", name: "Debt Payoff Calculator", description: "Plan debt payoff date and interest", category: "financial", path: "/financial-calculators/debt-payoff-calculator", implemented: true },
+  { id: "fire", name: "FIRE Calculator", description: "Plan early retirement corpus and SIP", category: "financial", path: "/financial-calculators/fire-calculator", implemented: true },
+  { id: "annuity", name: "Annuity Calculator", description: "Estimate pension from lump sum annuity", category: "financial", path: "/financial-calculators/annuity-calculator", implemented: true },
+  { id: "capital-gains", name: "Capital Gains Calculator", description: "India capital gains tax for equity, property & gold", category: "financial", path: "/financial-calculators/capital-gains-calculator", implemented: true },
+  { id: "crypto-tax", name: "Crypto Tax Calculator", description: "India 30% crypto tax with 1% TDS credit", category: "financial", path: "/financial-calculators/crypto-tax-calculator", implemented: true },
 ];
 
 export const healthCalculatorsData: Omit<CalculatorType, 'icon'>[] = [
@@ -261,6 +265,10 @@ const iconMap: { [key: string]: CalculatorType['icon'] } = {
   "rent-vs-buy": Home,
   "tax-regime": Receipt,
   "debt-payoff": WalletCards,
+  "fire": Flame,
+  "annuity": Landmark,
+  "capital-gains": TrendingUp,
+  "crypto-tax": Bitcoin,
   "period": CalendarHeart,
   "pregnancy-weight": Baby,
   "bsa": PersonStanding,

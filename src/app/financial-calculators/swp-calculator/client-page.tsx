@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -35,25 +35,119 @@ function computeSwp(initialStr: string, withdrawalStr: string, returnStr: string
   return { years: Math.floor(n / 12), months: Math.floor(n % 12), perpetual: false };
 }
 
+type SwpScheduleRow = { year: number; withdrawn: number; tax: number; balance: number; realBalance: number };
+
+type SwpProjection = {
+  firstYearNeed: number;
+  withdrawalRate: number;
+  realReturn: number;
+  effectiveNet: number;
+  warnDeplete: boolean;
+  depletedYear: number | null;
+  rows: SwpScheduleRow[];
+};
+
+const LTCG_RATE = 0.125;
+const LTCG_EXEMPTION = 125000;
+
+function computeProSchedule(
+  initialStr: string,
+  withdrawalStr: string,
+  returnStr: string,
+  inflationStr: string,
+  maxYears = 50
+): SwpProjection | null {
+  const p = parseFloat(initialStr);
+  const wMonthly = parseFloat(withdrawalStr);
+  const annual = parseFloat(returnStr);
+  const inflation = parseFloat(inflationStr);
+  if (
+    !(p > 0 && p <= 1e12) ||
+    !(wMonthly > 0 && wMonthly <= 1e9) ||
+    isNaN(annual) ||
+    annual < -50 ||
+    annual > 100 ||
+    isNaN(inflation) ||
+    inflation < -10 ||
+    inflation > 30
+  ) {
+    return null;
+  }
+  const r = annual / 100;
+  const g = inflation / 100;
+  const annualWithdrawal = wMonthly * 12;
+  const firstYearNeed = annualWithdrawal;
+  const withdrawalRate = (annualWithdrawal / p) * 100;
+  const realReturn = ((1 + r) / (1 + g) - 1) * 100;
+  const effectiveNet = annual - inflation - withdrawalRate;
+  const warnDeplete = effectiveNet < 0;
+  let balance = p;
+  let costBasis = p;
+  const rows: SwpScheduleRow[] = [];
+  let depletedYear: number | null = null;
+  for (let year = 1; year <= maxYears; year++) {
+    const grown = balance * (1 + r);
+    let withdrawn = annualWithdrawal * Math.pow(1 + g, year - 1);
+    if (!(grown > 0)) {
+      depletedYear = year;
+      rows.push({ year, withdrawn, tax: 0, balance: 0, realBalance: 0 });
+      break;
+    }
+    if (withdrawn > grown) withdrawn = grown;
+    const unrealized = Math.max(0, grown - costBasis);
+    const gainRatio = grown > 0 ? Math.min(1, unrealized / grown) : 0;
+    const gainsInWithdrawal = Math.min(withdrawn, withdrawn * gainRatio, unrealized);
+    const taxable = Math.max(0, gainsInWithdrawal - LTCG_EXEMPTION);
+    const tax = taxable * LTCG_RATE;
+    const totalOutflow = Math.min(grown, withdrawn + tax);
+    // Pro-rata cost basis reduction for the principal portion withdrawn.
+    if (grown > 0 && costBasis > 0) {
+      const principalRatio = Math.min(1, withdrawn / grown);
+      costBasis = Math.max(0, costBasis * (1 - principalRatio));
+    }
+    balance = Math.max(0, grown - totalOutflow);
+    const realBalance = balance / Math.pow(1 + g, year);
+    rows.push({
+      year,
+      withdrawn,
+      tax,
+      balance,
+      realBalance: isFinite(realBalance) ? realBalance : 0,
+    });
+    if (balance <= 0.005) {
+      depletedYear = year;
+      break;
+    }
+  }
+  return { firstYearNeed, withdrawalRate, realReturn, effectiveNet, warnDeplete, depletedYear, rows };
+}
+
 const SwpCalculator = () => {
   const [initialInvestment, setInitialInvestment] = useState("100000");
   const [monthlyWithdrawal, setMonthlyWithdrawal] = useState("500");
-  const [returnRate, setReturnRate] = useState("7");
+  const [returnRate, setReturnRate] = useState("10");
+  const [inflationRate, setInflationRate] = useState("6");
   const [currency, setCurrency] = useState("USD");
-  const [result, setResult] = useState<SwpResult | null>(() => computeSwp("100000", "500", "7"));
+  const [result, setResult] = useState<SwpResult | null>(() => computeSwp("100000", "500", "10"));
   const { toast } = useToast();
   const currencySymbol = getCurrencySymbol(currency);
 
   const fmt = (n: number) =>
     n.toLocaleString("en-US", { maximumFractionDigits: 2, minimumFractionDigits: 2 });
 
+  const projection = useMemo(
+    () => computeProSchedule(initialInvestment, monthlyWithdrawal, returnRate, inflationRate),
+    [initialInvestment, monthlyWithdrawal, returnRate, inflationRate]
+  );
+
   const calculate = () => {
     const computed = computeSwp(initialInvestment, monthlyWithdrawal, returnRate);
-    if (!computed) {
+    const inflationNum = parseFloat(inflationRate);
+    if (!computed || isNaN(inflationNum) || inflationNum < -10 || inflationNum > 30) {
       toast({
         variant: "destructive",
         title: "Invalid Input",
-        description: "Enter investment (1+), withdrawal (1+), return (-50 to 100%).",
+        description: "Enter investment (1+), withdrawal (1+), return (-50 to 100%), inflation (-10 to 30%).",
       });
       return;
     }
@@ -74,15 +168,19 @@ const SwpCalculator = () => {
     });
   };
 
-  const reset = () => { setInitialInvestment(""); setMonthlyWithdrawal(""); setReturnRate(""); setResult(null); };
+  const reset = () => { setInitialInvestment(""); setMonthlyWithdrawal(""); setReturnRate(""); setInflationRate(""); setResult(null); };
 
   const copyResult = async () => {
     if (!result) return;
     const pNum = parseFloat(initialInvestment);
     const wNum = parseFloat(monthlyWithdrawal);
-    const text = result.perpetual
+    const base = result.perpetual
       ? `SWP: ${currencySymbol}${fmt(isNaN(pNum) ? 0 : pNum)} with ${currencySymbol}${fmt(isNaN(wNum) ? 0 : wNum)}/month at ${returnRate}% lasts forever (withdrawals covered by returns). — via PrimeMetric`
       : `SWP: ${currencySymbol}${fmt(isNaN(pNum) ? 0 : pNum)} with ${currencySymbol}${fmt(isNaN(wNum) ? 0 : wNum)}/month at ${returnRate}% lasts ${result.years} years and ${result.months} months. — via PrimeMetric`;
+    const proLine = projection
+      ? ` Inflation ${inflationRate}%: first-year need ${currencySymbol}${fmt(projection.firstYearNeed)}, withdrawal rate ${projection.withdrawalRate.toLocaleString("en-US", { maximumFractionDigits: 2 })}%, real return ${projection.realReturn.toLocaleString("en-US", { maximumFractionDigits: 2 })}%.`
+      : "";
+    const text = `${base}${proLine}`;
     try {
       await navigator.clipboard.writeText(text);
       toast({ title: "Copied", description: "Result copied to clipboard." });
@@ -111,7 +209,11 @@ const SwpCalculator = () => {
             </div>
             <div>
               <Label>Expected Annual Return Rate (%)</Label>
-              <Input type="number" value={returnRate} onChange={(e) => setReturnRate(e.target.value)} placeholder="e.g., 7" />
+              <Input type="number" value={returnRate} onChange={(e) => setReturnRate(e.target.value)} placeholder="e.g., 10" />
+            </div>
+            <div>
+              <Label>Inflation Rate (%/yr)</Label>
+              <Input type="number" value={inflationRate} onChange={(e) => setInflationRate(e.target.value)} placeholder="e.g., 6" />
             </div>
           </div>
           <div className="flex gap-2">
@@ -132,6 +234,55 @@ const SwpCalculator = () => {
                 <p className="text-3xl font-bold text-primary">
                   {result.years === "Infinity" ? "an infinite time" : `${result.years} years and ${result.months} months`}
                 </p>
+              </div>
+            </div>
+          )}
+          {projection && (
+            <div className="mt-6 space-y-3 border-t pt-4">
+              <h3 className="text-sm font-semibold">Inflation-adjusted projection</h3>
+              {projection.warnDeplete && (
+                <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-800">
+                  Warning: effective net return ({projection.effectiveNet.toLocaleString("en-US", { maximumFractionDigits: 2 })}% = return − inflation − withdrawal rate) is below 0 — corpus may deplete.
+                </div>
+              )}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+                <div className="p-3 bg-neutral-50 rounded-lg">
+                  <p className="text-neutral-600">Inflation-adjusted first-year need</p>
+                  <p className="font-semibold">{currencySymbol}{fmt(projection.firstYearNeed)}/yr</p>
+                </div>
+                <div className="p-3 bg-neutral-50 rounded-lg">
+                  <p className="text-neutral-600">Withdrawal rate / Real return / Net</p>
+                  <p className="font-semibold">
+                    {projection.withdrawalRate.toLocaleString("en-US", { maximumFractionDigits: 2 })}% / {projection.realReturn.toLocaleString("en-US", { maximumFractionDigits: 2 })}% / {projection.effectiveNet.toLocaleString("en-US", { maximumFractionDigits: 2 })}%
+                  </p>
+                </div>
+              </div>
+              <p className="text-xs text-neutral-500">
+                Note: equity SWP LTCG 12.5% above {currencySymbol}1,25,000/yr (Indian rules). Yearly tax below is simplified — 12.5% on the estimated gains portion of that year&apos;s withdrawal above the {currencySymbol}{LTCG_EXEMPTION.toLocaleString("en-US")} exemption. {projection.depletedYear !== null ? `Inflation-adjusted corpus depletes in year ${projection.depletedYear}.` : "Inflation-adjusted corpus survives the full projection horizon."}
+              </p>
+              <div className="max-h-80 overflow-auto border rounded-lg">
+                <table className="w-full text-sm">
+                  <thead className="sticky top-0 bg-neutral-100">
+                    <tr>
+                      <th className="text-left p-2">Year</th>
+                      <th className="text-right p-2">Withdrawn that year</th>
+                      <th className="text-right p-2">Est. tax</th>
+                      <th className="text-right p-2">Balance (nominal)</th>
+                      <th className="text-right p-2">Balance (today&apos;s money)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {projection.rows.map((row) => (
+                      <tr key={row.year} className="border-t">
+                        <td className="p-2">{row.year}</td>
+                        <td className="p-2 text-right">{currencySymbol}{fmt(row.withdrawn)}</td>
+                        <td className="p-2 text-right">{currencySymbol}{fmt(row.tax)}</td>
+                        <td className="p-2 text-right">{currencySymbol}{fmt(row.balance)}</td>
+                        <td className="p-2 text-right">{currencySymbol}{fmt(row.realBalance)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           )}

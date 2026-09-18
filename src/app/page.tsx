@@ -104,7 +104,7 @@ export default function HomePage() {
             100% Free • No Sign-Up
           </span>
           <h1 className="text-3xl sm:text-5xl font-bold leading-tight text-black">
-            Every Calculator You Need,
+            Every Calculator & Tool You Need,
             <span className="block text-[#F2765E]">In One Place</span>
           </h1>
           <p className="mt-2.5 text-sm sm:text-base text-neutral-600 max-w-xl mx-auto">
