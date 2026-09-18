@@ -157,10 +157,16 @@ const TipCalculator = () => {
             { title: "Tipping on a Budget", description: "If you're on a tight budget, it's still customary to tip at least 15% for good service. Consider this when choosing where to dine." },
             { title: "Check for Included Gratuity", description: "For large parties (usually 6 or more), many restaurants automatically add an 18-20% gratuity to the bill. Check your receipt before adding an extra tip." },
         ]}
+        examples={[
+            { title: "$55.25 bill, 18% tip, 2 people", description: "The default scenario: $9.95 tip, $65.20 total, $32.60 per person.", steps: ["Tip: $55.25 × 0.18 = $9.945, rounded to $9.95.", "Total: $55.25 + $9.945 = $65.195, rounded to $65.20.", "Per person: $65.195 / 2 = $32.5975, rounded to $32.60."] },
+            { title: "$84.50 bill, 20% tip, 3 people", description: "Dinner for three: $16.90 tip, $101.40 total, $33.80 each.", steps: ["Tip: $84.50 × 0.20 = $16.90.", "Total: $84.50 + $16.90 = $101.40.", "Per person: $101.40 / 3 = $33.80."] },
+        ]}
         faqs={[
             { question: "Should I tip on the pre-tax or post-tax amount?", answer: "It is customary to calculate the tip based on the pre-tax total of the bill." },
             { question: "What is a standard tip percentage?", answer: "In the United States, 15% is considered a standard tip for average service, 18% for good service, and 20% or more for excellent service." },
             { question: "How do I tip for poor service?", answer: "If you received poor service, it's better to speak with a manager rather than leaving a very small or no tip. Servers often rely on tips for their income." },
+            { question: "How do I split an $84.50 bill with 20% tip among 3 people?", answer: "The tip is $84.50 × 0.20 = $16.90, so the total is $84.50 + $16.90 = $101.40. Divided by 3, each person pays $101.40 / 3 = $33.80." },
+            { question: "How much more is a 22% tip than a 15% tip on a $120 bill?", answer: "A 15% tip is $120 × 0.15 = $18.00 (total $138.00). A 22% tip is $120 × 0.22 = $26.40 (total $146.40). The difference is $26.40 − $18.00 = $8.40." },
         ]}
       />
     </CalculatorLayout>

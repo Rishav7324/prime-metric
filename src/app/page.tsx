@@ -251,7 +251,7 @@ export default function HomePage() {
         </section>
 
         <Faq />
-        <AdBanner />
+        
 
         {/* Help strip */}
         <section className="pb-8 bg-white">

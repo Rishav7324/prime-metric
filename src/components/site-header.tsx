@@ -2,6 +2,7 @@
 import React from 'react';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Menu } from 'lucide-react';
@@ -21,7 +22,7 @@ export function SiteHeader() {
       <div className="flex h-13 max-w-6xl items-center px-3 sm:px-4 py-2">
         <div className="mr-4 flex">
           <Link href="/" className="mr-5 flex items-center space-x-2">
-            <img src="/logo.png" alt="PrimeMetric Logo" className="h-7 w-7" />
+            <Image src="/logo.png" alt="PrimeMetric Logo" width={28} height={28} priority />
             <span className="font-bold sm:inline-block text-base text-black">
               PrimeMetric
             </span>
@@ -74,7 +75,7 @@ export function SiteHeader() {
                 <SheetHeader>
                     <SheetTitle>
                         <Link href="/" className="mr-6 flex items-center space-x-2">
-                            <img src="/logo.png" alt="PrimeMetric Logo" className="h-7 w-7" />
+                            <Image src="/logo.png" alt="PrimeMetric Logo" width={28} height={28} />
                             <span className="font-bold sm:inline-block text-base text-black">
                             PrimeMetric
                             </span>

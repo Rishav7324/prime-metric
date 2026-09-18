@@ -157,7 +157,7 @@ const PpfCalculator = () => {
       </div>
 
       <CalculatorContentSection
-        aboutContent="The Public Provident Fund is a government-backed savings scheme with a 15-year lock-in, currently paying 7.1% compounded yearly. Deposits up to 150,000 per year earn fully tax-free interest, making PPF a cornerstone of long-term, risk-free wealth building in India."
+        aboutContent="The Public Provident Fund is a government-backed savings scheme with a 15-year lock-in, currently paying 7.1% compounded yearly. Deposits up to 150,000 per year earn fully tax-free interest, making PPF a cornerstone of long-term, government-backed long-term savings in India."
         useCases={[
           { title: "Retirement Corpus", description: "Project 15-30 years of max deposits into a guaranteed tax-free retirement sum." },
           { title: "Child's Future", description: "Open a PPF for a minor and let 15+ years of compounding fund education costs." },
@@ -169,11 +169,33 @@ const PpfCalculator = () => {
           { title: "Max the Cap Yearly", description: "Fill the full 150,000 allowance each year; unused allowance cannot be carried forward." },
           { title: "Extend in Blocks", description: "After 15 years, extend in 5-year blocks with or without fresh deposits to keep earning." },
         ]}
+        examples={[
+          {
+            title: "150,000 per year at 7.1% for 15 years",
+            description: "Depositing the full 150,000 yearly at 7.1% for 15 years matures to about 4,068,209 on 2,250,000 deposited.",
+            steps: [
+              "Yearly rate r = 0.071 and years n = 15, with deposits at the start of each year.",
+              "Maturity = 150,000 x ((1.071^15 - 1) / 0.071) x 1.071 = 150,000 x 25.3589 = 4,068,209 (rounded).",
+              "Interest = 4,068,209 - 2,250,000 = 1,818,209, fully tax-free under EEE status.",
+            ],
+          },
+          {
+            title: "50,000 per year at 7.1% for 15 years",
+            description: "Depositing 50,000 yearly at 7.1% for 15 years matures to about 1,356,070 on 750,000 deposited.",
+            steps: [
+              "Same factor 25.3589 as above since rate and tenure match: maturity = 50,000 x 25.3589 = 1,356,070 (rounded).",
+              "Total deposited = 50,000 x 15 = 750,000, so interest = 1,356,070 - 750,000 = 606,070.",
+              "Tripling the deposit to 150,000 triples the maturity to 4,068,209, showing PPF scales linearly with deposits.",
+            ],
+          },
+        ]}
         faqs={[
           { question: "What is the PPF deposit limit?", answer: "Minimum 500 and maximum 150,000 per financial year; excess deposits earn no interest and are returned." },
           { question: "Is PPF interest taxable?", answer: "No. PPF enjoys EEE status — deposits (up to 80C limits), interest and maturity are all tax-free." },
           { question: "Can I withdraw PPF early?", answer: "Partial withdrawals are allowed from year 7, and full closure is possible after 5 years on specific grounds with a 1% rate cut." },
           { question: "What happens after 15 years?", answer: "You can withdraw fully or extend indefinitely in 5-year blocks, with or without new deposits." },
+          { question: "How much does extending PPF from 15 to 20 years add at full deposits?", answer: "Depositing 150,000 yearly at 7.1% gives about 4,068,209 after 15 years on 2,250,000 deposited. Continuing to 20 years gives about 6,658,288 on 3,000,000 deposited — the extra 5 years add roughly 2,590,079 of tax-free value on only 750,000 of extra deposits." },
+          { question: "What is the cost of depositing only 100,000 instead of 150,000 each year?", answer: "At 7.1% for 15 years, 150,000 per year matures to about 4,068,209 while 100,000 per year matures to about 2,712,139. Skipping 50,000 per year leaves roughly 1,356,070 of tax-free maturity on the table." },
         ]}
       />
     </CalculatorLayout>

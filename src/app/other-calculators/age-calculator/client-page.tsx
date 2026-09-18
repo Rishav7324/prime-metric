@@ -204,10 +204,16 @@ const AgeCalculatorClient = () => {
           { title: "Leap Babies", description: "Born Feb 29? The calculator counts actual elapsed days, so leap birthdays stay exact." },
           { title: "Timezone Note", description: "Age uses your device date — results shift at local midnight." },
         ]}
+        examples={[
+          { title: "Born 10 June 1995", description: "Age on 18 September 2026 is 31 years, 3 months and 8 days (375 total months).", steps: ["Years: 2026 − 1995 = 31 (June birthday already passed by September).", "Months and days: 10 June to 10 September = 3 months, plus 8 days to 18 September.", "Total months: 31 × 12 + 3 = 375 months."] },
+          { title: "Born 25 December 2010", description: "Age on 18 September 2026 is 15 years, 8 months and 24 days (188 total months).", steps: ["Years: 25 December 2010 to 25 December 2025 = 15 years.", "Months: 25 December 2025 to 25 August 2026 = 8 months.", "Days: 25 August to 18 September = 24 days; total months = 15 × 12 + 8 = 188."] },
+        ]}
         faqs={[
           { question: "How is exact age calculated?", answer: "Years, months and days are derived by calendar comparison (borrowing days/months like manual subtraction), while totals come from elapsed milliseconds — leap years included automatically." },
           { question: "Why do online age calculators differ by a day?", answer: "Usually timezone or time-of-day handling. We normalize both dates to local midnight for consistency." },
           { question: "What zodiac system is used?", answer: "Western tropical zodiac based on birth month and day." },
+          { question: "If I was born 15 March 1990, how old am I on 18 September 2026?", answer: "You are 36 years, 6 months and 3 days old. The year difference is 2026 − 1990 = 36 (birthday passed in March), then 15 March to 15 September is 6 months, plus 3 days to 18 September." },
+          { question: "I was born 29 February 2000 — what does the calculator show on 28 February 2025?", answer: "It shows 24 years, 11 months and 30 days. The year difference borrows a month (2025 − 2000 − 1 = 24 years, 11 months), then borrows January's 31 days (28 − 29 + 31 = 30 days), counting real elapsed days including six leap days since 2000." },
         ]}
       />
     </CalculatorLayout>

@@ -108,6 +108,24 @@ const AllToolsPage = () => {
             </div>
           </section>
 
+          <section className="rounded-xl border border-neutral-200 bg-white p-6 shadow-sm">
+            <h2 className="text-lg font-bold mb-3 text-black">Everyday image and developer utilities in one place</h2>
+            <p className="text-sm text-neutral-600 mb-3">
+              This collection covers the two toolboxes most people reach for weekly: image tools that crop, resize, compress, and convert photos for faster pages and cleaner posts, and developer tools that format JSON, encode Base64, generate QR codes, and hash files for quick debugging and sharing.               Everything runs free in the browser — shrink a 3 MB photo under 300 KB before uploading, validate a broken API response in seconds, or turn a long link into a scannable code for print and packaging.
+            </p>
+            <p className="text-sm text-neutral-600 mb-4">
+              Start with the most-used trio below, then explore the full grid above: pick WebP output for web images, pretty-print JSON before debugging, and prefer SHA-256 over MD5 when verifying downloads. Each tool works on any device with no signup, so one bookmark covers quick fixes at the desk or on the go.
+            </p>
+            <div className="flex flex-wrap gap-2 text-sm">
+              <span className="font-semibold text-black">Popular in this category:</span>
+              <Link href="/tool/compress-image" className="underline underline-offset-2 hover:text-[#F2765E]">Image Compressor</Link>
+              <span className="text-neutral-300">•</span>
+              <Link href="/tool/json-formatter" className="underline underline-offset-2 hover:text-[#F2765E]">JSON Formatter</Link>
+              <span className="text-neutral-300">•</span>
+              <Link href="/tool/qr-code" className="underline underline-offset-2 hover:text-[#F2765E]">QR Code Generator</Link>
+            </div>
+          </section>
+
         </div>
       </div>
     </div>

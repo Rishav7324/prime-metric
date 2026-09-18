@@ -162,11 +162,33 @@ const FdCalculator = () => {
           { title: "Mind Premature Penalties", description: "Breaking an FD early usually costs ~1% — keep emergency cash in savings instead." },
           { title: "Check Tax Impact", description: "FD interest is taxable; post-tax returns matter more than headline rates." },
         ]}
+        examples={[
+          {
+            title: "100,000 at 7% for 5 years",
+            description: "A 100,000 FD at 7% compounded quarterly for 5 years matures to about 141,478 with 41,478 interest.",
+            steps: [
+              "Quarterly rate = 7/400 = 0.0175 and quarters = 5 x 4 = 20.",
+              "Maturity = 100,000 x 1.0175^20 = 100,000 x 1.414778 = 141,478 (rounded).",
+              "Interest = 141,478 - 100,000 = 41,478 before tax and TDS.",
+            ],
+          },
+          {
+            title: "500,000 at 7% for 5 years",
+            description: "A 500,000 FD at the same 7% for 5 years matures to about 707,389 with 207,389 interest.",
+            steps: [
+              "Same growth factor 1.414778: maturity = 500,000 x 1.414778 = 707,389 (rounded).",
+              "Interest = 707,389 - 500,000 = 207,389, exactly 5x the 100,000 case.",
+              "Breaking this FD early at a 1% penalty rate (6% instead of 7%) would cut maturity to about 673,427, losing roughly 33,962.",
+            ],
+          },
+        ]}
         faqs={[
           { question: "How is FD interest compounded?", answer: "Most banks compound FD interest quarterly: maturity = principal × (1 + rate/400)^(4 × years)." },
           { question: "Is FD interest taxable?", answer: "Yes, FD interest is fully taxable as income, and banks deduct TDS above the threshold." },
           { question: "Can I withdraw an FD early?", answer: "Yes, but banks charge a premature-withdrawal penalty (usually ~1%) on the applicable rate." },
           { question: "FD vs savings account?", answer: "FDs pay higher rates in exchange for locking money for a fixed tenure; savings accounts stay liquid but pay less." },
+          { question: "What does a 1% higher FD rate do to 100,000 over 5 years?", answer: "At 7% compounded quarterly, 100,000 grows to about 141,478 with 41,478 interest. At 8% it grows to about 148,595 with 48,595 interest — one extra point adds roughly 7,117 with no extra risk or tenure." },
+          { question: "How much more does a 10-year FD earn than a 5-year FD at 7%?", answer: "A 100,000 FD at 7% reaches about 141,478 after 5 years (41,478 interest) but about 200,160 after 10 years (100,160 interest). Doubling the tenure more than doubles the interest because quarterly compounding accelerates in later years." },
         ]}
       />
     </CalculatorLayout>

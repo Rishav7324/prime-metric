@@ -203,7 +203,7 @@ const K401Calculator = () => {
             }
         ]}
         tips={[
-            { title: "Maximize Employer Match", description: "Always contribute at least enough to receive the full employer match. It is an instant, guaranteed return on your investment and is the fastest way to accelerate your savings." },
+            { title: "Maximize Employer Match", description: "Always contribute at least enough to receive the full employer match. It is an immediate 100% match on your contribution and is the fastest way to accelerate your savings." },
             { title: "Increase Contributions Annually", description: "Try to increase your contribution percentage by 1% each year, perhaps when you get a raise. These small, regular increments can have a huge impact on your final balance over time without drastically affecting your take-home pay." },
             { title: "Stay the Course During Market Volatility", description: "Market downturns are a normal part of investing. Continuing your regular contributions during these times means you are buying more shares at a lower price (dollar-cost averaging), which can significantly accelerate growth when the market recovers." },
             { title: "Review Your Investments", description: "Don't just 'set it and forget it.' Review your 401(k) investments annually to ensure they are still aligned with your risk tolerance and time horizon. Consider rebalancing if your asset allocation has drifted." }

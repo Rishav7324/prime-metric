@@ -31,7 +31,7 @@ export const blogPosts: BlogPost[] = [
     excerpt:
       "How Systematic Investment Plans work, what ₹5,000/month at 12% becomes in 10 years, and the mistakes that quietly eat your returns.",
     date: BLOG_DATE,
-    readMins: 6,
+    readMins: 9,
     toolPaths: [
       "/financial-calculators/sip-calculator",
       "/financial-calculators/cagr-calculator",
@@ -85,6 +85,45 @@ export const blogPosts: BlogPost[] = [
           "Begin with an amount you can sustain through a bad year — even ₹2,000/month is fine — and add the annual step-up from day one. Review once a year, not once a week: check whether the fund still beats its benchmark over 3–5 years, and otherwise leave it alone. Boring is profitable.",
         ],
       },
+      {
+        heading: "SIP vs lump sum: when each wins",
+        paragraphs: [
+          "If you already hold ₹6 lakh in cash, should you invest it all at once or drip it in as a SIP? Pure math favours the lump sum in a rising market: ₹6 lakh invested at once at 12% for 10 years becomes 6,00,000 × 1.12^10 = about ₹18.6 lakh, while a ₹5,000/month SIP invests the same ₹6 lakh gradually and reaches roughly ₹11.6 lakh — because the SIP's later instalments spend fewer years compounding.",
+          "But timing risk flips the answer. Invest that ₹6 lakh the month before a 20% crash and it shrinks to ₹4.8 lakh overnight; growing back at 12% for 10 years it reaches only about ₹14.9 lakh — and most investors panic-sell at the bottom. A SIP sidesteps this regret entirely: early instalments buy the dip, and there is never a single day that decides your fate. Rule of thumb: genuine windfall plus a 7+ year horizon and strong nerves — consider a lump sum or a 6–12 month STP; regular salary income — SIP without debate.",
+        ],
+        bullets: [
+          "₹6L lump sum at 12% for 10y ≈ ₹18.6L vs ₹5,000/month SIP ≈ ₹11.6L on the same ₹6L invested",
+          "Lump sum wins in steadily rising markets; SIP wins on psychology and volatile entry points",
+          "Middle path: park a windfall in a liquid fund and STP it into equity over 6–12 months",
+          "Never fund a lump sum with emergency money or short-term savings",
+        ],
+      },
+      {
+        heading: "What fees and taxes shave off your SIP",
+        paragraphs: [
+          "A 1% higher expense ratio quietly costs around ₹67,000 on a 10-year ₹5,000/month SIP: at 12% gross the corpus is about ₹11.62 lakh, while at 11% net it is about ₹10.95 lakh — same contributions, same market, different fee. That is why direct plans, which typically charge 0.8–1.2% less than regular plans of the same fund, deserve your attention before any fund comparison.",
+          "Taxes take a second bite. Equity fund gains above ₹1.25 lakh a year face 12.5% long-term capital gains tax (after one year of holding), so a ₹4 lakh long-term gain means roughly ₹34,375 in tax on the ₹2.75 lakh above the exemption. ELSS funds add a twist: they save 80C tax today but lock every SIP instalment for 3 years. Factor both in, and judge SIPs on post-fee, post-tax XIRR — not headline NAV returns.",
+        ],
+        bullets: [
+          "Compare direct-plan expense ratios; 1% extra fee ≈ ₹67,000 lost on a 10y ₹5,000 SIP",
+          "Equity LTCG: 12.5% on gains above ₹1.25L per year after 1-year holding",
+          "ELSS saves 80C tax but each instalment is locked for 3 years",
+          "Track XIRR (your personal annualised return), not the fund's advertised returns",
+        ],
+      },
+      {
+        heading: "SIP questions everyone asks",
+        paragraphs: [
+          "Can I pause a SIP? Yes — most funds allow a pause of 1–6 months without penalty, and pausing beats cancelling because your existing units keep compounding. Skipping three ₹5,000 instalments in year 3 of a 15-year SIP costs surprisingly little (those ₹15,000 would have grown to roughly ₹55,000), while stopping the whole SIP destroys the compounding tail that matters most.",
+          "When can I withdraw? Anytime for open-ended funds — SIPs have no lock-in except ELSS — but withdrawing equity within 5 years of a long-term goal invites sequence risk. The SIP date itself barely matters: AMFI data shows 5th vs 25th debit dates differ by fractions of a percent over a decade. Automate for the day after salary, add the step-up, and spend your energy on asset allocation instead.",
+        ],
+        bullets: [
+          "Pause up to a few months if needed; avoid full cancellation in downturns",
+          "Only ELSS SIPs lock in (3 years per instalment); other equity funds stay liquid",
+          "SIP date has negligible long-term effect — pick the day after salary credit",
+          "One flexi-cap or index fund is enough to start; diversify across goals, not funds",
+        ],
+      },
     ],
   },
   {
@@ -93,7 +132,7 @@ export const blogPosts: BlogPost[] = [
     excerpt:
       "How BMI is calculated, what a BMI of 22.9 means for a 70 kg adult, and why athletes and older adults should read it differently.",
     date: BLOG_DATE,
-    readMins: 5,
+    readMins: 9,
     toolPaths: [
       "/health-calculators/bmi-calculator",
       "/health-calculators/calorie-calculator",
@@ -147,6 +186,45 @@ export const blogPosts: BlogPost[] = [
           "For most adults between these groups, though, BMI remains the fastest free screening tool available. Calculate it, sanity-check it with a waist measurement, and act on the pair — that two-minute habit catches problems years before symptoms do.",
         ],
       },
+      {
+        heading: "BMI vs body-fat percentage vs waist-to-height ratio",
+        paragraphs: [
+          "Consider two men who are both 175 cm and 85 kg — identical BMI of 27.8 (85 ÷ 3.0625). One is a lifter with a 82 cm waist and 16% body fat; the other is sedentary with a 102 cm waist and 31% body fat. Same BMI, opposite health pictures. This is exactly why a second metric matters: body-fat percentage tells you what the weight is, while waist measurements tell you where it sits.",
+          "The cheapest upgrade is the waist-to-height ratio: divide waist by height in the same units and keep it under 0.5. Our lifter scores 82 ÷ 175 = 0.47 (healthy), while the sedentary man scores 102 ÷ 175 = 0.58 (high risk) — instant separation that BMI alone could never give. Use BMI as the smoke alarm, waist-to-height as the confirmation, and a body-fat estimate (callipers, smart scale, or DEXA for precision) when the two disagree.",
+        ],
+        bullets: [
+          "BMI 27.8 can mean 16% or 31% body fat — composition decides the meaning",
+          "Waist-to-height ratio under 0.5 is the simplest confirmation check",
+          "Body-fat guide: athletic men 10–16%, women 18–24%; obese roughly 25%+ men, 32%+ women",
+          "If BMI and waist agree, act; if they conflict, measure body fat before deciding",
+        ],
+      },
+      {
+        heading: "Three worked weight targets",
+        paragraphs: [
+          "Target weight is just target BMI × height². A 160 cm adult at 80 kg has a BMI of 31.2 (80 ÷ 2.56) — for a BMI of 22 the target is 22 × 2.56 = 56.3 kg, a journey of about 23.7 kg. At a steady 0.5 kg per week that is roughly 11–12 months, which is why crash diets promising it in 3 months should be ignored.",
+          "A 170 cm adult at 90 kg has a BMI of 31.1 (90 ÷ 2.89); reaching BMI 23 means 23 × 2.89 = 66.5 kg, or 23.5 kg to lose. A smaller case: 165 cm at 68 kg is BMI 25.0 (68 ÷ 2.7225) — just into overweight — and reaching BMI 23 needs only 62.6 kg, a 5.4 kg trim achievable in about 3 months at 0.4 kg per week. Same formula, wildly different plans: always convert the BMI goal into kilograms and weeks before starting.",
+        ],
+        bullets: [
+          "160 cm, 80 kg (BMI 31.2) → 56.3 kg at BMI 22: ~24 kg, plan for a year",
+          "170 cm, 90 kg (BMI 31.1) → 66.5 kg at BMI 23: ~23.5 kg, plan in 5 kg blocks",
+          "165 cm, 68 kg (BMI 25.0) → 62.6 kg at BMI 23: ~5.4 kg, about 3 months",
+          "Lose 0.25–0.5 kg/week; faster rates mostly sacrifice muscle and rebound",
+        ],
+      },
+      {
+        heading: "Mistakes people make tracking BMI",
+        paragraphs: [
+          "The classic error is weighing daily and reacting to noise: a salty dinner plus glycogen can add a kilo overnight with zero fat gain, and morning-vs-evening readings differ by 0.5–1.5 kg. Weigh first thing in the morning, 2–3 times a week, and judge the 2-week trend — then recalculate BMI monthly, not daily.",
+          "The second error is chasing BMI down with extreme deficits. Cutting 1,000+ kcal a day cannibalises muscle, drops maintenance calories, and stalls you at a 'healthy' BMI with a soft, weak physique — thin outside, still high body fat. Keep protein near 1.2–1.6 g per kg of target weight, add two weekly strength sessions, and accept 0.5 kg a week. A BMI of 23 built on muscle outperforms a BMI of 21 built on loss of it.",
+        ],
+        bullets: [
+          "Weigh consistently (morning, similar clothes) and trust trends, not single readings",
+          "Recalculate BMI monthly and calorie needs every 5 kg lost",
+          "Keep protein high and lift weights while losing — protect muscle, lose fat",
+          "Plateaued for 3+ weeks? Cut 150–200 kcal or add 2,000 daily steps, not a crash diet",
+        ],
+      },
     ],
   },
   {
@@ -155,7 +233,7 @@ export const blogPosts: BlogPost[] = [
     excerpt:
       "The EMI formula with a ₹50 lakh example, why a 1% rate difference costs lakhs, and how one extra EMI a year cuts years off your loan.",
     date: BLOG_DATE,
-    readMins: 6,
+    readMins: 9,
     toolPaths: [
       "/financial-calculators/emi-calculator",
       "/financial-calculators/mortgage-calculator",
@@ -210,6 +288,45 @@ export const blogPosts: BlogPost[] = [
           "Factor in registration, stamp duty, and insurance in the budget",
         ],
       },
+      {
+        heading: "Fixed vs floating: which costs less",
+        paragraphs: [
+          "On a ₹50 lakh, 20-year loan, a floating rate of 8.5% sets the EMI near ₹43,391 with lifetime interest around ₹54.1 lakh, while a fixed rate just 0.5 points higher at 9.0% pushes the EMI to about ₹44,986 and interest to roughly ₹58.0 lakh — nearly ₹3.9 lakh extra for the certainty of a fixed payment. Floating rates have historically won in India over full 15–20 year tenures, but they can spike mid-loan and strain budgets.",
+          "Choose floating if your EMI sits comfortably under 30% of take-home pay and you keep the 6-month buffer — you can absorb hikes and benefit from cuts. Choose fixed (or a 2–3 year fixed-then-floating hybrid, if offered) if the EMI already stretches past 35% of income, or if rate certainty is what lets you sleep. Either way, confirm the reset clause: how often the floating rate revises, which benchmark it tracks, and the spread the bank adds over it.",
+        ],
+        bullets: [
+          "₹50L/20y at 8.5% floating: EMI ~₹43,391, interest ~₹54.1L",
+          "Same loan at 9.0% fixed: EMI ~₹44,986, interest ~₹58.0L (~₹3.9L more)",
+          "Floating usually cheaper long-term but EMIs can rise mid-tenure",
+          "Check benchmark, spread, and reset frequency before signing a floating loan",
+        ],
+      },
+      {
+        heading: "Balance transfer: a worked example",
+        paragraphs: [
+          "Suppose three years into a ₹50 lakh loan you still owe about ₹40 lakh with 15 years left, paying 9.3% — EMI roughly ₹41,288 and remaining payouts totalling about ₹74.3 lakh. A competing bank offers 8.5%: the EMI drops to about ₹39,390 and the remaining total to roughly ₹70.9 lakh. The saving is around ₹1,900 a month and about ₹3.4 lakh overall — well above typical transfer costs of ₹10,000–25,000 in processing plus legal charges.",
+          "The transfer pays off fastest when the balance is large and the remaining tenure is long; with under 5 years left, the same 0.8-point gap may save less than the fees and paperwork cost. Get the foreclosure letter, confirm no prepayment penalty on your floating loan, negotiate the spread (not just the headline rate), and restart prepayments immediately after the switch instead of absorbing the lower EMI into spending.",
+        ],
+        bullets: [
+          "₹40L, 15y left: 9.3% → 8.5% saves ~₹1,900/month and ~₹3.4L overall",
+          "Transfer costs ~₹10,000–25,000; worthwhile when tenure left exceeds ~7–8 years",
+          "Confirm zero prepayment penalty and compare all-in rates, not headlines",
+          "Keep paying the old EMI after transfer — the surplus becomes automatic prepayment",
+        ],
+      },
+      {
+        heading: "Home-loan tax and prepayment FAQs",
+        paragraphs: [
+          "In the old tax regime, principal repayment up to ₹1.5 lakh a year counts under 80C (shared with EPF and PPF), while interest up to ₹2 lakh a year on a self-occupied house is deductible under section 24(b) — together worth up to about ₹1.1 lakh in tax for someone in the 30% slab. The new regime offers no such deductions, so compare regimes before assuming the benefits apply to you.",
+          "On prepayments, floating-rate loans in India generally carry zero foreclosure charges for individual borrowers, while fixed-rate loans may charge 1–2%. Prepaying ₹5,000 extra a month from year one on the ₹50 lakh, 20-year loan at 8.5% wipes out roughly 3 years and saves several lakhs in interest — and unlike market investments, that return is risk-free and tax-free. Ask your lender whether part-payments reduce tenure or EMI, and always choose tenure reduction for maximum interest saved.",
+        ],
+        bullets: [
+          "Old regime: principal under 80C (₹1.5L) + interest under 24(b) (₹2L self-occupied)",
+          "New regime: no home-loan deductions — run both regimes yearly",
+          "Floating-rate prepayment is usually free; fixed-rate may charge 1–2%",
+          "Direct part-payments at tenure reduction, made early and often",
+        ],
+      },
     ],
   },
   {
@@ -218,7 +335,7 @@ export const blogPosts: BlogPost[] = [
     excerpt:
       "Post-tax returns compared with real numbers, when a 7.1% PPF beats a 7.5% FD, and how to use both in one portfolio.",
     date: BLOG_DATE,
-    readMins: 5,
+    readMins: 8,
     toolPaths: [
       "/financial-calculators/ppf-calculator",
       "/financial-calculators/fd-calculator",
@@ -266,6 +383,45 @@ export const blogPosts: BlogPost[] = [
           "Revisit the split yearly. If FD rates spike above 8% or you drop to a lower tax slab, FDs deserve a bigger short-term role; if rates fall, lock PPF contributions early in April each year so the full year's balance earns interest from day one — deposits before April 5 earn interest for the entire month.",
         ],
       },
+      {
+        heading: "The April 5 trick that boosts PPF returns",
+        paragraphs: [
+          "PPF interest for each month is calculated on the lowest balance between the 5th and month-end — so money deposited after April 5 misses April's interest entirely. Deposit the full ₹1.5 lakh before April 5 and it earns 7.1% for all 12 months: 1,50,000 × 7.1% = ₹10,650 for the year. Drip the same ₹1.5 lakh as ₹12,500 on the 10th of each month and the first-year interest totals only about ₹5,900 — a gap of roughly ₹4,750 in year one alone, compounding every year after.",
+          "The practical move: park your planned PPF amount in a sweep-in FD or liquid fund, then push it into PPF in the first week of April. Monthly contributors who cannot invest a lump sum should still deposit before the 5th of each month rather than on salary day — a one-time standing instruction dated the 3rd captures the full month's interest twelve times a year at zero extra cost.",
+        ],
+        bullets: [
+          "₹1.5L before April 5 earns ~₹10,650 that year; monthly deposits earn only ~₹5,900",
+          "PPF interest uses the lowest balance between the 5th and month-end",
+          "Automate deposits for the 3rd of the month, not salary day",
+          "Lump sum in early April beats monthly instalments for identical yearly totals",
+        ],
+      },
+      {
+        heading: "FD laddering vs extending PPF",
+        paragraphs: [
+          "When a 5-year goal needs both safety and liquidity, FD laddering beats one big deposit. Split ₹5 lakh into five ₹1 lakh FDs of 1, 2, 3, 4, and 5 years at 7%: they mature at roughly ₹1.07L, ₹1.14L, ₹1.23L, ₹1.31L, and ₹1.40L — giving you cash every year while the longest piece still earns the full rate. If rates rise, only the maturing rung reinvests at the new rate; if rates fall, four rungs already locked the old one.",
+          "PPF's answer to changing rates is the 5-year extension: after maturity at year 15 (about ₹40.7 lakh on ₹1.5L/year at 7.1%), you can extend indefinitely with or without fresh contributions, and the whole balance keeps earning tax-free. Use ladders for money you will spend in stages, and PPF extensions for money you will not touch for another decade — retirees often run both, living off maturing FD rungs while the PPF core compounds untouched.",
+        ],
+        bullets: [
+          "FD ladder: split across 1–5y tenures for yearly liquidity plus full long-rate earnings",
+          "₹1L rungs at 7% mature ~₹1.07L/₹1.14L/₹1.23L/₹1.31L/₹1.40L across years 1–5",
+          "PPF extends in 5-year blocks with or without fresh deposits, fully tax-free",
+          "Retiree pattern: spend FD rungs, leave PPF compounding for later decades",
+        ],
+      },
+      {
+        heading: "PPF and FD mistakes to avoid",
+        paragraphs: [
+          "The costliest FD mistake is ignoring TDS: banks deduct 10% tax when yearly interest per bank crosses ₹40,000 (₹50,000 for senior citizens), but that is not your final tax — a 30%-slab investor still owes the ₹20,000 difference at filing time. File Form 15G/15H only if your total income is genuinely below the taxable limit; a false declaration draws interest and scrutiny.",
+          "On PPF, three errors recur: depositing after April 5 and forfeiting a month's interest, breaching the ₹1.5 lakh yearly cap across multiple accounts (the excess earns nothing and invites compliance trouble), and opening a second PPF in your own name — only one PPF account per person is allowed, though you may open one for a minor child. Nominees, online access, and the years 3–6 loan facility (up to 25% of the balance two years prior) should all be set up in year one, not year ten.",
+        ],
+        bullets: [
+          "FD TDS (10%) is advance tax, not final tax — pay the slab difference yourself",
+          "File 15G/15H only when total income is truly below the exemption limit",
+          "One PPF per person; cap ₹1.5L/year across all your deposits including a minor's",
+          "Deposit before April 5, add a nominee, and split large FDs across banks for DICGC cover",
+        ],
+      },
     ],
   },
   {
@@ -274,7 +430,7 @@ export const blogPosts: BlogPost[] = [
     excerpt:
       "The three percentage formulas that solve 95% of problems, with shopping, tip, tax, and exam-score examples worked out.",
     date: BLOG_DATE,
-    readMins: 5,
+    readMins: 8,
     toolPaths: [
       "/math-calculators/percentage-calculator",
       "/financial-calculators/discount-calculator",
@@ -328,6 +484,45 @@ export const blogPosts: BlogPost[] = [
           "Estimate first, calculate exact second — catch input errors",
         ],
       },
+      {
+        heading: "Salary hikes, CAGR, and real growth",
+        paragraphs: [
+          "A 10% hike on a ₹60,000 monthly salary adds 0.10 × 60,000 = ₹6,000, taking you to ₹66,000 — but two consecutive 10% hikes do not total 20%. Year two compounds on the new base: 66,000 × 1.10 = ₹72,600, a total gain of 21% (1.10² = 1.21). Employers quoting '10% every year for two years' are describing 21% growth, and your rent negotiations should treat it that way.",
+          "Investments need the reverse lens: CAGR. If ₹50,000 grows to ₹65,000 over 3 years, the annualised return is (65,000 ÷ 50,000)^(1/3) − 1 = 1.30^0.333 − 1 ≈ 9.1% per year — not the 10% you get from dividing 30% by 3. Simple averages overstate multi-year growth because they ignore compounding; CAGR is the only honest yearly figure, which is why mutual funds must report it.",
+        ],
+        bullets: [
+          "₹60,000 + 10% = ₹66,000; two 10% hikes = ₹72,600 (21%, not 20%)",
+          "₹50,000 → ₹65,000 in 3y is 30% total but only ~9.1% CAGR",
+          "Never average yearly percentages — compound or use CAGR instead",
+          "Apply to appraisals, rent escalation, and SIP return claims alike",
+        ],
+      },
+      {
+        heading: "Four worked everyday problems",
+        paragraphs: [
+          "GST: a ₹18,000 laptop with 18% GST adds 0.18 × 18,000 = ₹3,240, for a total of ₹21,240. Reverse it — a ₹21,240 price inclusive of 18% means the base is 21,240 ÷ 1.18 = ₹18,000 exactly. Dividing by (1 + rate) unpicks any tax-inclusive price, from restaurant bills to freelance quotes.",
+          "Scores and tips round out the set: 132 marks out of 150 is (132 ÷ 150) × 100 = 88%, while a 15% tip on an ₹860 bill is 0.15 × 860 = ₹129 — round to ₹130 and move on. Notice each uses a different one of the three core formulas (whole from inclusive total, percent from part and whole, part from percent and whole), which is precisely why identifying the missing value first solves 95% of problems.",
+        ],
+        bullets: [
+          "Add GST: base × (1 + rate); strip GST: inclusive ÷ (1 + rate)",
+          "Exam score: (marks ÷ total) × 100 — 132/150 = 88%",
+          "Tip: rate × pre-tax bill — 15% of ₹860 = ₹129",
+          "Name the missing value (part, percent, or whole) before calculating",
+        ],
+      },
+      {
+        heading: "Percentage traps even smart people fall for",
+        paragraphs: [
+          "Trap one is averaging percentages with different bases: 50% off one store plus 30% off another is not 40% off overall unless both bills are identical — percentages only average cleanly over equal bases. Trap two is the base switch: a stock that falls 50% needs a 100% gain to recover (₹100 → ₹50 needs +₹50, which is 100% of ₹50), a fact loss-recovery emails hope you never compute.",
+          "Trap three is confusing '200% more' with '200% of': a tip rising from ₹100 to ₹300 is 300% of the original but 200% more than it — the word 'more' subtracts the base. When stakes are high — loan offers, medical risks, salary comparisons — always convert back to absolute rupees first, then decide. Percentages persuade; absolute numbers clarify.",
+        ],
+        bullets: [
+          "Never average percentages across unequal bases — weight by the base",
+          "A 50% loss needs a 100% gain to break even; losses hurt more than gains help",
+          "'200% more' = 3× total; '200% of' = 2× total — read the wording",
+          "Convert to rupees before deciding anything expensive",
+        ],
+      },
     ],
   },
   {
@@ -336,7 +531,7 @@ export const blogPosts: BlogPost[] = [
     excerpt:
       "Old vs new regime in plain English, which deductions actually matter, and a month-by-month plan to avoid the March rush.",
     date: BLOG_DATE,
-    readMins: 6,
+    readMins: 9,
     toolPaths: [
       "/financial-calculators/income-tax-calculator",
       "/financial-calculators/salary-calculator",
@@ -387,6 +582,45 @@ export const blogPosts: BlogPost[] = [
           "July & October: reconcile TDS with Form 26AS/AIS",
           "January: final old-vs-new comparison and top-ups",
           "Separate insurance from investing; file before the July deadline",
+        ],
+      },
+      {
+        heading: "New-regime slabs with a worked calculation",
+        paragraphs: [
+          "Under the new regime slabs (0–₹4 lakh nil, ₹4–8 lakh at 5%, ₹8–12 lakh at 10%, ₹12–16 lakh at 15%, and higher bands beyond), a taxable income of ₹11.25 lakh attracts roughly ₹20,000 on the second slab (4,00,000 × 5%) plus about ₹32,500 on the third (3,25,000 × 10%) — about ₹52,500 before cess and rebate. In practice the rebate wipes this out for incomes up to about ₹12 lakh (₹12.75 lakh for salaried employees after the ₹75,000 standard deduction), which is why most mid-salaried employees owe nothing in the new regime.",
+          "Contrast the old regime on ₹9.25 lakh taxable: roughly ₹12,500 on the ₹2.5–5 lakh band (2,50,000 × 5%) plus about ₹42,500 on the ₹5–9.25 lakh band (4,25,000 × 10%) — about ₹55,000 plus 4% cess, or roughly ₹57,200. Neither figure includes surcharges or marginal relief, so treat this as a comparison framework rather than your exact liability — then run your own numbers through an income-tax calculator with current-year slab and rebate rules before choosing.",
+        ],
+        bullets: [
+          "₹11.25L taxable (new regime): ~₹52,500 slab tax before cess and rebate",
+          "Rebate zeroes new-regime liability up to ~₹12L (₹12.75L salaried with standard deduction)",
+          "₹9.25L taxable (old regime): ~₹55,000 + 4% cess ≈ ₹57,200",
+          "Always recompute with the current year's official slabs before filing",
+        ],
+      },
+      {
+        heading: "HRA exemption: three worked cases",
+        paragraphs: [
+          "HRA exemption (old regime only) is the minimum of three figures: actual HRA received, 50% of basic salary for metro cities (40% elsewhere), and rent paid minus 10% of basic. Take basic pay of ₹7.2 lakh a year with ₹3 lakh HRA received. Paying ₹20,000/month rent (₹2.4 lakh/year) in Mumbai gives min(3,00,000, 3,60,000, 2,40,000 − 72,000) = ₹1,68,000 exempt — the rent-minus-10% leg binds.",
+          "Raise that Mumbai rent to ₹30,000/month (₹3.6 lakh/year) and the exemption jumps to min(3,00,000, 3,60,000, 2,88,000) = ₹2,88,000. But the same ₹30,000 rent in a non-metro city gives min(3,00,000, 2,88,000, 2,88,000) = ₹2,88,000 — here the 40%-of-basic ceiling binds instead. Lesson: in metros, higher rent directly raises exemption until HRA caps it; outside metros, the 40% ceiling caps you early, so oversized rent buys no extra tax benefit. Keep rent receipts and the landlord's PAN for annual rent above ₹1 lakh.",
+        ],
+        bullets: [
+          "Formula: min(actual HRA, 50%/40% of basic, rent − 10% of basic)",
+          "Metro, ₹20k rent on ₹7.2L basic: ₹1,68,000 exempt (rent leg binds)",
+          "Metro, ₹30k rent: ₹2,88,000 exempt; non-metro, same rent: ₹2,88,000 (40% ceiling binds)",
+          "Landlord PAN mandatory for yearly rent above ₹1 lakh; keep receipts monthly",
+        ],
+      },
+      {
+        heading: "Tax mistakes that trigger notices",
+        paragraphs: [
+          "The most common notice-generator is ignoring the Annual Information Statement: your bank reports ₹60,000 of FD interest while you declare ₹40,000, and the computer flags the ₹20,000 gap automatically. Interest on savings accounts (taxable beyond the ₹10,000 section 80TTA deduction, ₹50,000 under 80TTB for seniors), second-employer Form 16s, and freelance receipts all feed the same mismatch engine.",
+          "The other repeat mistakes: forgetting to pay advance tax when non-TDS income (rent, capital gains, freelance) pushes extra liability above ₹10,000 a year, which draws 234B/234C interest; and mixing up the filing deadline with the regime deadline — salaried staff can usually switch regimes yearly when filing on time, but a belated return locks you out of choices and carry-forward losses. File early, reconcile AIS/TIS with Form 26AS first, and pay advance tax in the June–September–December–March instalments instead of one March panic.",
+        ],
+        bullets: [
+          "Reconcile AIS/TIS with Form 26AS before filing — declare every rupee of interest",
+          "Advance tax applies above ₹10,000 extra liability; missed instalments draw interest",
+          "Belated returns restrict regime choice and loss carry-forward — file on time",
+          "Never buy ULIPs or endowment plans in March purely for 80C receipts",
         ],
       },
     ],

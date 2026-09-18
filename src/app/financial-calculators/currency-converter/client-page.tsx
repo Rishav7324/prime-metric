@@ -195,11 +195,17 @@ const CurrencyCalculator = () => {
           { title: "Timing Matters", description: "Exchange rates fluctuate constantly. For large transactions, consider timing and potentially using limit orders with currency services." },
           { title: "Multiple Currencies", description: "For multi-currency trips or transactions, convert each currency pair separately for accuracy rather than daisy-chaining conversions." }
         ]}
+        examples={[
+          { title: "100 USD to EUR", description: "Converting 100 US dollars to euros at a rate of 0.92 gives €92.00.", steps: ["Start with 100 USD and the USD-based rate table (USD = 1, EUR = 0.92).", "Convert to USD first: 100 / 1 = 100 USD.", "Multiply by the target rate: 100 × 0.92 = €92.00."] },
+          { title: "100 EUR to GBP", description: "Converting 100 euros to pounds at fallback rates (EUR 0.92, GBP 0.79) gives £85.87.", steps: ["Convert euros to USD: 100 / 0.92 = 108.6957 USD.", "Multiply by the pound rate: 108.6957 × 0.79 = 85.8696.", "Round to two decimals: £85.87."] },
+        ]}
         faqs={[
           { question: "How often do exchange rates change?", answer: "Real exchange rates change constantly throughout the trading day. This calculator uses live rates that update periodically. For time-sensitive transactions, re-check the rate just before converting." },
           { question: "Why is my actual exchange different?", answer: "Banks and exchange services add markup (spread) to mid-market rates, plus fees. The difference can be 2-5% or more. Shop around for better rates on large amounts." },
           { question: "What's the best way to exchange currency?", answer: "For travel: ATMs often offer competitive rates. For large amounts: compare banks, online services (Wise, Revolut), and currency brokers. Avoid airport exchanges." },
-          { question: "Should I exchange before traveling?", answer: "Having some local currency on arrival is convenient, but you'll typically get better rates using ATMs at your destination or prepaid travel cards." }
+          { question: "Should I exchange before traveling?", answer: "Having some local currency on arrival is convenient, but you'll typically get better rates using ATMs at your destination or prepaid travel cards." },
+          { question: "How much is $250 USD in euros if 1 USD = 0.92 EUR?", answer: "Multiply by the rate: 250 × 0.92 = €230.00. The calculator does this as 250 / 1 × 0.92, converting through USD as the base currency." },
+          { question: "How do I convert €200 back to dollars at that same rate?", answer: "Divide by the euro rate: 200 / 0.92 = $217.39. The reverse calculation is (200 / 0.92) × 1, which is why converting there and back never matches exactly once fees are added." }
         ]}
       />
     </CalculatorLayout>

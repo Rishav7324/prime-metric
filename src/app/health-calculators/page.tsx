@@ -75,21 +75,38 @@ const HealthCalculatorsPage = () => {
                             <p className="text-sm text-neutral-600 line-clamp-2">
                                 {calc.description}
                             </p>
-                            {!calc.implemented && (
-                                <span className="inline-block mt-2 text-xs px-2 py-1 rounded-full bg-yellow-500/10 text-yellow-600 border border-yellow-500/20">
-                                Coming Soon
-                                </span>
-                            )}
+                            
                             </div>
                         </div>
                         </Card>
                     </Link>
-                     {(index + 1) % 6 === 0 && <div className="sm:col-span-2" key={`ad-${index}`}><AdBanner/></div>}
+                     
                   </React.Fragment>
                 )
             })}
           </div>
         </div>
+
+        <section className="mx-auto max-w-6xl mt-10 rounded-xl border border-neutral-200 bg-white p-6 shadow-sm">
+          <h2 className="text-lg font-bold mb-3 text-black">How health metrics work together: BMI, BMR, and TDEE</h2>
+          <p className="text-sm text-neutral-600 mb-3">
+            Health numbers are most useful as a chain, not in isolation. Start with <Link href="/health-calculators/bmi-calculator" className="font-semibold text-black underline underline-offset-2 hover:text-[#F2765E]">BMI</Link>, which screens weight relative to height: a 70 kg adult who is 175 cm tall has a BMI of 70 / (1.75 × 1.75) = 22.9, squarely in the 18.5–24.9 healthy range. BMI does not distinguish muscle from fat, so pair it with body-fat and ideal-weight estimates — two people with the same 22.9 BMI can look and perform very differently if one lifts weights and the other does not.
+          </p>
+          <p className="text-sm text-neutral-600 mb-3">
+            Next, estimate burn. <Link href="/health-calculators/bmr-calculator" className="font-semibold text-black underline underline-offset-2 hover:text-[#F2765E]">BMR</Link> is what that same 70 kg adult burns at complete rest — roughly 1,600–1,700 kcal per day for a 30-year-old man using the Mifflin-St Jeor equation — while <Link href="/health-calculators/tdee-calculator" className="font-semibold text-black underline underline-offset-2 hover:text-[#F2765E]">TDEE</Link> multiplies BMR by activity: sedentary (×1.2) gives about 2,000 kcal, moderately active (×1.55) gives about 2,600 kcal, and very active (×1.9) exceeds 3,100 kcal. That 600–1,100 kcal swing explains why generic &ldquo;eat 2,000 calories&rdquo; advice fails: the right target depends on your size, age, and training load.
+          </p>
+          <p className="text-sm text-neutral-600 mb-4">
+            Finally, turn TDEE into a plan. Subtract 300–500 kcal per day for sustainable fat loss of about 0.25–0.5 kg per week, or add 200–300 kcal for lean muscle gain, then split calories into macros: around 1.6–2.2 g of protein per kg of body weight (112–154 g for our 70 kg example), 45–65% of calories from carbohydrates for active people, and the rest from fats. Check water intake (about 30–35 ml per kg, or 2.1–2.5 liters), sleep consistency, and heart-rate zones alongside the scale — if weight stalls for 2–3 weeks, recalculate TDEE first, because a 5 kg loss alone can lower daily burn by 100–150 kcal. Re-measure monthly and adjust portions before cutting further, since sleep debt and stress can mask steady fat-loss progress.
+          </p>
+          <div className="flex flex-wrap gap-2 text-sm">
+            <span className="font-semibold text-black">Popular in this category:</span>
+            <Link href="/health-calculators/bmi-calculator" className="underline underline-offset-2 hover:text-[#F2765E]">BMI Calculator</Link>
+            <span className="text-neutral-300">•</span>
+            <Link href="/health-calculators/bmr-calculator" className="underline underline-offset-2 hover:text-[#F2765E]">BMR Calculator</Link>
+            <span className="text-neutral-300">•</span>
+            <Link href="/health-calculators/tdee-calculator" className="underline underline-offset-2 hover:text-[#F2765E]">TDEE Calculator</Link>
+          </div>
+        </section>
       </div>
     </div>
   );

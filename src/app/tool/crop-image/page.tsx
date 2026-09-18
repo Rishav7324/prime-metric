@@ -172,14 +172,14 @@ const CropImage = () => {
                 <div className="space-y-4">
                   <Label>Original</Label>
                   <div className="border rounded-lg overflow-hidden flex justify-center items-center bg-muted/30 p-2 min-h-[200px]">
-                    <img src={image} alt="Original Preview" className="max-w-full h-auto max-h-[300px]" />
+                    <img loading="lazy" decoding="async" src={image} alt="Original Preview" className="max-w-full h-auto max-h-[300px]" />
                   </div>
                 </div>
                 <div className="space-y-4">
                   <Label>Cropped Preview</Label>
                   <div className="border rounded-lg overflow-hidden flex justify-center items-center bg-muted/30 p-2 min-h-[200px]">
                     {croppedImageUrl ? (
-                      <img src={croppedImageUrl} alt="Cropped Preview" className="max-w-full h-auto max-h-[300px]" />
+                      <img loading="lazy" decoding="async" src={croppedImageUrl} alt="Cropped Preview" className="max-w-full h-auto max-h-[300px]" />
                     ): (
                       <div className="text-neutral-600 text-sm">Crop the image to see a preview</div>
                     )}

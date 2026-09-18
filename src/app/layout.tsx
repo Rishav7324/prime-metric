@@ -10,7 +10,6 @@ import { FirebaseClientProvider } from '@/firebase';
 import CookieConsentBanner from '@/components/CookieConsentBanner';
 import { Analytics } from '@vercel/analytics/react';
 import { Inter, Montserrat } from 'next/font/google';
-import AdBanner from '@/components/AdBanner';
 import { VisitTracker } from '@/components/VisitTracker';
 import Script from 'next/script';
 
@@ -109,7 +108,6 @@ export default function RootLayout({
           <div className="relative flex min-h-dvh flex-col">
             <SiteHeader />
             <div className="flex-1">{children}</div>
-            <AdBanner />
             <SiteFooter />
           </div>
           <Toaster />

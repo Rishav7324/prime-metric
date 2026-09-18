@@ -123,14 +123,14 @@ const ResizeImage = () => {
                 <div className="space-y-4">
                   <Label>Original</Label>
                   <div className="border rounded-lg overflow-hidden flex justify-center items-center bg-muted/30 p-2 min-h-[200px]">
-                    <img src={image} alt="Original Preview" className="max-w-full h-auto max-h-[300px]" />
+                    <img loading="lazy" decoding="async" src={image} alt="Original Preview" className="max-w-full h-auto max-h-[300px]" />
                   </div>
                 </div>
                 <div className="space-y-4">
                   <Label>Resized Preview</Label>
                   <div className="border rounded-lg overflow-hidden flex justify-center items-center bg-muted/30 p-2 min-h-[200px]">
                     {resizedImageUrl ? (
-                      <img src={resizedImageUrl} alt="Resized Preview" className="max-w-full h-auto max-h-[300px]" />
+                      <img loading="lazy" decoding="async" src={resizedImageUrl} alt="Resized Preview" className="max-w-full h-auto max-h-[300px]" />
                     ): (
                       <div className="text-neutral-600 text-sm">Resize the image to see a preview</div>
                     )}

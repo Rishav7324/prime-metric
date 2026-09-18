@@ -79,11 +79,32 @@ const DeveloperToolsPage = () => {
                         </div>
                       </Card>
                     </Link>
-                    {(index + 1) % 6 === 0 && <div className="sm:col-span-2" key={`ad-${index}`}><AdBanner/></div>}
+                    
                   </React.Fragment>
             )})}
           </div>
         </div>
+
+        <section className="mx-auto max-w-6xl mt-10 rounded-xl border border-neutral-200 bg-white p-6 shadow-sm">
+          <h2 className="text-lg font-bold mb-3 text-black">Developer utilities explained: JSON, Base64, QR codes, and hashes</h2>
+          <p className="text-sm text-neutral-600 mb-3">
+            These tools remove the small frictions that interrupt coding. Paste a minified API response into a <Link href="/tool/json-formatter" className="font-semibold text-black underline underline-offset-2 hover:text-[#F2765E]">JSON formatter</Link> to pretty-print, validate, and locate the missing comma or trailing bracket behind a &ldquo;Unexpected token&rdquo; error — for example, spotting that {"`name`"} was quoted with backticks instead of double quotes. Validated JSON also reveals type bugs early, such as zip codes sent as numbers (90210) losing a leading zero that strings (&ldquo;02139&rdquo;) preserve.
+          </p>
+          <p className="text-sm text-neutral-600 mb-3">
+            Encoding tools bridge text and transport. <Link href="/tool/base64" className="font-semibold text-black underline underline-offset-2 hover:text-[#F2765E]">Base64</Link> turns binary into plain ASCII — &ldquo;Hi&rdquo; becomes &ldquo;SGk=&rdquo; — which is how small images embed in CSS data URIs, email attachments survive SMTP, and Basic Auth headers carry credentials. Remember it is encoding, not encryption: anyone can decode it, so never treat Base64 as security. For sharing, a <Link href="/tool/qr-code" className="font-semibold text-black underline underline-offset-2 hover:text-[#F2765E]">QR code generator</Link> turns a long URL like https://example.com/menu?table=14 into a scannable code for tables, packaging, or Wi-Fi onboarding, with error correction keeping codes readable even when a logo overlays 20–30% of the symbol.
+          </p>
+          <p className="text-sm text-neutral-600 mb-4">
+            Hashing answers a different question: &ldquo;Did this change?&rdquo; A SHA-256 digest like 9f86d081884c7d65… uniquely fingerprints a file, so comparing hashes after a download verifies integrity, checksums in CI catch corrupted artifacts, and salted password hashes (bcrypt, Argon2) let servers verify logins without storing passwords. Use MD5 only for non-security checks — it is broken for collision resistance — and prefer SHA-256 or SHA-512 for verification. Together, formatting, encoding, QR, and hash tools cover the daily loop of debug, transmit, share, and verify. The same toolbox handles the surrounding chores: URL-encoding a query string so spaces and ampersands survive transit, stamping events with Unix timestamps, minting UUID v4 identifiers for database rows, and checking password strength before shipping credentials to production.
+          </p>
+          <div className="flex flex-wrap gap-2 text-sm">
+            <span className="font-semibold text-black">Popular in this category:</span>
+            <Link href="/tool/json-formatter" className="underline underline-offset-2 hover:text-[#F2765E]">JSON Formatter</Link>
+            <span className="text-neutral-300">•</span>
+            <Link href="/tool/base64" className="underline underline-offset-2 hover:text-[#F2765E]">Base64 Encoder</Link>
+            <span className="text-neutral-300">•</span>
+            <Link href="/tool/hash-generator" className="underline underline-offset-2 hover:text-[#F2765E]">Hash Generator</Link>
+          </div>
+        </section>
       </div>
     </div>
   );

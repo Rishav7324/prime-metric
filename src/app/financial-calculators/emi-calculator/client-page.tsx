@@ -192,11 +192,33 @@ const EmiCalculator = () => {
           { title: "Watch Early Years", description: "Initial EMIs are mostly interest; prepaying early reduces the total dramatically." },
           { title: "Keep EMI Under 40%", description: "Lenders prefer total EMIs below ~40% of monthly income for safe approval odds." },
         ]}
+        examples={[
+          {
+            title: "2,500,000 home loan at 8.5% for 20 years",
+            description: "A 2,500,000 loan at 8.5% for 20 years means EMI 21,696 with total interest 2,706,939.",
+            steps: [
+              "Monthly rate r = 8.5/100/12 = 0.0070833 and months n = 20 x 12 = 240.",
+              "EMI = 2,500,000 x 0.0070833 x 1.0070833^240 / (1.0070833^240 - 1) = 21,695.58, shown as 21,696 rounded.",
+              "Total payable = 21,695.58 x 240 = 5,206,939.40, so total interest = 5,206,939.40 - 2,500,000 = 2,706,939.40.",
+            ],
+          },
+          {
+            title: "500,000 loan at 9% for 7 years",
+            description: "A 500,000 loan at 9% for 7 years means EMI 8,045 with total interest 175,741.",
+            steps: [
+              "Monthly rate r = 9/100/12 = 0.0075 and months n = 7 x 12 = 84.",
+              "EMI = 500,000 x 0.0075 x 1.0075^84 / (1.0075^84 - 1) = 8,044.54, shown as 8,045 rounded.",
+              "Total payable = 8,044.54 x 84 = 675,741.29, so total interest = 675,741.29 - 500,000 = 175,741.29.",
+            ],
+          },
+        ]}
         faqs={[
           { question: "How is EMI calculated?", answer: "EMI = P × r × (1+r)^n ÷ ((1+r)^n − 1), where P is principal, r monthly rate and n total months. Our tool applies this and builds the schedule." },
           { question: "Does EMI change with floating rates?", answer: "Yes — if your home loan rate resets, the EMI or tenure adjusts. Re-run the calculator with the new rate." },
           { question: "EMI vs simple loan estimate?", answer: "Unlike flat estimates, EMI math uses reducing balance, so interest falls as you repay — the schedule table shows this shift." },
           { question: "Can I reduce my total interest?", answer: "Yes: choose a shorter tenure, negotiate a lower rate, or make periodic prepayments against principal." },
+          { question: "What does a 1% higher rate do to a 2,500,000 loan over 20 years?", answer: "At 8.5%, the EMI is 21,695.58 with total interest 2,706,939.40. At 9.5%, the EMI rises to 23,303.28 with total interest 3,092,787.13 — one extra point costs 1,607.70 more per month and 385,847.73 more over 20 years." },
+          { question: "How much do I save by shortening a 2,500,000 loan at 8.5% from 20 to 15 years?", answer: "The 20-year EMI is 21,695.58 with total interest 2,706,939.40, while the 15-year EMI is 24,618.49 with total interest 1,931,328.01. Paying 2,922.91 extra per month saves 775,611.39 in lifetime interest." },
         ]}
       />
     </CalculatorLayout>

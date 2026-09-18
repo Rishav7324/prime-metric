@@ -197,9 +197,9 @@ const CompressImage = () => {
                 <Label>Preview</Label>
                 <div className="border rounded-lg overflow-hidden flex justify-center items-center bg-muted/30">
                   {compressedImageBlob ? (
-                    <img src={URL.createObjectURL(compressedImageBlob)} className="max-w-full h-auto" />
+                    <img loading="lazy" decoding="async" src={URL.createObjectURL(compressedImageBlob)} className="max-w-full h-auto" />
                   ) : (
-                    <img src={image} className="max-w-full h-auto" />
+                    <img loading="lazy" decoding="async" src={image} className="max-w-full h-auto" />
                   )}
                 </div>
               </div>

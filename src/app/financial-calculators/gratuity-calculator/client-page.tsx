@@ -153,11 +153,33 @@ const GratuityCalculator = () => {
           { title: "Know the Rounding Rule", description: "Service over 6 months in the final year counts as a full year, boosting the payout." },
           { title: "Basic Matters, Not CTC", description: "Only basic plus DA count — allowances and bonuses are excluded from the formula." },
         ]}
+        examples={[
+          {
+            title: "80,000 basic plus DA with 8 years of service",
+            description: "An 80,000 last-drawn basic plus DA with 8 years of service pays gratuity of 3,69,231.",
+            steps: [
+              "Formula = monthly basic plus DA x 15/26 x years = 80,000 x 15 x 8 / 26.",
+              "80,000 x 15 = 12,00,000; 12,00,000 x 8 = 96,00,000; 96,00,000 / 26 = 3,69,230.77, shown as 3,69,231 rounded.",
+              "8 years clears the 5-year vesting rule, so the full amount is payable on resignation or retirement.",
+            ],
+          },
+          {
+            title: "50,000 basic plus DA with 5 years of service",
+            description: "A 50,000 basic plus DA at exactly the 5-year vesting mark pays gratuity of 1,44,231.",
+            steps: [
+              "Formula = 50,000 x 15 x 5 / 26 = 37,50,000 / 26 = 1,44,230.77, shown as 1,44,231 rounded.",
+              "Each extra year at this salary is worth 50,000 x 15/26 = 28,846.15, so year 6 would add exactly that.",
+              "Below 5 years the same math gives a figure but it is forfeited on resignation — only death or disablement waives vesting.",
+            ],
+          },
+        ]}
         faqs={[
           { question: "How is gratuity calculated?", answer: "Last-drawn monthly basic plus DA, multiplied by 15/26, multiplied by completed years of service." },
           { question: "Is 5 years of service mandatory?", answer: "Yes for resignation or retirement — but gratuity is payable regardless of tenure on death or disablement." },
           { question: "Is gratuity taxable?", answer: "Rules vary by country and employer type; in India government employees are fully exempt while others get exemption up to a statutory limit." },
           { question: "Does notice period count toward service?", answer: "Generally yes — continuous service includes the notice period if you remain on payroll." },
+          { question: "How much is each extra year of service worth on an 80,000 basic?", answer: "One year equals 80,000 x 15/26 = 46,153.85. So 8 years pays 3,69,231 while 10 years pays 4,61,538 — staying two more years adds 92,307.69 with no change in salary." },
+          { question: "Can the 6-month rounding rule change my payout?", answer: "Yes. Service beyond 6 months in the final year rounds up: at a 60,000 basic, 6 years pays 60,000 x 15 x 6/26 = 2,07,692 but 6 years and 7 months counts as 7 years and pays 2,42,308 — crossing that mark is worth an extra 34,615.38." },
         ]}
       />
     </CalculatorLayout>

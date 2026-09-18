@@ -183,11 +183,17 @@ const DateCalculatorClient = () => {
           { title: "Different Date Formats", description: "Dates can be entered in various formats depending on your browser and locale settings. The calculator automatically interprets the dates correctly." },
           { title: "Planning with Results", description: "Use the multiple unit display to choose the most meaningful representation - weeks for short periods, months for medium terms, years for long durations." }
         ]}
+        examples={[
+          { title: "1 January 2024 to 1 January 2025", description: "A full leap year apart: 366 days, 52 weeks, 12 months and 1 year.", steps: ["Days: 1 Jan 2024 to 1 Jan 2025 spans leap day 29 Feb 2024, so 366 days.", "Weeks: 366 / 7 = 52 full weeks (52 × 7 = 364) plus 2 days.", "Months: 366 / 30.44 = 12; years: 366 / 365.25 = 1."] },
+          { title: "1 March 2026 to 18 September 2026", description: "Spring to autumn 2026: 201 days, 28 weeks, 6 months and 0 years.", steps: ["Add month hops: 31 + 30 + 31 + 30 + 31 + 31 = 184 days from 1 March to 1 September.", "Add 17 days from 1 to 18 September: 184 + 17 = 201 days.", "Weeks: 201 / 7 = 28; months: 201 / 30.44 = 6; years: 201 / 365.25 = 0."] },
+        ]}
         faqs={[
           { question: "How does the calculator handle leap years?", answer: "The calculator automatically accounts for leap years when computing date differences. Leap years occur every 4 years (except century years not divisible by 400) and add an extra day to February." },
           { question: "Why are months and years approximate?", answer: "Months vary from 28-31 days, so month calculations use an average of 30.44 days per month. Years use 365.25 days to account for leap years. For precise results, use the days or weeks display." },
           { question: "Can I calculate dates in the future?", answer: "Yes, the calculator works for any date combination - past to present, present to future, or any historical date range. It always shows the absolute difference between the two dates." },
-          { question: "What if I enter the dates in reverse order?", answer: "The calculator automatically computes the absolute difference, so it doesn't matter which date you enter first. The result will be the same either way." }
+          { question: "What if I enter the dates in reverse order?", answer: "The calculator automatically computes the absolute difference, so it doesn't matter which date you enter first. The result will be the same either way." },
+          { question: "How many days are there from 1 January 2025 to 18 September 2026?", answer: "There are 625 days. From 1 Jan 2025 to 1 Jan 2026 is 365 days (2025 is not a leap year), plus 260 days from 1 Jan to 18 Sep 2026 (31 + 28 + 31 + 30 + 31 + 30 + 31 + 31 + 17). That is 89 weeks, 20 months and 1 year in the other units." },
+          { question: "A 90-day contract starts 10 October 2026 — when does it end?", answer: "It ends on 8 January 2027. October has 21 remaining days after the 10th (31 − 10), plus 30 in November and 31 in December = 82 days, so day 90 lands 8 days into January (90 − 82 = 8)." }
         ]}
       />
     </CalculatorLayout>

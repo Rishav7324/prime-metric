@@ -248,10 +248,32 @@ const SipCalculator = () => {
           { title: "Stay Consistent", description: "Market dips buy more units (rupee-cost averaging). Don't pause SIPs in crashes." },
           { title: "Be Realistic", description: "12% is a common long-term equity assumption, not a guarantee." },
         ]}
+        examples={[
+          {
+            title: "10,000/month at 12% for 10 years",
+            description: "A 10,000 monthly SIP earning 12% annually for 10 years grows to about 2,323,391 on 1,200,000 invested.",
+            steps: [
+              "Monthly rate r = 12/100/12 = 0.01 and months n = 10 x 12 = 120.",
+              "Future value = 10,000 x (((1.01^120 - 1) / 0.01)) x 1.01 = 10,000 x 230.0387 = 2,323,391 (rounded).",
+              "Total invested = 10,000 x 120 = 1,200,000, so gains = 2,323,391 - 1,200,000 = 1,123,391.",
+            ],
+          },
+          {
+            title: "10,000/month at 12% for 15 years",
+            description: "Extending the same 10,000 SIP from 10 to 15 years more than doubles the corpus to about 5,045,760.",
+            steps: [
+              "Monthly rate r = 0.01 and months n = 15 x 12 = 180.",
+              "Future value = 10,000 x (((1.01^180 - 1) / 0.01)) x 1.01 = 10,000 x 499.5802 = 5,045,760 (rounded).",
+              "Total invested = 10,000 x 180 = 1,800,000, so the extra 5 years add 2,722,369 of value on only 600,000 of extra deposits.",
+            ],
+          },
+        ]}
         faqs={[
           { question: "What is a SIP?", answer: "A fixed amount auto-invested at regular intervals (usually monthly) into mutual funds — disciplined, automatic wealth building." },
           { question: "Is the projected return guaranteed?", answer: "No. Market returns vary; treat projections as estimates and review annually." },
           { question: "SIP vs lump sum?", answer: "SIPs smooth market timing risk via averaging; lump sums win if invested right before a rally — but timing is hard." },
+          { question: "What does a 1% higher return do to a 5,000/month SIP over 10 years?", answer: "At 12%, a 5,000 monthly SIP for 10 years grows to about 1,161,695 on 600,000 invested. At 13% it reaches about 1,233,403 — so one extra percentage point adds roughly 71,708 with zero extra deposits." },
+          { question: "How much does extending a 10,000/month SIP from 15 to 20 years add?", answer: "At 12%, 15 years gives about 5,045,760 on 1,800,000 invested, while 20 years gives about 9,991,479 on 2,400,000 invested. The extra 5 years add roughly 4,945,719 of value on only 600,000 of extra contributions, showing late-year compounding dominance." },
         ]}
       />
     </CalculatorLayout>

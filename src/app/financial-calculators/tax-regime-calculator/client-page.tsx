@@ -210,11 +210,33 @@ const TaxRegimeCalculatorClient = () => {
           { title: "Big Deductions Favor Old", description: "80C at the full 150k plus HRA usually tips the scales toward the old regime." },
           { title: "No Deductions? Go New", description: "With zero 80C/HRA claims the new regime almost always wins." },
         ]}
+        examples={[
+          {
+            title: "12,00,000 salary with 2,05,000 of deductions",
+            description: "At 12,00,000 gross with 80C 1,50,000 plus 80D 25,000 plus HRA 30,000, the new regime wins by 19,760.",
+            steps: [
+              "Taxable new = 12,00,000 - 50,000 = 11,50,000; slab tax = 15,000 + 30,000 + 37,500 = 82,500; plus 4% cess = 85,800.",
+              "Taxable old = 12,00,000 - 50,000 - 1,50,000 - 25,000 - 30,000 = 9,45,000; slab tax = 12,500 + 89,000 = 1,01,500; plus 4% cess = 1,05,560.",
+              "New regime saves 1,05,560 - 85,800 = 19,760 despite full 80C claims.",
+            ],
+          },
+          {
+            title: "8,00,000 salary with the same 2,05,000 of deductions",
+            description: "At 8,00,000 gross with identical deductions, the old regime wins by 8,840 — the opposite result.",
+            steps: [
+              "Taxable new = 8,00,000 - 50,000 = 7,50,000; slab tax = 15,000 + 15,000 = 30,000; plus 4% cess = 31,200.",
+              "Taxable old = 8,00,000 - 50,000 - 1,50,000 - 25,000 - 30,000 = 5,45,000; slab tax = 12,500 + 9,000 = 21,500; plus 4% cess = 22,360.",
+              "Old regime saves 31,200 - 22,360 = 8,840, showing lower incomes with big deductions still favor old.",
+            ],
+          },
+        ]}
         faqs={[
           { question: "Which slab table does this calculator use?", answer: "A simplified FY 2024-25 table: New regime 0–3L nil, 3–6L 5%, 6–9L 10%, 9–12L 15%, 12–15L 20%, above 15L 30%; Old regime 0–2.5L nil, 2.5–5L 5%, 5–10L 20%, above 10L 30%; plus 4% health & education cess on both. Surcharge and section 87A rebates are ignored." },
           { question: "What deductions are considered?", answer: "Standard deduction of 50000 for both regimes, plus 80C (capped at 150000), 80D premium and HRA exempt only under the old regime." },
           { question: "Is this my exact tax liability?", answer: "No — it is an estimate. Real liability adds 87A rebates, surcharge, marginal relief and other chapter VI-A deductions this tool skips." },
           { question: "Can I switch regimes every year?", answer: "Salaried individuals can generally choose each financial year, but confirm current CBDT rules before filing since conditions change." },
+          { question: "I earn 12,00,000 with 80C of 1,50,000, 80D of 25,000 and HRA of 30,000 — which regime wins?", answer: "Taxable income is 11,50,000 under new versus 9,45,000 under old. Tax plus 4% cess is 85,800 under new versus 1,05,560 under old, so the new regime wins and saves 19,760 even with full 80C claimed." },
+          { question: "When do big deductions still make the old regime win?", answer: "Take 8,00,000 gross with the same 2,05,000 of deductions: new-regime tax is 31,200 on 7,50,000 taxable while old-regime tax is 22,360 on 5,45,000 taxable. Here the old regime wins by 8,840 — lower salaries with full 80C plus HRA can still beat the new slabs." },
         ]}
       />
     </CalculatorLayout>

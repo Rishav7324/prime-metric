@@ -152,11 +152,17 @@ const BMRCalculatorClient = () => {
           { title: "Muscle Burns More", description: "Muscle tissue burns more calories at rest than fat tissue, so building muscle can increase your BMR." },
           { title: "Don't Eat Below BMR", description: "Consistently eating below your BMR can slow metabolism and is generally not recommended without medical supervision." }
         ]}
+        examples={[
+          { title: "40-year-old man, 85 kg, 180 cm", description: "A 40-year-old man weighing 85 kg at 180 cm has a BMR of 1,780 kcal/day.", steps: ["Male formula: 10 × 85 + 6.25 × 180 − 5 × 40 + 5.", "Compute: 850 + 1,125 − 200 + 5 = 1,780 kcal/day.", "TDEE if moderately active: 1,780 × 1.55 = 2,759 kcal/day."] },
+          { title: "35-year-old woman, 65 kg, 168 cm", description: "A 35-year-old woman weighing 65 kg at 168 cm has a BMR of 1,364 kcal/day.", steps: ["Female formula: 10 × 65 + 6.25 × 168 − 5 × 35 − 161.", "Compute: 650 + 1,050 − 175 − 161 = 1,364 kcal/day.", "TDEE if lightly active: 1,364 × 1.375 = 1,876 kcal/day (1,364 × 1.375 = 1,875.5)."] },
+        ]}
         faqs={[
           { question: "What's the difference between BMR and TDEE?", answer: "BMR is calories burned at complete rest. TDEE (Total Daily Energy Expenditure) includes BMR plus calories burned through daily activities and exercise." },
           { question: "How can I increase my BMR?", answer: "Build muscle through strength training, stay active, eat enough protein, get adequate sleep, and avoid crash diets that can slow metabolism." },
           { question: "Why is my BMR lower than expected?", answer: "Factors like genetics, body composition, hormonal conditions, and dieting history can affect BMR. Consult a healthcare provider if concerned." },
-          { question: "Is BMR the same as metabolism?", answer: "BMR is a measurement of your basal metabolism - the minimum energy required for basic bodily functions at rest." }
+          { question: "Is BMR the same as metabolism?", answer: "BMR is a measurement of your basal metabolism - the minimum energy required for basic bodily functions at rest." },
+          { question: "What is the BMR of a 40-year-old man who is 85 kg and 180 cm?", answer: "Using the male Mifflin-St Jeor formula: 10 × 85 + 6.25 × 180 − 5 × 40 + 5 = 850 + 1,125 − 200 + 5 = 1,780 kcal/day at rest." },
+          { question: "What is the BMR of a 35-year-old woman who is 65 kg and 168 cm?", answer: "Using the female Mifflin-St Jeor formula: 10 × 65 + 6.25 × 168 − 5 × 35 − 161 = 650 + 1,050 − 175 − 161 = 1,364 kcal/day at rest." }
         ]}
       />
     </CalculatorLayout>

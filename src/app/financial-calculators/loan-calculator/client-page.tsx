@@ -255,11 +255,33 @@ const LoanCalculatorClient = () => {
           { title: "0% Isn't Always Free", description: "Check processing fees and insurance — they add to the true cost." },
           { title: "Round Up Your EMI", description: "Even small extra principal payments shorten the loan noticeably." },
         ]}
+        examples={[
+          {
+            title: "100,000 loan at 7.5% for 10 years",
+            description: "Borrowing 100,000 at 7.5% for 10 years costs EMI 1,187.02 and total interest 42,442.12.",
+            steps: [
+              "Monthly rate r = 7.5/100/12 = 0.00625 and months n = 10 x 12 = 120.",
+              "EMI = 100,000 x 0.00625 x 1.00625^120 / (1.00625^120 - 1) = 100,000 x 0.00625 x 2.11206 / 1.11206 = 1,187.02.",
+              "Total payment = 1,187.02 x 120 = 142,442.12, so total interest = 142,442.12 - 100,000 = 42,442.12.",
+            ],
+          },
+          {
+            title: "50,000 loan at 9% for 5 years",
+            description: "Borrowing 50,000 at 9% for 5 years costs EMI 1,037.92 and total interest 12,275.07.",
+            steps: [
+              "Monthly rate r = 9/100/12 = 0.0075 and months n = 5 x 12 = 60.",
+              "EMI = 50,000 x 0.0075 x 1.0075^60 / (1.0075^60 - 1) = 50,000 x 0.0075 x 1.56568 / 0.56568 = 1,037.92.",
+              "Total payment = 1,037.92 x 60 = 62,275.07, so total interest = 62,275.07 - 50,000 = 12,275.07.",
+            ],
+          },
+        ]}
         faqs={[
           { question: "What is an EMI?", answer: "EMI (Equated Monthly Installment) is the fixed amount you pay each month toward principal + interest until the loan is fully repaid." },
           { question: "How is EMI calculated?", answer: "EMI = P × r × (1+r)ⁿ / ((1+r)ⁿ − 1), where P is principal, r monthly rate, n number of months." },
           { question: "Does a longer tenure always help?", answer: "It lowers EMI but raises total interest substantially. Balance monthly comfort against lifetime cost." },
           { question: "What is amortization?", answer: "The gradual payoff process where early payments cover mostly interest and later payments mostly principal — shown in the schedule table above." },
+          { question: "What does a 1% higher rate do to a 100,000 loan over 10 years?", answer: "At 7.5%, the EMI is 1,187.02 with total interest 42,442.12. At 8.5%, the EMI rises to 1,239.86 with total interest 48,782.83 — so one extra point costs 52.84 more per month and 6,340.70 more over the loan." },
+          { question: "How much does stretching a 100,000 loan at 7.5% from 10 to 15 years cost?", answer: "The 10-year EMI is 1,187.02 with total interest 42,442.12, while the 15-year EMI drops to 927.01 but total interest jumps to 66,862.22. You save 260.01 per month but pay 24,420.10 extra in lifetime interest." },
         ]}
       />
     </CalculatorLayout>

@@ -88,17 +88,13 @@ const AllCalculatorsClient = () => {
                               <span className="text-[11px] px-2 py-0.5 rounded-full bg-[#FFF5F2] text-[#c25136] border border-[#F2765E]/25 capitalize">
                                 {calc.category}
                               </span>
-                              {!calc.implemented && (
-                                <span className="text-xs px-2 py-1 rounded-full bg-yellow-500/10 text-yellow-600 border border-yellow-500/20">
-                                  Coming Soon
-                                </span>
-                              )}
+                              
                             </div>
                           </div>
                         </div>
                       </Card>
                     </Link>
-                    {(index + 1) % 9 === 0 && <div className="sm:col-span-2" key={`ad-${index}`}><AdBanner/></div>}
+                    {(index + 1) % 18 === 0 && <div className="sm:col-span-2" key={`ad-${index}`}><AdBanner/></div>}
                   </React.Fragment>
                 )
             })}

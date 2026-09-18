@@ -241,7 +241,7 @@ const ColorPicker = () => {
                       className="max-w-full h-auto cursor-crosshair hover:opacity-95 transition-opacity"
                       style={{ display: 'block' }}
                     />
-                    <img
+                    <img loading="lazy" decoding="async"
                       ref={imageRef}
                       src={image}
                       alt="Color picker source"

@@ -188,11 +188,17 @@ const CalorieCalculatorClient = () => {
           { title: "Don't Cut Too Low", description: "Avoid eating below your BMR or cutting more than 500-750 calories from maintenance for sustainable results." },
           { title: "Quality Matters Too", description: "Focus on nutrient-dense whole foods, not just calorie numbers. Protein, fiber, and micronutrients are crucial." }
         ]}
+        examples={[
+          { title: "Active man maintaining weight", description: "A 30-year-old man, 70 kg and 175 cm, moderately active (1.55) needs about 2,556 kcal/day to maintain.", steps: ["BMR: 10 × 70 + 6.25 × 175 − 5 × 30 + 5 = 1,648.75.", "TDEE: 1,648.75 × 1.55 = 2,555.6, rounded to 2,556 kcal/day.", "Maintain goal: target = 2,556 kcal/day (lose would be 2,056)."] },
+          { title: "Sedentary woman gaining weight", description: "A 25-year-old woman, 60 kg and 165 cm, sedentary (1.2) needs about 2,114 kcal/day to gain.", steps: ["BMR: 10 × 60 + 6.25 × 165 − 5 × 25 − 161 = 1,345.25.", "TDEE: 1,345.25 × 1.2 = 1,614.3, rounded to 1,614 kcal/day.", "Gain goal: 1,614 + 500 = 2,114 kcal/day."] },
+        ]}
         faqs={[
           { question: "How accurate are calorie calculators?", answer: "Calculators provide estimates based on averages. Individual metabolism varies, so use the result as a starting point and adjust based on your actual results over time." },
           { question: "Should I eat less on rest days?", answer: "You can slightly reduce calories on rest days, but your body still burns calories for recovery. Many people maintain consistent daily calories for simplicity." },
           { question: "How quickly should I lose weight?", answer: "A safe, sustainable rate is 0.5-1% of body weight per week. Faster weight loss often leads to muscle loss and metabolic slowdown." },
-          { question: "Do I need to count calories forever?", answer: "Calorie tracking is a tool to learn portion sizes and food content. Many people develop intuitive eating skills after tracking consistently." }
+          { question: "Do I need to count calories forever?", answer: "Calorie tracking is a tool to learn portion sizes and food content. Many people develop intuitive eating skills after tracking consistently." },
+          { question: "I am a 30-year-old man, 70 kg and 175 cm, moderately active — what are my calories to lose weight?", answer: "Your BMR is 10 × 70 + 6.25 × 175 − 5 × 30 + 5 = 1,648.75. At activity 1.55 your maintenance is 1,648.75 × 1.55 = 2,556 kcal/day, so a 500-calorie deficit gives a weight-loss target of 2,556 − 500 = 2,056 kcal/day." },
+          { question: "I am a 25-year-old woman, 60 kg and 165 cm, sedentary — what are my calories to gain weight?", answer: "Your BMR is 10 × 60 + 6.25 × 165 − 5 × 25 − 161 = 1,345.25. At activity 1.2 your maintenance is 1,345.25 × 1.2 = 1,614 kcal/day, so a 500-calorie surplus gives a weight-gain target of 1,614 + 500 = 2,114 kcal/day." }
         ]}
       />
     </CalculatorLayout>

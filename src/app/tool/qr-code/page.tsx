@@ -126,7 +126,7 @@ const QRCodeGenerator = () => {
                 </Button>
               </div>
               <div className="flex justify-center p-4 sm:p-5 bg-white rounded-lg">
-                <img src={qrCode} alt="QR Code" className="max-w-full" />
+                <img loading="lazy" decoding="async" src={qrCode} alt="QR Code" className="max-w-full" />
               </div>
               <Button onClick={downloadQR} variant="outline" className="w-full">
                 <Download className="w-4 h-4 mr-2" />

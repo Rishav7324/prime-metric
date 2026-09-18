@@ -204,7 +204,7 @@ const ConvertImage = () => {
                   <p className="text-xs text-neutral-500">{originalFilename || "Image"}{originalFormat ? ` • ${originalFormat}` : ""} • {formatFileSize(originalSize)}</p>
                 )}
                 <div className="border rounded-lg overflow-hidden flex justify-center items-center bg-muted/30 p-4">
-                  <img src={convertedImageUrl || image} alt="Preview" className="max-w-full h-auto max-h-[400px] object-contain" />
+                  <img loading="lazy" decoding="async" src={convertedImageUrl || image} alt="Preview" className="max-w-full h-auto max-h-[400px] object-contain" />
                 </div>
               </div>
 

@@ -178,11 +178,33 @@ const InterestCalculatorClient = () => {
           { title: "Impact of Rate and Time", description: "Higher interest rates and longer time periods dramatically increase the amount of interest earned, especially with compounding." },
           { title: "Interest on Debt", description: "Remember that compound interest also works on debt like credit cards, which is why balances can grow quickly if not paid off." }
         ]}
+        examples={[
+          {
+            title: "10,000 at 8% compounded for 10 years",
+            description: "Investing 10,000 at 8% compound annual growth for 10 years grows to 21,589.25 with 11,589.25 of interest.",
+            steps: [
+              "Compound formula A = P x (1 + r)^t = 10,000 x 1.08^10.",
+              "1.08^10 = 2.158925, so A = 10,000 x 2.158925 = 21,589.25.",
+              "Interest = 21,589.25 - 10,000 = 11,589.25, versus only 8,000 under simple interest.",
+            ],
+          },
+          {
+            title: "10,000 at 8% simple interest for 10 years",
+            description: "The same 10,000 at 8% simple interest for 10 years reaches only 18,000 — 3,589.25 less than compounding.",
+            steps: [
+              "Simple formula I = P x r x t = 10,000 x 0.08 x 10 = 8,000.",
+              "Total = 10,000 + 8,000 = 18,000.",
+              "Gap to compounding = 21,589.25 - 18,000 = 3,589.25, which widens every extra year.",
+            ],
+          },
+        ]}
         faqs={[
           { question: "What's the main difference between simple and compound interest?", answer: "Simple interest is calculated only on the initial principal. Compound interest is calculated on the principal plus any interest that has already been earned. This 'interest on interest' is what leads to faster growth." },
           { question: "Which type of interest is more common?", answer: "Most savings accounts, investments, and loans use compound interest. Simple interest is less common but can be found in some short-term loans or bonds." },
           { question: "Does this calculator account for different compounding frequencies?", answer: "This version calculates interest compounded annually. For more detailed calculations with different frequencies (monthly, quarterly), you would need a more advanced compound interest calculator." },
-          { question: "How does inflation affect my interest earnings?", answer: "Your 'real' return is the interest rate minus the inflation rate. If your interest rate is 5% and inflation is 3%, your real return is about 2%. To grow your purchasing power, your interest rate must be higher than the inflation rate." }
+          { question: "How does inflation affect my interest earnings?", answer: "Your 'real' return is the interest rate minus the inflation rate. If your interest rate is 5% and inflation is 3%, your real return is about 2%. To grow your purchasing power, your interest rate must be higher than the inflation rate." },
+          { question: "How much extra does compounding add over simple interest on 10,000 at 8% for 10 years?", answer: "Simple interest gives 10,000 x 0.08 x 10 = 8,000 for a total of 18,000. Compound interest gives 10,000 x 1.08^10 = 21,589.25, with interest of 11,589.25 — compounding adds 3,589.25 with no extra deposits." },
+          { question: "What happens if I leave 10,000 at 8% compounded for 20 instead of 10 years?", answer: "After 10 years the total is 21,589.25 with interest of 11,589.25. After 20 years it is 10,000 x 1.08^20 = 46,609.57 with interest of 36,609.57 — doubling the time more than triples the interest because gains start earning their own gains." }
         ]}
       />
     </CalculatorLayout>

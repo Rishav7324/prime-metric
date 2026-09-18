@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 const DisclaimerPage = () => {
   return (
     <LegalPageLayout title="Disclaimer">
-        <p className="text-muted-foreground mb-6 text-center">Last updated: November 24, 2025</p>
+        <p className="text-muted-foreground mb-6 text-center">Last updated: September 17, 2026</p>
         
         <div className="space-y-8 text-muted-foreground">
             <p>Welcome to Prime Metric. This Disclaimer (“Disclaimer”) outlines important limitations, clarifications, and responsibilities regarding the use of the website https://primemetric.online (“Site”), its calculators, tools, services, and content. By accessing or using any part of this Site, you agree to the terms described below. If you disagree with any part of this Disclaimer, you must discontinue use immediately.</p>

@@ -156,7 +156,7 @@ const RdCalculator = () => {
         useCases={[
           { title: "Salary-Based Saving", description: "Turn a fixed slice of each paycheck into a guaranteed lump sum years later." },
           { title: "Short-Term Goals", description: "Fund a vacation, gadget or course fee with disciplined monthly deposits." },
-          { title: "First-Time Savers", description: "Start small with low minimums and build a saving habit risk-free." },
+          { title: "First-Time Savers", description: "Start small with low minimums and build a saving habit low-risk." },
           { title: "RD vs SIP Compare", description: "Weigh guaranteed RD returns against market-linked SIP projections." },
         ]}
         tips={[

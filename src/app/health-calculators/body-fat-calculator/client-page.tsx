@@ -192,11 +192,17 @@ const BodyFatCalculatorClient = () => {
           { title: "Track Trends", description: "Single measurements can vary. Track weekly or monthly trends rather than day-to-day fluctuations." },
           { title: "Combine with Other Metrics", description: "Use alongside photos, measurements, and how clothes fit for a complete picture of progress." }
         ]}
+        examples={[
+          { title: "Man: 175 cm, neck 38 cm, waist 85 cm", description: "A man with these measurements has about 16.9% body fat (Fitness category).", steps: ["Waist minus neck: 85 − 38 = 47; log10(47) = 1.6721, log10(175) = 2.2430.", "Density: 1.0324 − 0.19077 × 1.6721 + 0.15456 × 2.2430 = 1.0601.", "Body fat: 495 / 1.0601 − 450 = 16.9% (Fitness for men is 14-18%)."] },
+          { title: "Woman: 165 cm, neck 34 cm, waist 75 cm, hip 100 cm", description: "A woman with these measurements has about 28.9% body fat (Average category).", steps: ["Waist + hip − neck: 75 + 100 − 34 = 141; log10(141) = 2.1492, log10(165) = 2.2175.", "Density: 1.29579 − 0.35004 × 2.1492 + 0.22100 × 2.2175 = 1.0335.", "Body fat: 495 / 1.0335 − 450 = 28.9% (Average for women is 25-32%)."] },
+        ]}
         faqs={[
           { question: "How accurate is the Navy body fat method?", answer: "The Navy method is reasonably accurate (within 3-4%) for most people and much better than BMI alone. However, it's less accurate than DEXA scans or hydrostatic weighing." },
           { question: "What's a healthy body fat percentage?", answer: "For men: 10-20% is athletic/fit, 21-25% is average. For women: 18-25% is athletic/fit, 26-31% is average. Essential fat is ~3% for men and ~12% for women." },
           { question: "Can I spot reduce body fat?", answer: "No, you can't target fat loss from specific areas. Fat loss occurs throughout the body based on genetics. Focus on overall fat loss through diet and exercise." },
-          { question: "How long does it take to lose body fat?", answer: "Safe fat loss is 0.5-1% of body weight per week. For someone at 25% body fat wanting to reach 20%, this might take 2-4 months depending on starting weight." }
+          { question: "How long does it take to lose body fat?", answer: "Safe fat loss is 0.5-1% of body weight per week. For someone at 25% body fat wanting to reach 20%, this might take 2-4 months depending on starting weight." },
+          { question: "My waist shrank from 92 cm to 85 cm (man, 178 cm, 40 cm neck) — how much body fat did I lose?", answer: "At 92 cm: 92 − 40 = 52 gives 495 / 1.0529 − 450 = 20.1% (Average). At 85 cm: 85 − 40 = 45 gives 495 / 1.0648 − 450 = 14.9% (Fitness). That 7 cm waist drop equals about 5.2 percentage points of body fat." },
+          { question: "I am a 180 cm man with a 42 cm neck and 102 cm waist — what is my body fat?", answer: "Waist minus neck is 102 − 42 = 60. The Navy formula gives 495 / 1.0418 − 450 = 25.2%, which falls in the Obese category for men (25%+). Reducing your waist below about 101 cm would bring you under 25%." }
         ]}
       />
     </CalculatorLayout>

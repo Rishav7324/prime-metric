@@ -213,10 +213,16 @@ const PercentageCalculator = () => {
           { title: "Decimal Conversion", description: "To convert a percentage to a decimal, divide by 100 (e.g., 25% becomes 0.25). To convert a decimal to a percentage, multiply by 100." },
           { title: "Percentage Change Formula", description: "The formula for percentage change is: ((Final Value - Initial Value) / |Initial Value|) × 100." },
         ]}
+        examples={[
+          { title: "20% of 500", description: "Finding a percentage of a number: 20% of 500 is 100.", steps: ["Convert 20% to a decimal: 20 / 100 = 0.20.", "Multiply: 0.20 × 500 = 100.", "Check with mode 2: (100 / 500) × 100 = 20%."] },
+          { title: "80 increased to 100", description: "Percentage change from 80 to 100 is a 25% increase.", steps: ["Difference: 100 − 80 = 20.", "Divide by initial: 20 / 80 = 0.25.", "Multiply by 100: 0.25 × 100 = 25% increase."] },
+        ]}
         faqs={[
           { question: "How do I calculate a percentage of a number?", answer: "Convert the percentage to a decimal and multiply it by the number. For example, to find 20% of 200, you would calculate 0.20 * 200 = 40." },
           { question: "How do I find what percentage one number is of another?", answer: "Divide the first number by the second number, then multiply the result by 100. For example, to find what percentage 50 is of 200, you calculate (50 / 200) * 100 = 25%." },
           { question: "How do I calculate percentage increase?", answer: "Subtract the initial value from the final value, divide by the initial value, and multiply by 100. For example, if a price goes from $10 to $12, the increase is (($12 - $10) / $10) * 100 = 20%." },
+          { question: "What is 15% off $240 jeans plus 8% sales tax?", answer: "The discount is 0.15 × $240 = $36, so the sale price is $240 − $36 = $204. Tax is 0.08 × $204 = $16.32, making the total $204 + $16.32 = $220.32." },
+          { question: "My salary rose from $52,000 to $57,200 — what percent raise is that?", answer: "Subtract: $57,200 − $52,000 = $5,200. Divide by the starting salary: $5,200 / $52,000 = 0.10. Multiply by 100 to get a 10% raise." },
         ]}
       />
     </CalculatorLayout>

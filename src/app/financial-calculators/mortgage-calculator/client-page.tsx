@@ -238,11 +238,33 @@ const MortgageCalculatorClient = () => {
           { title: "PITI is Key", description: "Your full monthly housing payment will also include property taxes and homeowners insurance (PITI). This calculator only shows principal and interest." },
           { title: "Shop for Rates", description: "Getting quotes from multiple lenders can save you a significant amount of money over the life of your loan." },
         ]}
+        examples={[
+          {
+            title: "300,000 home with 60,000 down at 6.5% for 30 years",
+            description: "A 240,000 mortgage at 6.5% for 30 years costs 1,516.96 per month with total interest 306,106.77.",
+            steps: [
+              "Loan principal = 300,000 - 60,000 = 240,000; monthly rate r = 6.5/100/12 = 0.0054167 and months n = 360.",
+              "Monthly payment = 240,000 x 0.0054167 x 1.0054167^360 / (1.0054167^360 - 1) = 1,516.96.",
+              "Total payment = 1,516.96 x 360 = 546,106.77, so total interest = 546,106.77 - 240,000 = 306,106.77.",
+            ],
+          },
+          {
+            title: "400,000 home with 80,000 down at 7% for 30 years",
+            description: "A 320,000 mortgage at 7% for 30 years costs 2,128.97 per month with total interest 446,428.47.",
+            steps: [
+              "Loan principal = 400,000 - 80,000 = 320,000; monthly rate r = 7/100/12 = 0.0058333 and months n = 360.",
+              "Monthly payment = 320,000 x 0.0058333 x 1.0058333^360 / (1.0058333^360 - 1) = 2,128.97.",
+              "Total payment = 2,128.97 x 360 = 766,428.47, so total interest = 766,428.47 - 320,000 = 446,428.47.",
+            ],
+          },
+        ]}
         faqs={[
           { question: "What is a mortgage?", answer: "A mortgage is a loan used to purchase a home or other type of real estate. The property itself serves as collateral for the loan." },
           { question: "What's the difference between a 15-year and a 30-year mortgage?", answer: "A 15-year mortgage has higher monthly payments but a lower interest rate and less total interest paid over the life of the loan. A 30-year mortgage has lower monthly payments but you'll pay more in interest over time." },
           { question: "What is an amortization schedule?", answer: "An amortization schedule is a table detailing each periodic payment on a loan. It shows how much of each payment goes towards interest and how much goes towards paying down the principal." },
-          { question: "Can I pay my mortgage off early?", answer: "Yes, making extra payments towards your principal can help you pay off your mortgage faster and save on interest. Check with your lender to ensure there are no prepayment penalties." }
+          { question: "Can I pay my mortgage off early?", answer: "Yes, making extra payments towards your principal can help you pay off your mortgage faster and save on interest. Check with your lender to ensure there are no prepayment penalties." },
+          { question: "What does a 1% higher rate do to a 240,000 mortgage over 30 years?", answer: "At 6.5%, the payment is 1,516.96 per month with total interest 306,106.77. At 7.5%, it rises to 1,678.11 per month with total interest 364,121.34 — one extra point costs 161.15 more monthly and 58,014.57 more over 30 years." },
+          { question: "How much does a 15-year term save versus 30 years on a 240,000 loan at 6.5%?", answer: "The 30-year payment is 1,516.96 with total interest 306,106.77, while the 15-year payment is 2,090.66 with total interest 136,318.38. Paying 573.69 extra per month saves 169,788.39 in lifetime interest." }
         ]}
       />
     </CalculatorLayout>

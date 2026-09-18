@@ -234,11 +234,17 @@ const BMICalculatorClient = () => {
           { title: "Measure Right", description: "Weigh yourself in the morning, measure height barefoot against a wall." },
           { title: "BMR Is a Baseline", description: "Total daily burn = BMR × activity level (1.2 sedentary up to 1.9 very active)." },
         ]}
+        examples={[
+          { title: "70 kg at 175 cm", description: "A typical healthy-weight check: 70 kg and 175 cm gives a Normal BMI of 22.9.", steps: ["Convert height: 175 cm = 1.75 m, squared = 3.0625.", "Divide: 70 / 3.0625 = 22.9 BMI (Normal).", "Healthy range: 18.5 × 3.0625 = 56.7 kg to 24.9 × 3.0625 = 76.3 kg."] },
+          { title: "90 kg at 165 cm", description: "A higher-weight check: 90 kg and 165 cm gives an Obese BMI of 33.1.", steps: ["Convert height: 165 cm = 1.65 m, squared = 2.7225.", "Divide: 90 / 2.7225 = 33.1 BMI (Obese).", "Healthy range: 18.5 × 2.7225 = 50.4 kg to 24.9 × 2.7225 = 67.8 kg."] },
+        ]}
         faqs={[
           { question: "What is a healthy BMI?", answer: "For most adults, 18.5 to 24.9 is considered healthy. Below 18.5 is underweight, 25-29.9 overweight, and 30+ obese." },
           { question: "How is BMR calculated?", answer: "We use the Mifflin-St Jeor equation, which factors in weight, height, age and gender. It estimates calories burned at complete rest." },
           { question: "Is BMI accurate for athletes?", answer: "Not always — dense muscle raises BMI without extra fat. Athletes should also track body-fat percentage and waist size." },
           { question: "How often should I check BMI?", answer: "Monthly is plenty. Daily fluctuations in water and food make frequent checks misleading." },
+          { question: "I am 180 cm and 95 kg — what is my BMI and how much should I lose?", answer: "Your BMI is 95 / (1.80 × 1.80) = 95 / 3.24 = 29.3, which is Overweight. Your healthy maximum is 24.9 × 3.24 = 80.7 kg, so reaching the top of the healthy range means losing about 95 − 80.7 = 14.3 kg." },
+          { question: "Why did gaining 6 kg move my BMI from 22 to 24 at 170 cm?", answer: "At 170 cm your height squared is 1.70 × 1.70 = 2.89, so each kilo adds 1 / 2.89 = 0.35 BMI points. Gaining 6 kg adds 6 / 2.89 = 2.1 points — exactly the jump from 22.0 to about 24.1." },
         ]}
       />
     </CalculatorLayout>

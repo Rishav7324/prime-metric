@@ -4,6 +4,7 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import LegalPageLayout from "@/components/LegalPageLayout";
+import { ContactForm } from "@/components/ContactForm";
 import { Mail, Briefcase, Info, CheckCircle, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 
@@ -15,6 +16,7 @@ const ContactPage = () => {
       </p>
 
       <div className="space-y-8">
+        <ContactForm />
         <Card className="p-8 bg-card/80 backdrop-blur">
           <div className="flex items-start gap-4">
             <Mail className="w-8 h-8 text-primary mt-1 flex-shrink-0" />

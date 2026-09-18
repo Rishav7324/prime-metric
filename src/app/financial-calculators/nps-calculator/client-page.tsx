@@ -213,11 +213,33 @@ const NpsCalculator = () => {
           { title: "Stay Equity-Heavy Early", description: "Younger investors can use higher equity allocation, then shift safer near retirement." },
           { title: "Treat Pension as Approximate", description: "Actual annuity rates vary by insurer and age — 6% is a planning placeholder, not a quote." },
         ]}
+        examples={[
+          {
+            title: "10,000/month from age 30 at 10% to age 60",
+            description: "Contributing 10,000 monthly from age 30 builds a corpus of about 2,27,93,253 with a 45,587 monthly pension.",
+            steps: [
+              "Years = 60 - 30 = 30; monthly rate r = 10/100/12 = 0.008333 and months n = 360.",
+              "Corpus = 10,000 x (((1.008333^360 - 1) / 0.008333)) x 1.008333 = 2,27,93,253 (rounded); invested = 10,000 x 360 = 36,00,000.",
+              "Annuity 40% = 91,17,301; pension = 91,17,301 x 0.06 / 12 = 45,587 per month; lump sum = 1,36,75,952.",
+            ],
+          },
+          {
+            title: "5,000/month from age 30 at 10% to age 60",
+            description: "Halving the contribution to 5,000 halves every outcome: corpus about 1,13,96,627 with a 22,793 pension.",
+            steps: [
+              "Same 30-year factor as above: corpus = 5,000 x 2279.3253 = 1,13,96,627 (rounded); invested = 5,000 x 360 = 18,00,000.",
+              "Annuity 40% = 45,58,651; pension = 45,58,651 x 0.06 / 12 = 22,793 per month; lump sum = 68,37,976.",
+              "Starting at 25 instead of 30 at 10,000/month would raise the corpus to about 3,82,82,767 — 5 extra early years add roughly 1,54,89,514.",
+            ],
+          },
+        ]}
         faqs={[
           { question: "What is NPS Tier-1?", answer: "The main retirement account with tax benefits and withdrawal restrictions until age 60 — ideal for long-term pension building." },
           { question: "How is the monthly pension estimated?", answer: "The annuity portion is multiplied by an assumed 6% yearly annuity rate and divided by 12. Real payouts depend on prevailing annuity plans." },
           { question: "Is the lump sum taxable?", answer: "Up to 60% of the corpus withdrawn as a lump sum at maturity is currently tax-exempt; annuity pension received later is taxable as income." },
           { question: "What return should I assume?", answer: "10% reflects a blended equity-heavy portfolio historically, but NPS returns are market-linked — test 8-12% scenarios." },
+          { question: "How much does starting NPS at 25 instead of 35 change the corpus?", answer: "With 10,000 per month at 10%, starting at 35 (25 years) builds about 1,33,78,903 on 30,00,000 invested, while starting at 25 (35 years) builds about 3,82,82,767 on 42,00,000 invested. Ten extra early years add roughly 2,49,03,864 on only 12,00,000 of extra contributions." },
+          { question: "What does a 2% higher return do over a full 30-year NPS term?", answer: "With 10,000 per month from age 30, a 10% return builds about 2,27,93,253 while 12% builds about 3,52,99,138 — two extra points add roughly 1,25,05,885, lifting the 40% annuity pension from about 45,587 to about 70,598 per month at the assumed 6% annuity rate." },
         ]}
       />
     </CalculatorLayout>

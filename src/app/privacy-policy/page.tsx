@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 const PrivacyPolicyPage = () => {
   return (
     <LegalPageLayout title="Privacy Policy">
-        <p className="text-muted-foreground mb-6 text-center">Last updated: November 24, 2025</p>
+        <p className="text-muted-foreground mb-6 text-center">Last updated: September 17, 2026</p>
         
         <div className="space-y-8 text-muted-foreground">
           <p>
@@ -116,6 +116,23 @@ const PrivacyPolicyPage = () => {
                 <li>Contextual advertising</li>
             </ul>
             <p className="mt-2">We strictly follow Google Publisher Policies.</p>
+            <h3 className="text-xl font-semibold mt-4 mb-2 text-foreground">2.6 Google Advertising Cookies</h3>
+            <p>
+              Third party vendors, including Google, use cookies to serve ads based on a user&apos;s prior visits to our website and/or other websites on the Internet.
+            </p>
+            <p className="mt-2">
+              Google&apos;s use of advertising cookies enables it and its partners to serve ads to you based on your visit to our website and/or other websites on the Internet.
+            </p>
+            <p className="mt-2">
+              You may opt out of personalized advertising by visiting{" "}
+              <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Google Ads Settings</a>.
+              Alternatively, you can opt out of a third-party vendor&apos;s use of cookies for personalized advertising by visiting{" "}
+              <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">www.aboutads.info/choices</a>.
+            </p>
+            <p className="mt-2">
+              To learn more about how Google uses data when you use our website, please visit{" "}
+              <a href="https://www.google.com/policies/privacy/partners/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">How Google uses information from sites that use Google services</a>.
+            </p>
           </section>
 
           <section>
