@@ -3,7 +3,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronRight, ArrowRight, ArrowLeft, Clock, CalendarDays, FlaskConical } from "lucide-react";
 import { blogPosts, getBlogPost, getPrevNextPost, slugifyHeading } from "@/lib/blog";
-import { allCalculators } from "@/lib/data";
+import { allCalculators, imageTools, developerTools } from "@/lib/data";
+
+const allToolsLookup = [...allCalculators, ...imageTools, ...developerTools];
 
 export function generateStaticParams() {
   return blogPosts.map((post) => ({ slug: post.slug }));
@@ -55,7 +57,7 @@ export default async function BlogPostPage({ params }: Props) {
 
   const { prev, next } = getPrevNextPost(slug);
   const relatedTools = post.toolPaths
-    .map((path) => allCalculators.find((c) => c.path === path))
+    .map((path) => allToolsLookup.find((c) => c.path === path))
     .filter((c): c is NonNullable<typeof c> => Boolean(c));
   const url = `https://primemetric.online/blog/${post.slug}`;
 

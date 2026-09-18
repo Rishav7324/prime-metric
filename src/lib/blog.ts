@@ -1,3 +1,8 @@
+import { batch1Posts } from "./blog-batch-1";
+import { batch2Posts } from "./blog-batch-2";
+import { batch3Posts } from "./blog-batch-3";
+import { batch4Posts } from "./blog-batch-4";
+import { batch5Posts } from "./blog-batch-5";
 export type BlogSection = {
   heading: string;
   paragraphs: string[];
@@ -625,6 +630,11 @@ export const blogPosts: BlogPost[] = [
       },
     ],
   },
+  ...batch1Posts,
+  ...batch2Posts,
+  ...batch3Posts,
+  ...batch4Posts,
+  ...batch5Posts,
 ];
 
 export function getBlogPost(slug: string): BlogPost | undefined {
