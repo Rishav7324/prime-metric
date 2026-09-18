@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from "react";
-import { Area, AreaChart, CartesianGrid, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,46 +12,50 @@ import { CurrencySelector, getCurrencySymbol } from "@/components/CurrencySelect
 import { Copy, RotateCcw } from "lucide-react";
 
 type YearRow = { year: number; invested: number; value: number };
-type SipResult = {
+type StepUpSipResult = {
   futureValue: number; totalInvested: number; wealthGained: number;
   investedShare: number; schedule: YearRow[];
 };
 
-const futureValueAt = (p: number, r: number, n: number) =>
-  r === 0 ? p * n : p * ((Math.pow(1 + r, n) - 1) / r) * (1 + r);
-
-function computeSip(pStr: string, annualStr: string, yearsStr: string): SipResult | null {
+function computeStepUpSip(pStr: string, stepStr: string, annualStr: string, yearsStr: string): StepUpSipResult | null {
   const p = parseFloat(pStr);
+  const step = parseFloat(stepStr);
   const annual = parseFloat(annualStr);
   const years = parseInt(yearsStr);
 
-  if (!(p > 0 && p <= 1e9) || isNaN(annual) || annual < -50 || annual > 100 || !(years >= 1 && years <= 50)) {
+  if (!(p > 0 && p <= 1e9) || isNaN(step) || step < 0 || step > 100 || isNaN(annual) || annual < -50 || annual > 100 || !(years >= 1 && years <= 50)) {
     return null;
   }
 
   const r = annual / 100 / 12;
-  const n = years * 12;
-  const futureValue = futureValueAt(p, r, n);
-  const totalInvested = p * n;
-
+  const s = step / 100;
+  let balance = 0;
+  let invested = 0;
   const schedule: YearRow[] = [];
+
   for (let y = 1; y <= years; y++) {
-    schedule.push({ year: y, invested: p * y * 12, value: futureValueAt(p, r, y * 12) });
+    const monthly = p * Math.pow(1 + s, y - 1);
+    for (let m = 0; m < 12; m++) {
+      balance = (balance + monthly) * (1 + r);
+      invested += monthly;
+    }
+    schedule.push({ year: y, invested, value: balance });
   }
 
   return {
-    futureValue, totalInvested, wealthGained: futureValue - totalInvested,
-    investedShare: (totalInvested / futureValue) * 100, schedule,
+    futureValue: balance, totalInvested: invested, wealthGained: balance - invested,
+    investedShare: (invested / balance) * 100, schedule,
   };
 }
 
-const SipCalculator = () => {
-  const [monthlyInvestment, setMonthlyInvestment] = useState("5000");
+const StepUpSipCalculator = () => {
+  const [monthlySip, setMonthlySip] = useState("10000");
+  const [stepUp, setStepUp] = useState("10");
   const [returnRate, setReturnRate] = useState("12");
   const [timePeriod, setTimePeriod] = useState("10");
   const [currency, setCurrency] = useState("USD");
   // Pre-filled so the result renders instantly (no empty state)
-  const [result, setResult] = useState<SipResult | null>(() => computeSip("5000", "12", "10"));
+  const [result, setResult] = useState<StepUpSipResult | null>(() => computeStepUpSip("10000", "10", "12", "10"));
   const [showSchedule, setShowSchedule] = useState(false);
   const { toast } = useToast();
   const currencySymbol = getCurrencySymbol(currency);
@@ -60,36 +63,21 @@ const SipCalculator = () => {
   const fmt = (n: number) =>
     n.toLocaleString("en-US", { maximumFractionDigits: 0 });
 
-  const pieData = result
-    ? [
-        { name: "Invested", value: result.totalInvested, fill: "#171717" },
-        { name: "Gains", value: Math.max(result.wealthGained, 0), fill: "#F2765E" },
-      ]
-    : [];
-  const growthData = result
-    ? result.schedule.map((row) => ({
-        year: row.year,
-        invested: Math.round(row.invested),
-        value: Math.round(row.value),
-      }))
-    : [];
-
   const calculate = () => {
-    const computed = computeSip(monthlyInvestment, returnRate, timePeriod);
+    const computed = computeStepUpSip(monthlySip, stepUp, returnRate, timePeriod);
     if (!computed) {
-      toast({ variant: "destructive", title: "Invalid Input", description: "Enter investment (1+), return (-50 to 100%), years (1-50)." });
+      toast({ variant: "destructive", title: "Invalid Input", description: "Enter SIP (1+), step-up (0-100%), return (-50 to 100%), years (1-50)." });
       return;
     }
     setResult(computed);
-    const yrs = parseInt(timePeriod);
-    toast({ title: "SIP Projected", description: `Est. value ${currencySymbol}${fmt(computed.futureValue)} in ${yrs} yrs.` });
+    toast({ title: "Step-Up SIP Projected", description: `Est. value ${currencySymbol}${fmt(computed.futureValue)} in ${parseInt(timePeriod)} yrs.` });
   };
 
-  const reset = () => { setMonthlyInvestment(""); setReturnRate(""); setTimePeriod(""); setResult(null); setShowSchedule(false); };
+  const reset = () => { setMonthlySip(""); setStepUp(""); setReturnRate(""); setTimePeriod(""); setResult(null); setShowSchedule(false); };
 
   const copyResult = async () => {
     if (!result) return;
-    const text = `SIP: ${currencySymbol}${fmt(parseFloat(monthlyInvestment))}/month for ${timePeriod} yrs at ${returnRate}% → Est. value ${currencySymbol}${fmt(result.futureValue)} (invested ${currencySymbol}${fmt(result.totalInvested)}, gains ${currencySymbol}${fmt(result.wealthGained)}). — via PrimeMetric`;
+    const text = `Step-up SIP: ${currencySymbol}${fmt(parseFloat(monthlySip))}/month +${stepUp}%/yr for ${timePeriod} yrs at ${returnRate}% → Est. value ${currencySymbol}${fmt(result.futureValue)} (invested ${currencySymbol}${fmt(result.totalInvested)}, gains ${currencySymbol}${fmt(result.wealthGained)}). — via PrimeMetric`;
     try {
       await navigator.clipboard.writeText(text);
       toast({ title: "Copied", description: "Result copied to clipboard." });
@@ -100,10 +88,10 @@ const SipCalculator = () => {
 
   return (
     <CalculatorLayout
-      title="SIP (Systematic Investment Plan) Calculator"
-      description="Project SIP growth with compounding, year-by-year breakdown and invested-vs-gains split"
-      keywords="sip calculator, mutual fund sip returns, sip investment planner, compounding calculator"
-      canonicalUrl="/financial-calculators/sip-calculator"
+      title="Step-Up SIP Calculator with Annual Hike"
+      description="Project step-up SIP growth as yearly hikes compound, with a year-by-year schedule"
+      keywords="step up sip calculator, sip step up returns, annual increase sip planner, sip hike calculator"
+      canonicalUrl="/financial-calculators/step-up-sip-calculator"
     >
       <div className="grid sm:grid-cols-2 gap-4">
         <Card className="bg-white border border-neutral-200 p-4 sm:p-5">
@@ -111,8 +99,12 @@ const SipCalculator = () => {
           <div className="space-y-4">
             <CurrencySelector value={currency} onChange={setCurrency} />
             <div>
-              <Label className="text-sm font-medium">Monthly Investment ({currencySymbol})</Label>
-              <Input type="number" min={1} value={monthlyInvestment} onChange={(e) => setMonthlyInvestment(e.target.value)} placeholder="e.g., 5000" className="mt-1.5 h-10 text-sm bg-white" />
+              <Label className="text-sm font-medium">Monthly SIP ({currencySymbol})</Label>
+              <Input type="number" min={1} value={monthlySip} onChange={(e) => setMonthlySip(e.target.value)} placeholder="e.g., 10000" className="mt-1.5 h-10 text-sm bg-white" />
+            </div>
+            <div>
+              <Label className="text-sm font-medium">Annual Step-Up (%)</Label>
+              <Input type="number" min={0} max={100} step={0.5} value={stepUp} onChange={(e) => setStepUp(e.target.value)} placeholder="e.g., 10" className="mt-1.5 h-10 text-sm bg-white" />
             </div>
             <div>
               <Label className="text-sm font-medium">Expected Annual Return (%)</Label>
@@ -169,42 +161,6 @@ const SipCalculator = () => {
               <Button onClick={() => setShowSchedule(!showSchedule)} variant="outline" size="sm" className="w-full h-9 text-[13px]">
                 {showSchedule ? "Hide" : "Show"} Year-by-Year Growth
               </Button>
-              <div className="grid gap-2.5">
-                <div className="border border-neutral-200 rounded-lg p-3">
-                  <p className="text-xs font-semibold text-black mb-1">Invested vs Gains</p>
-                  <div style={{ height: 220, width: "100%" }}>
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart>
-                        <Pie data={pieData} dataKey="value" nameKey="name" innerRadius={50} outerRadius={75} paddingAngle={2} strokeWidth={0}>
-                          {pieData.map((entry) => (
-                            <Cell key={entry.name} fill={entry.fill} />
-                          ))}
-                        </Pie>
-                        <Tooltip />
-                      </PieChart>
-                    </ResponsiveContainer>
-                  </div>
-                  <div className="flex justify-center gap-4 text-[11px] text-neutral-500">
-                    <span><span className="inline-block w-2 h-2 bg-black rounded-full mr-1" />Invested</span>
-                    <span><span className="inline-block w-2 h-2 bg-[#F2765E] rounded-full mr-1" />Gains</span>
-                  </div>
-                </div>
-                <div className="border border-neutral-200 rounded-lg p-3">
-                  <p className="text-xs font-semibold text-black mb-1">Value Growth per Year</p>
-                  <div style={{ height: 220, width: "100%" }}>
-                    <ResponsiveContainer width="100%" height="100%">
-                      <AreaChart data={growthData} margin={{ top: 5, right: 5, bottom: 0, left: -8 }}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                        <XAxis dataKey="year" tick={{ fontSize: 11 }} tickLine={false} axisLine={false} minTickGap={24} />
-                        <YAxis tick={{ fontSize: 11 }} tickLine={false} axisLine={false} width={48} tickFormatter={(v: number) => (v >= 1000 ? `${Math.round(v / 1000)}k` : `${v}`)} />
-                        <Tooltip />
-                        <Area type="monotone" dataKey="invested" name="Invested" stroke="#171717" fill="#171717" fillOpacity={0.08} strokeWidth={1.5} />
-                        <Area type="monotone" dataKey="value" name="Value" stroke="#F2765E" fill="#F2765E" fillOpacity={0.18} strokeWidth={2} />
-                      </AreaChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
-              </div>
               {showSchedule && (
                 <div className="border border-neutral-200 rounded-lg overflow-hidden max-h-64 overflow-y-auto">
                   <table className="w-full text-xs">
@@ -237,25 +193,27 @@ const SipCalculator = () => {
       </div>
 
       <CalculatorContentSection
-        aboutContent="A Systematic Investment Plan (SIP) invests a fixed sum every month into mutual funds or stocks. Returns compound over time — this calculator projects the future value using monthly compounding and shows how each year's contributions grow."
+        aboutContent="A step-up SIP raises your monthly investment by a fixed percentage every year, so contributions grow alongside your salary. Even a 10% yearly hike can nearly double the final corpus versus a flat SIP. This calculator compounds monthly instalments with yearly step-ups and shows invested versus value for each year."
         useCases={[
-          { title: "Retirement Corpus", description: "See what small monthly sums become over 20-30 years of compounding." },
-          { title: "Goal Planning", description: "Work backwards from a target (education, home) to the monthly SIP needed." },
-          { title: "Compare Scenarios", description: "Test return rates and durations side by side before committing." },
+          { title: "Salary-Linked Investing", description: "Match SIP hikes to annual appraisals so lifestyle upgrades never crowd out savings." },
+          { title: "Corpus Acceleration", description: "See how much faster you hit a target when contributions rise instead of staying flat." },
+          { title: "Late Starters", description: "A small SIP today plus aggressive step-ups can still catch up on missed years." },
+          { title: "Flat vs Step-Up Compare", description: "Run both scenarios to quantify exactly what yearly hikes are worth." },
         ]}
         tips={[
-          { title: "Start Early", description: "Time matters more than amount — 10 extra years can triple the outcome." },
-          { title: "Stay Consistent", description: "Market dips buy more units (rupee-cost averaging). Don't pause SIPs in crashes." },
-          { title: "Be Realistic", description: "12% is a common long-term equity assumption, not a guarantee." },
+          { title: "Mirror Your Hike", description: "Set the step-up near your expected salary growth so investing stays painless." },
+          { title: "Start Modest, Hike Bold", description: "A lower starting SIP with 10-15% step-ups beats an overstretched flat SIP." },
+          { title: "Review Yearly", description: "Revisit the step-up each appraisal cycle — pause hikes, never the SIP itself." },
         ]}
         faqs={[
-          { question: "What is a SIP?", answer: "A fixed amount auto-invested at regular intervals (usually monthly) into mutual funds — disciplined, automatic wealth building." },
-          { question: "Is the projected return guaranteed?", answer: "No. Market returns vary; treat projections as estimates and review annually." },
-          { question: "SIP vs lump sum?", answer: "SIPs smooth market timing risk via averaging; lump sums win if invested right before a rally — but timing is hard." },
+          { question: "What is a step-up SIP?", answer: "A SIP that automatically increases by a chosen percentage each year, keeping investments in step with rising income." },
+          { question: "What step-up percentage is realistic?", answer: "8-12% mirrors typical salary growth; higher works if income is rising fast and expenses stay controlled." },
+          { question: "Does every fund allow step-ups?", answer: "Most major funds and platforms support auto step-up mandates; otherwise raise the SIP manually each year." },
+          { question: "Is the projected return guaranteed?", answer: "No — market returns fluctuate, so treat the projection as an estimate and review progress annually." },
         ]}
       />
     </CalculatorLayout>
   );
 };
 
-export default SipCalculator;
+export default StepUpSipCalculator;

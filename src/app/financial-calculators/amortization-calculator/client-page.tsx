@@ -53,10 +53,41 @@ function computeAmortization(principalStr: string, rateStr: string, yearsStr: st
   return { schedule: scheduleData, monthlyPayment, totalPayment, totalInterest: totalPayment - p };
 }
 
+type PrepayResult = { months: number; monthsSaved: number; interestSaved: number };
+
+function computePrepayFromBase(base: AmortResult | null, extraStr: string): PrepayResult | null {
+  if (!base || base.schedule.length === 0) return null;
+  const extra = parseFloat(extraStr);
+  if (!(extra > 0 && extra <= 1e9)) return null;
+  // Reuse the base schedule: principal = sum of principal column,
+  // monthly rate derived exactly from the first month's interest.
+  const p = base.schedule.reduce((sum, row) => sum + row.principal, 0);
+  if (!(p > 0)) return null;
+  const r = base.schedule[0].interest / p;
+  if (!isFinite(r) || r < 0) return null;
+  const payment = base.monthlyPayment + extra;
+  let balance = p;
+  let totalPaid = 0;
+  let months = 0;
+  while (balance > 0 && months < 1200) {
+    const interest = balance * r;
+    const prin = Math.min(payment - interest, balance);
+    if (prin <= 0) return null;
+    balance = Math.max(0, balance - prin);
+    totalPaid += prin + interest;
+    months++;
+  }
+  if (balance > 0) return null;
+  const monthsSaved = base.schedule.length - months;
+  if (monthsSaved <= 0) return null;
+  return { months, monthsSaved, interestSaved: base.totalInterest - (totalPaid - p) };
+}
+
 const AmortizationCalculatorClient = () => {
   const [principal, setPrincipal] = useState("250000");
   const [rate, setRate] = useState("5.5");
   const [years, setYears] = useState("30");
+  const [extraPayment, setExtraPayment] = useState("200");
   // Pre-filled so the result renders instantly (no empty state)
   const [result, setResult] = useState<AmortResult | null>(() => computeAmortization("250000", "5.5", "30"));
   const [currency, setCurrency] = useState("USD");
@@ -65,6 +96,8 @@ const AmortizationCalculatorClient = () => {
 
   const fmt = (n: number) =>
     n.toLocaleString("en-US", { maximumFractionDigits: 2, minimumFractionDigits: 2 });
+
+  const prepay = computePrepayFromBase(result, extraPayment);
 
   const calculate = () => {
     const computed = computeAmortization(principal, rate, years);
@@ -84,7 +117,7 @@ const AmortizationCalculatorClient = () => {
     });
   };
 
-  const reset = () => { setPrincipal(""); setRate(""); setYears(""); setResult(null); };
+  const reset = () => { setPrincipal(""); setRate(""); setYears(""); setExtraPayment(""); setResult(null); };
 
   const copyResult = async () => {
     if (!result) return;
@@ -135,6 +168,16 @@ const AmortizationCalculatorClient = () => {
               placeholder="e.g., 30"
             />
           </div>
+          <div>
+            <Label>Extra Monthly Payment ({currencySymbol}) — optional</Label>
+            <Input
+              type="number"
+              min={0}
+              value={extraPayment}
+              onChange={(e) => setExtraPayment(e.target.value)}
+              placeholder="e.g., 200"
+            />
+          </div>
           <div className="flex gap-2">
             <Button onClick={calculate} className="flex-1 gradient-button">
               Generate Schedule
@@ -151,6 +194,18 @@ const AmortizationCalculatorClient = () => {
                   <Copy className="h-3.5 w-3.5 mr-1" /> Copy
                 </Button>
               </div>
+              {prepay && (
+                <div className="grid grid-cols-2 gap-2.5 mb-3 text-center">
+                  <div className="p-3 rounded-lg bg-[#FFF5F2] border border-[#F2765E]/25">
+                    <div className="text-xs text-neutral-500">Prepayment payoff</div>
+                    <div className="text-base font-bold text-[#F2765E]">{prepay.monthsSaved} months early</div>
+                  </div>
+                  <div className="p-3 rounded-lg bg-neutral-50 border border-neutral-200">
+                    <div className="text-xs text-neutral-500">Interest saved</div>
+                    <div className="text-base font-bold text-green-600">{currencySymbol}{fmt(prepay.interestSaved)}</div>
+                  </div>
+                </div>
+              )}
               <div className="overflow-x-auto rounded-lg border max-h-[400px] overflow-y-auto">
                 <Table>
                   <TableHeader className="sticky top-0 bg-muted/80 backdrop-blur-sm">

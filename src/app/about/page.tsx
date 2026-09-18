@@ -157,6 +157,21 @@ const AboutPage = () => {
           </ul>
         </Card>
          
+        <Card className="p-8 bg-card/80 backdrop-blur mb-8">
+          <h2 className="text-xl font-semibold mb-4">Editorial standards</h2>
+          <p className="text-muted-foreground mb-3">
+            Every calculator is built and checked by the{" "}
+            <Link href="/authors/prime-metric" className="text-primary hover:underline font-medium">
+              Prime Metric Editorial Team
+            </Link>{" "}
+            using verified formulas and trusted sources — and maintained under our{" "}
+            <Link href="/editorial-policy" className="text-primary hover:underline font-medium">
+              editorial policy
+            </Link>
+            . Finance tools are re-checked at least quarterly, health tools at least twice a year.
+          </p>
+        </Card>
+
         <div className="text-center mt-12">
             <h2 className="text-xl font-semibold mb-4">Conclusion</h2>
             <p className="text-muted-foreground mb-6 max-w-3xl mx-auto">

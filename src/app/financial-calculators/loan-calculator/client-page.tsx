@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from "react";
+import { Area, AreaChart, CartesianGrid, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -66,6 +67,17 @@ const LoanCalculatorClient = () => {
 
   const fmt = (n: number) =>
     n.toLocaleString("en-US", { maximumFractionDigits: 2, minimumFractionDigits: 2 });
+
+  const loanPrincipal = result ? result.totalPayment - result.totalInterest : 0;
+  const pieData = result
+    ? [
+        { name: "Principal", value: loanPrincipal, fill: "#171717" },
+        { name: "Interest", value: Math.max(result.totalInterest, 0), fill: "#F2765E" },
+      ]
+    : [];
+  const balanceData = result
+    ? result.schedule.map((row) => ({ year: row.year, balance: Math.round(row.balance) }))
+    : [];
 
   const calculate = () => {
     const computed = computeLoan(amount, rate, term);
@@ -162,6 +174,41 @@ const LoanCalculatorClient = () => {
               <Button onClick={() => setShowSchedule(!showSchedule)} variant="outline" size="sm" className="w-full h-9 text-[13px]">
                 {showSchedule ? "Hide" : "Show"} Year-by-Year Schedule
               </Button>
+              <div className="grid gap-2.5">
+                <div className="border border-neutral-200 rounded-lg p-3">
+                  <p className="text-xs font-semibold text-black mb-1">Principal vs Interest</p>
+                  <div style={{ height: 220, width: "100%" }}>
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie data={pieData} dataKey="value" nameKey="name" innerRadius={50} outerRadius={75} paddingAngle={2} strokeWidth={0}>
+                          {pieData.map((entry) => (
+                            <Cell key={entry.name} fill={entry.fill} />
+                          ))}
+                        </Pie>
+                        <Tooltip />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </div>
+                  <div className="flex justify-center gap-4 text-[11px] text-neutral-500">
+                    <span><span className="inline-block w-2 h-2 bg-black rounded-full mr-1" />Principal</span>
+                    <span><span className="inline-block w-2 h-2 bg-[#F2765E] rounded-full mr-1" />Interest</span>
+                  </div>
+                </div>
+                <div className="border border-neutral-200 rounded-lg p-3">
+                  <p className="text-xs font-semibold text-black mb-1">Balance Declining per Year</p>
+                  <div style={{ height: 220, width: "100%" }}>
+                    <ResponsiveContainer width="100%" height="100%">
+                      <AreaChart data={balanceData} margin={{ top: 5, right: 5, bottom: 0, left: -8 }}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                        <XAxis dataKey="year" tick={{ fontSize: 11 }} tickLine={false} axisLine={false} minTickGap={24} />
+                        <YAxis tick={{ fontSize: 11 }} tickLine={false} axisLine={false} width={48} tickFormatter={(v: number) => (v >= 1000 ? `${Math.round(v / 1000)}k` : `${v}`)} />
+                        <Tooltip />
+                        <Area type="monotone" dataKey="balance" name="Balance" stroke="#F2765E" fill="#F2765E" fillOpacity={0.18} strokeWidth={2} />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+              </div>
               {showSchedule && (
                 <div className="border border-neutral-200 rounded-lg overflow-hidden">
                   <table className="w-full text-xs">

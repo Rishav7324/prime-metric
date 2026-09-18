@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from "react";
+import { Area, AreaChart, CartesianGrid, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import CalculatorLayout from "@/components/CalculatorLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,8 +12,10 @@ import { useToast } from "@/hooks/use-toast";
 import { CurrencySelector, getCurrencySymbol } from "@/components/CurrencySelector";
 import { Copy, RotateCcw } from "lucide-react";
 
+type YearRow = { year: number; balance: number };
 type MortgageResult = {
   monthlyPayment: number; totalPayment: number; totalInterest: number;
+  principal: number; principalShare: number; schedule: YearRow[];
 };
 
 function computeMortgage(
@@ -40,7 +43,23 @@ function computeMortgage(
     : (principal * monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1);
   const totalPayment = monthlyPayment * months;
 
-  return { monthlyPayment, totalPayment, totalInterest: totalPayment - principal };
+  // Yearly balance schedule (same EMI amortization math as the loan calculator)
+  let balance = principal;
+  const schedule: YearRow[] = [];
+  for (let y = 1; y <= Math.ceil(months / 12); y++) {
+    for (let m = 0; m < 12 && (y - 1) * 12 + m < months; m++) {
+      const interest = balance * monthlyRate;
+      const prin = Math.min(monthlyPayment - interest, balance);
+      balance = Math.max(0, balance - prin);
+    }
+    schedule.push({ year: y, balance });
+    if (balance <= 0) break;
+  }
+
+  return {
+    monthlyPayment, totalPayment, totalInterest: totalPayment - principal,
+    principal, principalShare: (principal / totalPayment) * 100, schedule,
+  };
 }
 
 const MortgageCalculatorClient = () => {
@@ -57,6 +76,16 @@ const MortgageCalculatorClient = () => {
 
   const fmt = (n: number) =>
     n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+  const pieData = result
+    ? [
+        { name: "Principal", value: result.principal, fill: "#171717" },
+        { name: "Interest", value: Math.max(result.totalInterest, 0), fill: "#F2765E" },
+      ]
+    : [];
+  const balanceData = result
+    ? result.schedule.map((row) => ({ year: row.year, balance: Math.round(row.balance) }))
+    : [];
 
   const calculate = () => {
     const computed = computeMortgage(homePrice, downPayment, interestRate, loanTerm);
@@ -151,6 +180,41 @@ const MortgageCalculatorClient = () => {
                 <div className="p-4 rounded-lg bg-white border border-neutral-200 border border-secondary/20">
                   <div className="text-sm text-neutral-600">Total Interest</div>
                   <div className="text-2xl font-bold">{currencySymbol}{fmt(result.totalInterest)}</div>
+                </div>
+              </div>
+              <div className="grid gap-2.5">
+                <div className="border border-neutral-200 rounded-lg p-3">
+                  <p className="text-xs font-semibold text-black mb-1">Principal vs Interest</p>
+                  <div style={{ height: 220, width: "100%" }}>
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie data={pieData} dataKey="value" nameKey="name" innerRadius={50} outerRadius={75} paddingAngle={2} strokeWidth={0}>
+                          {pieData.map((entry) => (
+                            <Cell key={entry.name} fill={entry.fill} />
+                          ))}
+                        </Pie>
+                        <Tooltip />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </div>
+                  <div className="flex justify-center gap-4 text-[11px] text-neutral-500">
+                    <span><span className="inline-block w-2 h-2 bg-black rounded-full mr-1" />Principal</span>
+                    <span><span className="inline-block w-2 h-2 bg-[#F2765E] rounded-full mr-1" />Interest</span>
+                  </div>
+                </div>
+                <div className="border border-neutral-200 rounded-lg p-3">
+                  <p className="text-xs font-semibold text-black mb-1">Balance Declining per Year</p>
+                  <div style={{ height: 220, width: "100%" }}>
+                    <ResponsiveContainer width="100%" height="100%">
+                      <AreaChart data={balanceData} margin={{ top: 5, right: 5, bottom: 0, left: -8 }}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                        <XAxis dataKey="year" tick={{ fontSize: 11 }} tickLine={false} axisLine={false} minTickGap={24} />
+                        <YAxis tick={{ fontSize: 11 }} tickLine={false} axisLine={false} width={48} tickFormatter={(v: number) => (v >= 1000 ? `${Math.round(v / 1000)}k` : `${v}`)} />
+                        <Tooltip />
+                        <Area type="monotone" dataKey="balance" name="Balance" stroke="#F2765E" fill="#F2765E" fillOpacity={0.18} strokeWidth={2} />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </div>
                 </div>
               </div>
             </div>

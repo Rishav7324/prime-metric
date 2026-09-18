@@ -1,4 +1,4 @@
-import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link, DollarSign, Heart, GraduationCap, Repeat, Percent, Divide, Sigma, Wrench, Clock, CalendarDays, WalletCards, ListOrdered, Square, Car, Flame, PersonStanding, Wallet, Dumbbell, Circle, Dices, MoveHorizontal, FileCheck, Ruler, Home, Scale, BrainCircuit, Image as ImageIcon, AlarmClock, Timer as TimerIcon, Globe, Receipt, Droplets, MoonStar, CalendarHeart, HeartPulse, Fingerprint, ShieldCheck, Hourglass } from "lucide-react";
+import { Calculator, BookOpen, PiggyBank, Landmark, Briefcase, TrendingUp, Binary, Type, Pipette, Minimize2, RefreshCw, Crop, Hash, Braces, FileText, QrCode, Link, DollarSign, Heart, GraduationCap, Repeat, Percent, Divide, Sigma, Wrench, Clock, CalendarDays, WalletCards, ListOrdered, Square, Car, Flame, PersonStanding, Wallet, Dumbbell, Circle, Dices, MoveHorizontal, FileCheck, Ruler, Home, Scale, BrainCircuit, Image as ImageIcon, AlarmClock, Timer as TimerIcon,   Globe, Receipt, Droplets, MoonStar, CalendarHeart, HeartPulse, Fingerprint, ShieldCheck, Hourglass, BarChart3, Network, Baby, Activity } from "lucide-react";
 import { Calculator as CalculatorType } from "@/types/calculator";
 
 
@@ -35,6 +35,15 @@ export const financialCalculatorsData: Omit<CalculatorType, 'icon'>[] = [
   { id: "ppf", name: "PPF Calculator", description: "Public Provident Fund maturity calculator", category: "financial", path: "/financial-calculators/ppf-calculator", implemented: true },
   { id: "cagr", name: "CAGR Calculator", description: "Calculate compound annual growth rate", category: "financial", path: "/financial-calculators/cagr-calculator", implemented: true },
   { id: "emi", name: "EMI Calculator", description: "Calculate home & personal loan EMI", category: "financial", path: "/financial-calculators/emi-calculator", implemented: true },
+  { id: "epf", name: "EPF Calculator", description: "Estimate PF maturity at retirement", category: "financial", path: "/financial-calculators/epf-calculator", implemented: true },
+  { id: "nps", name: "NPS Calculator", description: "Project NPS corpus and monthly pension", category: "financial", path: "/financial-calculators/nps-calculator", implemented: true },
+  { id: "hra", name: "HRA Calculator", description: "Calculate HRA exemption and taxable HRA", category: "financial", path: "/financial-calculators/hra-calculator", implemented: true },
+  { id: "gratuity", name: "Gratuity Calculator", description: "Estimate gratuity payout and eligibility", category: "financial", path: "/financial-calculators/gratuity-calculator", implemented: true },
+  { id: "ssy", name: "SSY Calculator", description: "Sukanya Samriddhi maturity calculator", category: "financial", path: "/financial-calculators/ssy-calculator", implemented: true },
+  { id: "step-up-sip", name: "Step-Up SIP Calculator", description: "SIP growth with annual step-ups", category: "financial", path: "/financial-calculators/step-up-sip-calculator", implemented: true },
+  { id: "rent-vs-buy", name: "Rent vs Buy Calculator", description: "Compare renting vs buying home costs", category: "financial", path: "/financial-calculators/rent-vs-buy-calculator", implemented: true },
+  { id: "tax-regime", name: "Tax Regime Calculator", description: "Compare old vs new tax regime", category: "financial", path: "/financial-calculators/tax-regime-calculator", implemented: true },
+  { id: "debt-payoff", name: "Debt Payoff Calculator", description: "Plan debt payoff date and interest", category: "financial", path: "/financial-calculators/debt-payoff-calculator", implemented: true },
 ];
 
 export const healthCalculatorsData: Omit<CalculatorType, 'icon'>[] = [
@@ -55,6 +64,10 @@ export const healthCalculatorsData: Omit<CalculatorType, 'icon'>[] = [
   { id: "ovulation", name: "Ovulation Calculator", description: "Track fertile window and ovulation day", category: "health", path: "/health-calculators/ovulation-calculator", implemented: true },
   { id: "heart-rate", name: "Heart Rate Calculator", description: "Max HR and training zone targets", category: "health", path: "/health-calculators/heart-rate-calculator", implemented: true },
   { id: "one-rep-max", name: "One Rep Max Calculator", description: "Estimate 1RM strength and training percentages", category: "health", path: "/health-calculators/one-rep-max-calculator", implemented: true },
+  { id: "period", name: "Period Calculator", description: "Predict next periods and fertile windows", category: "health", path: "/health-calculators/period-calculator", implemented: true },
+  { id: "pregnancy-weight", name: "Pregnancy Weight Calculator", description: "Track IOM weight-gain targets by week", category: "health", path: "/health-calculators/pregnancy-weight-calculator", implemented: true },
+  { id: "bsa", name: "BSA Calculator", description: "Body Surface Area via DuBois & Mosteller", category: "health", path: "/health-calculators/bsa-calculator", implemented: true },
+  { id: "vo2max", name: "VO2max Calculator", description: "Estimate VO2max cardio fitness", category: "health", path: "/health-calculators/vo2max-calculator", implemented: true },
 ];
 
 export const mathCalculatorsData: Omit<CalculatorType, 'icon'>[] = [
@@ -78,6 +91,9 @@ export const mathCalculatorsData: Omit<CalculatorType, 'icon'>[] = [
   { id: "binary", name: "Binary Calculator", description: "Binary calculations", category: "math", path: "/math-calculators/binary-calculator", implemented: true },
   { id: "hcf-lcm", name: "HCF and LCM Calculator", description: "GCD and LCM with step-by-step working", category: "math", path: "/math-calculators/hcf-lcm-calculator", implemented: true },
   { id: "prime-checker", name: "Prime Number Checker", description: "Check primes with factors and neighbours", category: "math", path: "/math-calculators/prime-checker", implemented: true },
+  { id: "statistics", name: "Statistics Calculator", description: "Mean, median, mode and confidence interval", category: "math", path: "/math-calculators/statistics-calculator", implemented: true },
+  { id: "long-division", name: "Long Division Calculator", description: "Division with step-by-step working", category: "math", path: "/math-calculators/long-division-calculator", implemented: true },
+  { id: "hex-converter", name: "Hex Converter", description: "Convert hex, decimal, binary, octal and ASCII", category: "math", path: "/math-calculators/hex-converter", implemented: true },
 ];
 
 export const otherCalculatorsData: Omit<CalculatorType, 'icon'>[] = [
@@ -99,6 +115,7 @@ export const otherCalculatorsData: Omit<CalculatorType, 'icon'>[] = [
   { id: "slug-generator", name: "Slug Generator", description: "Turn titles into SEO-friendly URL slugs", category: "other", path: "/other-calculators/slug-generator", implemented: true },
   { id: "countdown", name: "Countdown Calculator", description: "Live countdown to any event", category: "other", path: "/other-calculators/countdown-calculator", implemented: true },
   { id: "love", name: "Love Calculator", description: "Fun name compatibility score", category: "other", path: "/other-calculators/love-calculator", implemented: true },
+  { id: "business-days", name: "Business Days Calculator", description: "Count workdays between dates or add workdays", category: "other", path: "/other-calculators/business-days-calculator", implemented: true },
 ];
 
 export const imageToolsData: Omit<CalculatorType, 'icon'>[] = [
@@ -124,6 +141,7 @@ export const developerToolsData: Omit<CalculatorType, 'icon'>[] = [
   { id: "uuid-generator", name: "UUID Generator", description: "Generate bulk UUID v4 identifiers", category: "tools", path: "/tool/uuid-generator", implemented: true },
   { id: "timestamp-converter", name: "Timestamp Converter", description: "Convert Unix timestamps to dates", category: "tools", path: "/tool/timestamp-converter", implemented: true },
   { id: "password-strength-checker", name: "Password Strength Checker", description: "Check password strength and crack time", category: "tools", path: "/tool/password-strength-checker", implemented: true },
+  { id: "subnet-calculator", name: "Subnet Calculator", description: "IPv4 subnet, broadcast, hosts and wildcard", category: "tools", path: "/tool/subnet-calculator", implemented: true },
 ];
 
 const iconMap: { [key: string]: CalculatorType['icon'] } = {
@@ -234,6 +252,24 @@ const iconMap: { [key: string]: CalculatorType['icon'] } = {
   "slug-generator": Link,
   "countdown": Hourglass,
   "love": Heart,
+  "epf": Landmark,
+  "nps": Wallet,
+  "hra": Home,
+  "gratuity": Briefcase,
+  "ssy": PiggyBank,
+  "step-up-sip": TrendingUp,
+  "rent-vs-buy": Home,
+  "tax-regime": Receipt,
+  "debt-payoff": WalletCards,
+  "period": CalendarHeart,
+  "pregnancy-weight": Baby,
+  "bsa": PersonStanding,
+  "vo2max": Activity,
+  "statistics": BarChart3,
+  "long-division": Divide,
+  "hex-converter": Binary,
+  "business-days": CalendarDays,
+  "subnet-calculator": Network,
 };
 
 const addIcons = (calculators: Omit<CalculatorType, 'icon'>[]): CalculatorType[] => {
