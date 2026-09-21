@@ -39,10 +39,6 @@ export const metadata: Metadata = {
   publisher: 'Prime Metric',
   alternates: {
     canonical: 'https://primemetric.online',
-    languages: {
-      'x-default': 'https://primemetric.online',
-      hi: 'https://primemetric.online/hi',
-    },
   },
   robots: {
     index: true,

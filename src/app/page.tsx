@@ -13,7 +13,14 @@ export const metadata: Metadata = {
   title: 'Prime Metric - Free Online Calculators & Tools',
   description: 'Access 100+ free online calculators for finance, health, math & daily use. Fast, accurate, mobile-friendly, no sign-up required.',
   keywords: 'calculator, online calculator, free calculator, BMI calculator, loan calculator, mortgage calculator, percentage calculator, EMI calculator, age calculator',
-  alternates: { canonical: 'https://primemetric.online' },
+  alternates: {
+    canonical: 'https://primemetric.online',
+    languages: {
+      'x-default': 'https://primemetric.online',
+      en: 'https://primemetric.online',
+      hi: 'https://primemetric.online/hi',
+    },
+  },
   robots: { index: true, follow: true },
   openGraph: {
     title: 'Prime Metric - Free Online Calculators & Tools',

@@ -9,17 +9,17 @@ import { ListingJsonLd } from "@/components/ListingJsonLd";
 import React from "react";
 
 export const metadata: Metadata = {
-  title: "All Tools - Image & Developer Utilities",
-  description: "A complete collection of developer and image utility tools. Includes formatters, converters, generators, and image editors.",
+  title: "Image & Developer Tools Collection | Prime Metric",
+  description: "Browse image editors (crop, resize, compress, convert) and developer utilities (JSON, Base64, QR, hash) — free online tools.",
   keywords: "developer tools, image tools, text tools, json formatter, image resizer, qr code generator",
   robots: { index: true, follow: true },
   alternates: {
-    canonical: "https://primemetric.online/tool/all-tools",
+    canonical: "https://primemetric.online/all-tools",
   },
   openGraph: {
-    title: "All Tools - Image & Developer Utilities",
-    description: "A complete collection of developer and image utility tools. Includes formatters, converters, generators, and image editors.",
-    url: "https://primemetric.online/tool/all-tools",
+    title: "Image & Developer Tools Collection | Prime Metric",
+    description: "Browse image editors (crop, resize, compress, convert) and developer utilities (JSON, Base64, QR, hash) — free online tools.",
+    url: "https://primemetric.online/all-tools",
     siteName: 'Prime Metric',
     locale: 'en_US',
     type: 'website',
@@ -43,10 +43,10 @@ const AllToolsPage = () => {
             </div>
           </div>
           <h1 className="text-2xl sm:text-3xl font-bold mb-4 text-black">
-            All Tools
+            Image & Developer Tools
           </h1>
           <p className="text-sm text-neutral-600">
-            A complete suite of developer and image utility tools
+            Crop, resize and convert images, or use developer utilities like JSON formatting and QR codes
           </p>
         </div>
 
